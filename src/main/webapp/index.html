@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Mangaku</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    </head>
+    <body>
+        <script type="text/javascript" src="js/materialize.min.js"></script>
+        <div style="position:relative">
+            <div class="row" style="position:absolute;z-index: 2;width: 100%;margin-top: 1%;">
+                
+                
+                
+                <div class="col s4">
+                    
+                    
+                    <nav class="black">
+                        <div class="row nav-wrapper">
+                            <div class="col s2 right">
+                                <a href="/index.html">LOGO</a>
+                            </div>
+                            <form class="col s10">
+                                <div class="input-field">
+                                    <input placeholder="Busca tu manga favorito aqui" id="search" type="search" required>
+                                    <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+                                    <i class="material-icons">close</i>
+                                </div>
+                            </form>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+            
+            <div id="carousel" class="carousel carousel-slider center" style="position: absolute;height:100vh;width: 100%;z-index: 1;">
+                <div class="carousel-item black white-text" style="filter:brightness(0.7);background-image: url('images/wallpaper-1.jpg');" href="#one!" >
+                </div>
+                <div class="carousel-item black white-text" style="filter:brightness(0.7);background-image: url('images/wallpaper-2.jpg');" href="#two!">
+                </div>
+                <div class="carousel-item black white-text" style="filter:brightness(0.7);background-image: url('images/wallpaper-3.png');" href="#three!">
+                </div>
+                <div class="carousel-item black white-text" style="filter:brightness(0.7);background-image: url('images/wallpaper-4.jpg');" href="#four!">
+                </div>
+            </div>    
+        </div>
+        
+        
+        <script>
+            
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var elems = document.querySelectorAll('.carousel');
+                var instances = M.Carousel.init(elems,{
+                    fullWidth: true,
+                    indicators: true,
+                    duration:500
+                });
+                setInterval(function(){$('.carousel').carousel('next');},10000);
+            });
+
+            
+            
+        </script>
+    </body>
+</html>
