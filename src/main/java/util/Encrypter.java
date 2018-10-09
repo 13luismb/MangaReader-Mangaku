@@ -1,4 +1,3 @@
-//COLOCAR EL PACKAGE
 package util;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
