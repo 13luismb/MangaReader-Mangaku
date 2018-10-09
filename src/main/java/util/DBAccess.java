@@ -28,7 +28,6 @@ public class DBAccess {
 	public ResultSet execute(String query, Object... values) {
 		try {
 			this.pstm = con.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			
 			for (int i = 0; i < values.length; i++) {
 				this.pstm.setObject(i + 1, values[i]);
 			}
