@@ -6,9 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 public class DBAccess {
-	
+	private Timestamp ts;
 	private Connection con;
 	private PreparedStatement pstm;
 	private ResultSet rs;
@@ -52,6 +53,11 @@ public class DBAccess {
 			}
 		return this.res; 
 	}
+        
+        public Timestamp currentTimestamp(){
+            ts = new Timestamp(System.currentTimeMillis());
+            return ts;
+        }
 	
 	//Cerrar conexiones
 	public void close() {

@@ -10,20 +10,16 @@ import java.io.IOException;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import model.UserModel;
 
 /**
  *
  * @author kko_0
  */
 public class JacksonMapper {
-  private static ObjectMapper objMap = new ObjectMapper();
+  private ObjectMapper objMap = new ObjectMapper();
   
-  public static <T> T jsonToPojo(HttpServletRequest request, Class clase) throws IOException{
+  public <T> T jsonToPojo(HttpServletRequest request, Class clase) throws IOException{
       return (T) objMap.readValue(request.getReader().lines().collect(Collectors.joining(System.lineSeparator())), clase);
   }
-  
-  public static void pojoToJson (HttpServletResponse response){
-      
-  }
-  
 }

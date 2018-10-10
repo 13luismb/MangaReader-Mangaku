@@ -1,6 +1,6 @@
 package facade;
 
-import Model.UserModel;
+import model.UserModel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -24,17 +24,15 @@ public class UserFacade {
         pReader = PropertiesReader.getInstance();
         db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
         jackson = new JacksonMapper();
-        
+        ResultSet rs = null;
         String response = "";
         
         
         try{
             UserModel user = jackson.jsonToPojo(request,UserModel.class);
-            ResultSet rs = db.execute(pReader.getValue("q1"), user.getUsername());
+            rs = db.execute(pReader.getValue("q1"), user.getUsername());
             if(!rs.next()){
-            /*DETECTAR TIEMPO Y AGREGARLO AL INSERT
-            Q2 DEBERIA SER UN INSERT QUE INGRESE TODOS LOS DATOS SIGUIENTES A LA BASE DE DATOS*/
-                db.update(pReader.getValue("q2"),user.getUsername(),Encrypter.getSecurePassword(user.getPassword),user.getName(),user.getEmail(),/**/);
+                db.update(pReader.getValue("q2"),user.getUsername(),Encrypter.getSecurePassword(user.getPassword()),user.getName(),user.getEmail(),db.currentTimestamp(),2);
                 response = "Ok";
             }else{
                 response = "Error";
@@ -50,23 +48,24 @@ public class UserFacade {
         
     }
     
-    public HashMap<String,String> checkUser(HttpServletRequest request){
+    public HashMap<String,String> checkUser(HttpServletRequest request) throws SQLException{
         pReader = PropertiesReader.getInstance();
         db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
         jackson = new JacksonMapper();
+        ResultSet rs = null;
         
         HashMap<String,String> dataUser = new HashMap<>();
         
         try{
             UserModel user = jackson.jsonToPojo(request,UserModel.class);
-            ResultSet rs = db.execute(pReader.getValue("q3"), user.getUsername(),Encrypter.getSecurePassword(user.getPassword()));
-            //Q3 DEBERIA SER UN SELECT DONDE ENVIE USER Y PASSWORD ENCRYPTADO Y LO REVISE EN LA TABLA USER
+            rs = db.execute(pReader.getValue("q3"), user.getUsername(),Encrypter.getSecurePassword(user.getPassword()));
             if(rs.next()){
-                dataUser.put("username", rs.getString(1));
+                //Orden: id, type, password, username, name, creationtime, email
+                dataUser.put("id", String.valueOf(rs.getInt(1)));
                 dataUser.put("typeUser", String.valueOf(rs.getInt(2)));
-                dataUser.put("name", rs.getString(3));
-                dataUser.put("lastname", rs.getString(4));
-                dataUser.put("id", String.valueOf(getInt(5)));
+                dataUser.put("userName", rs.getString(3));
+                dataUser.put("name", rs.getString(4));
+                dataUser.put("email", rs.getString(6));
             }
         }catch(Exception e){
             e.printStackTrace();
