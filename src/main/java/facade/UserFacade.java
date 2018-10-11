@@ -25,9 +25,7 @@ public class UserFacade {
         db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
         jackson = new JacksonMapper();
         ResultSet rs = null;
-        String response = "";
-        
-        
+        String response = "";  
         try{
             UserModel user = jackson.jsonToPojo(request,UserModel.class);
             rs = db.execute(pReader.getValue("q1"), user.getUsername());
@@ -37,13 +35,11 @@ public class UserFacade {
             }else{
                 response = "Error";
             }
-        }catch(Exception e){
-            e.printStackTrace();
-        }finally{
             rs.close();
             db.close();
+        }catch(Exception e){
+            e.printStackTrace();
         }
-        
         return response;
         
     }
