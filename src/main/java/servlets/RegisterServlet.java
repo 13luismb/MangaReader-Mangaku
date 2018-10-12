@@ -44,8 +44,8 @@ public class RegisterServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
             UserFacade userFacade = new UserFacade();
-            PrintWriter out = response.getWriter();   
- 
+            PrintWriter out = response.getWriter();  
+            
             try {
             String status = userFacade.insertUser(request);
                 switch(status){
