@@ -5,10 +5,12 @@
  */
 package servlets;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import facade.UserFacade;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -22,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "RegisterServlet", urlPatterns = {"/register"})
 public class RegisterServlet extends HttpServlet {
-
+    private static final long serialVersionUID = 1L;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -45,7 +47,7 @@ public class RegisterServlet extends HttpServlet {
             PrintWriter out = response.getWriter();   
  
             try {
-                String status = userFacade.insertUser(request);
+            String status = userFacade.insertUser(request);
                 switch(status){
                     case "Ok":
                         out.print("200");

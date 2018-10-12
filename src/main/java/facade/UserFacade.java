@@ -54,14 +54,14 @@ public class UserFacade {
         
         try{
             UserModel user = jackson.jsonToPojo(request,UserModel.class);
-            rs = db.execute(pReader.getValue("q3"), user.getUsername(),Encrypter.getSecurePassword(user.getPassword()));
+            rs = db.execute(pReader.getValue("q3"), user.getUsername(),user.getUsername(),Encrypter.getSecurePassword(user.getPassword()));
             if(rs.next()){
                 //Orden: id, type, password, username, name, creationtime, email
                 dataUser.put("id", String.valueOf(rs.getInt(1)));
                 dataUser.put("typeUser", String.valueOf(rs.getInt(2)));
-                dataUser.put("userName", rs.getString(3));
-                dataUser.put("name", rs.getString(4));
-                dataUser.put("email", rs.getString(6));
+                dataUser.put("userName", rs.getString(4));
+                dataUser.put("name", rs.getString(5));
+                dataUser.put("email", rs.getString(7));
             }
         }catch(Exception e){
             e.printStackTrace();
@@ -73,5 +73,10 @@ public class UserFacade {
         return dataUser;
         
     }
+    
+public <T> String write(T objeto){
+    jackson = new JacksonMapper();
+    return jackson.pojoToJson(null, objeto);
+}
     
 }
