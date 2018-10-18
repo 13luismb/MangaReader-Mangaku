@@ -8,12 +8,14 @@ package servlets;
 import facade.UserFacade;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import util.JacksonMapper;
 
 /**
  *
@@ -23,27 +25,9 @@ import javax.servlet.http.HttpSession;
 public class LoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet LoginServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet LoginServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request,response);
     }
 
     @Override
@@ -52,10 +36,25 @@ public class LoginServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         UserFacade user = new UserFacade();
         HttpSession session = user.checkUser(request);
-        
+        JacksonMapper jackson = new JacksonMapper();
+        HashMap<String,String> json = new HashMap();
+                
         if(session!=null){
-            out.print("Started session as: " + session.getAttribute("session"));
+            if(session.isNew()){
+                json.put("status", "200");
+                json.put("message", "session stored");//Modificar con el archivo de propiedades
+                json.put("session", (String) session.getAttribute("session"));
+            }else{
+                json.put("status", "200");
+                json.put("message","ya existe un usuario en sesion");//Modificar con el archivo de propiedades
+                session.invalidate();
+            }
+        }else{
+            json.put("status", "500");
+            json.put("message","Error al iniciar session");//Modificar con el archio de propiedades
         }
-        
+        System.out.println(jackson.pojoToJson(json));
+        out.print(jackson.pojoToJson(json));
     }
+    
 }

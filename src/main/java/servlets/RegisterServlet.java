@@ -47,18 +47,7 @@ public class RegisterServlet extends HttpServlet {
             PrintWriter out = response.getWriter();  
             
             try {
-            String status = userFacade.insertUser(request);
-                switch(status){
-                    case "Ok":
-                        out.print("200");
-                        break;
-                    case "Error":
-                        out.print("500");
-                        break;
-                    case "":
-                        out.print("What's happening");
-                        break;
-                }
+                out.print(userFacade.insertUser(request)); 
             } catch (SQLException ex) {
                 Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
