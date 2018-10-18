@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Mangaku</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link type="text/css" rel="stylesheet" href="../css/materialize.min.css"  media="screen,projection"/>
+    </head>
+    <body>
+        <script type="text/javascript" src="../js/materialize.min.js"></script>
+         
+            <!--Navbar-->
+            <nav class="black" style="position:absolute;z-index: 2;">
+                <div class="nav-wrapper container">
+                    <a href="#" class="brand-logo center">Mangaku</a>
+                    
+                    <form class="left hide-on-med-and-down" style="width:40%">
+                        <div class="input-field">
+                            <input id="search" placeholder="Busca tus mangas favoritos aqui" type="search" required>
+                            <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+                            <i class="material-icons">close</i>
+                        </div>
+                    </form>
+                    <!-- Login and register-->        
+                    <ul id="login-register" class="hide-on-med-and-down right">
+                        <li><a id="login" href="login.html">Login</a></li>
+                        <li><a id="register" class="btn-large grey darken-2 pulse" href="register.html">Register</a></li>
+                    </ul>
+                    <!-- User-name and log-out-->
+                    <ul id="name-logout" class="hide-on-med-and-down right" hidden>
+                        <li><a id="user-name" href="config.html"></a></li>
+                        <li><a id="user-log-out" class="btn-large grey darken-2" onClick="logout()">Log-out</a></li>
+                    </ul>
+
+                </div>
+            </nav>
+            <!--End Navbar-->
+            <!--Div-->
+            <div class="grey" style="position: absolute;height:100vh;width: 100%;z-index: 1;filter:brightness(0.1);background-image: url('../images/wallpaper-2.jpg');">
+            </div>
+
+        
+        <script>
+                const navLogin = document.getElementById('login-register');
+                const navName = document.getElementById('name-logout');
+                var dataUser = localStorage.getItem("userInfo");
+                console.log(JSON.parse(dataUser));
+                if (localStorage.getItem("userInfo") === null || undefined) {
+                    navLogin.hidden = false;
+                    navName.hidden = !navLogin.hidden;
+                } else {
+                    navName.hidden = false;
+                    navLogin.hidden = !navName.hidden;
+                    document.getElementById("user-name").innerHTML = JSON.parse(dataUser).userName;
+                }
+                
+                function logout() {
+                    let params = {
+                        method: "GET",
+                        withCredentials: true,
+                        credentials: 'same-origin',
+                        headers: {
+                            "Content-type": "application/x-www-form-urlencoded"
+                        }
+                    }
+                    fetch('.././logout', params)
+                    .then(res => res.json())
+                    .then(data => {
+                        localStorage.clear();
+                        location.href = "dashboard.html";
+                })
+}
+        </script>
+    </body>
+</html>
