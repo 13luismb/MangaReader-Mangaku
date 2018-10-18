@@ -18,14 +18,12 @@ function register(){
     .then(resp => resp.json())
     .then(data => {
         console.log(data);
-      if (data==200){
+      if (data.status==200){
           let newDiv = document.createElement('div');
           let newCont = document.createTextNode("Te has registrado satisfactoriamente!");
           newDiv.appendChild(newCont);
           document.body.appendChild(newDiv);
-          window.setTimeout(function(){
-              location.href = history.go(-1);
-          },3000);
+          location.href = "login.html";
       }else{
           let newDiv = document.createElement('div');
           let newCont = document.createTextNode("El usuario que has tratado de registrar, o el correo que utilizaste ya existe.");

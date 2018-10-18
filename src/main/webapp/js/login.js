@@ -23,6 +23,9 @@ function login(){
           let newCont = document.createTextNode("Haz iniciado satisfactoriamente sesion!");
           newDiv.appendChild(newCont);
           document.body.appendChild(newDiv);
+          localStorage.setItem("userInfo",data.session);
+          console.log(JSON.parse(data.session));
+          location.href = "dashboard.html";
       }else{
           let newDiv = document.createElement('div');
           let newCont = document.createTextNode("Usuario o contrase;a erronea");
