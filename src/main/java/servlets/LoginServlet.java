@@ -36,24 +36,25 @@ public class LoginServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         UserFacade user = new UserFacade();
         HttpSession session = user.checkUser(request);
+        JacksonMapper jackson = new JacksonMapper();
         HashMap<String,String> json = new HashMap();
-        
+                
         if(session!=null){
             if(session.isNew()){
                 json.put("status", "200");
-                json.put("message", user.getProperty("r1"));//Modificar con el archivo de propiedades
+                json.put("message", "session stored");//Modificar con el archivo de propiedades
                 json.put("session", (String) session.getAttribute("session"));
             }else{
                 json.put("status", "200");
-                json.put("message", user.getProperty("r2"));//Modificar con el archivo de propiedades
+                json.put("message","ya existe un usuario en sesion");//Modificar con el archivo de propiedades
                 session.invalidate();
             }
         }else{
             json.put("status", "500");
-            json.put("message",user.getProperty("r3"));//Modificar con el archio de propiedades
+            json.put("message","Error al iniciar session");//Modificar con el archio de propiedades
         }
-        System.out.println(user.writeJSON(json));
-        out.print(user.writeJSON(json));
+        System.out.println(jackson.pojoToJson(json));
+        out.print(jackson.pojoToJson(json));
     }
     
 }
