@@ -17,11 +17,13 @@ public class UserFacade {
     private DBAccess db;
     private PropertiesReader pReader;
     private JacksonMapper jackson;
+    private Validator validator;
     
     public UserFacade(){
         db = null;
         pReader = null;
         jackson = null;
+        validator = null;
     }
 
     public String insertUser(HttpServletRequest request) throws SQLException, JsonProcessingException{
@@ -33,26 +35,29 @@ public class UserFacade {
         HashMap<String,String> map = new HashMap();  
         try{
             UserModel user = jackson.jsonToPojo(request,UserModel.class);
-            rs = db.execute(pReader.getValue("q1"), user.getUsername());
-            rs1 = db.execute(pReader.getValue("q2"), user.getEmail());
-            if(!rs.next() && !rs1.next()){
-                db.update(pReader.getValue("q3"),user.getUsername(),Encrypter.getSecurePassword(user.getPassword()),user.getName(),user.getEmail(),db.currentTimestamp(),2);
-                map.put("status","200");//Mensage
+            if (isValidated(user.getName(),user.getPassword(),user.getEmail())){
+                    rs = db.execute(pReader.getValue("q1"), user.getUsername());
+                    rs1 = db.execute(pReader.getValue("q2"), user.getEmail());
+                if(!rs.next() && !rs1.next()){
+                    db.update(pReader.getValue("q3"),user.getUsername().toLowerCase(),Encrypter.getSecurePassword(user.getPassword()),user.getName(),user.getEmail(),db.currentTimestamp(),2);
+                    map.put("status","200");//Mensage
+                }else{
+                    map.put("status","500");//Mensage
+                }
+                rs.close();
+                rs1.close();
+                db.close();
             }else{
-                map.put("status","500");//Mensage
+                map.put("status","puta");
             }
-            rs.close();
-            rs1.close();
-            db.close();
         }catch(Exception e){
             e.printStackTrace();
         }
         return jackson.pojoToJson(map);
         
-    }
+        }    
     
     public HashMap<String,String> getUserData(HttpServletRequest request) throws SQLException{
-        /*Este método solía ser checkUser. Lo cambié para que me retornara los datos de la session. */
         pReader = PropertiesReader.getInstance();
         db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
         jackson = new JacksonMapper();
@@ -63,7 +68,7 @@ public class UserFacade {
         try{
             dataUser = new HashMap<>();
             UserModel user = jackson.jsonToPojo(request,UserModel.class);
-            rs = db.execute(pReader.getValue("q4"), user.getUsername(),user.getUsername(),Encrypter.getSecurePassword(user.getPassword()));
+            rs = db.execute(pReader.getValue("q4"), user.getUsername().toLowerCase(),user.getUsername(),Encrypter.getSecurePassword(user.getPassword()));
             
             if(rs.next()){
                 //Orden: id, type, password, username, name, creationtime, email
@@ -91,39 +96,29 @@ public HttpSession checkUser(HttpServletRequest request) throws JsonProcessingEx
             if(map.containsKey("id")){
                 session = request.getSession();
                 session.setAttribute("session", jackson.pojoToJson(map));
-                /*
-                session.setAttribute("id", map.get("id"));
-                session.setAttribute("name", map.get("name"));
-                session.setAttribute("email", map.get("email"));
-                session.setAttribute("typeUser", map.get("typeUser"));
-                session.setAttribute("session", map.get("userName"));
-                */
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserFacade.class.getName()).log(Level.SEVERE, null, ex);
         }
     return session;
 }
-/*    
-public <T> String write(T objeto){
-    jackson = new JacksonMapper();
-    return jackson.pojoToJson(null, objeto);
-}
 
-
-public String writeResponse(String response){ //Mete las respuestas del .properties en el modelo de Response y lo devuelve como json.
-    //No lo he implementado aun
-    jackson = new JacksonMapper();
-    ResponseModel resp = new ResponseModel();
-    resp.setResponse(response);
-    return jackson.pojoToJson(null, resp);
-}*/
-
-public String getProperty(String propertyValue){ //Lo uso para poder traerme la propiedad que quiero del .properties sin sacarlo de facade
-    //No lo he implementado aun
+public String getProperty(String propertyValue){
     pReader = PropertiesReader.getInstance();
     return pReader.getValue(propertyValue);
 }
 
+private boolean isValidated(String username, String password, String email){
+    pReader = PropertiesReader.getInstance();
+    validator = new Validator();
+    
+    if (validator.WhitespaceValidated(username, password, email) && validator.EmailContainsDomains(pReader.getValue("ER"), email)
+            && !validator.hasSpecialCharacter(pReader.getValue("UR"), username) 
+            && !validator.hasSpecialCharacter(pReader.getValue("PR"), password)
+            && validator.LengthValidated(username, password, 20)){
+        return true;
+    }
+    return false;
+}
 
 }
