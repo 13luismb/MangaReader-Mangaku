@@ -35,11 +35,11 @@ public class LogoutServlet extends HttpServlet {
         
 	if (session.isNew()) {
             json.put("status", "200");
-            json.put("message", "session not started");
+            json.put("message", user.getProperty("r4"));
             session.invalidate();
 	} else {
             json.put("status", "200");
-            json.put("message", "session finished");
+            json.put("message", user.getProperty("r5"));
             session.invalidate();
 	}
         out.print(jackson.pojoToJson(json));

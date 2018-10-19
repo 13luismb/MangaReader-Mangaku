@@ -48,7 +48,7 @@ public class UserFacade {
                 rs1.close();
                 db.close();
             }else{
-                map.put("status","puta");
+                map.put("status","500");
             }
         }catch(Exception e){
             e.printStackTrace();
@@ -68,7 +68,7 @@ public class UserFacade {
         try{
             dataUser = new HashMap<>();
             UserModel user = jackson.jsonToPojo(request,UserModel.class);
-            rs = db.execute(pReader.getValue("q4"), user.getUsername().toLowerCase(),user.getUsername(),Encrypter.getSecurePassword(user.getPassword()));
+            rs = db.execute(pReader.getValue("q4"), Encrypter.getSecurePassword(user.getPassword()),user.getUsername().toLowerCase(),user.getUsername());
             
             if(rs.next()){
                 //Orden: id, type, password, username, name, creationtime, email
