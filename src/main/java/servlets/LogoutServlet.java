@@ -30,19 +30,19 @@ public class LogoutServlet extends HttpServlet {
             throws ServletException, IOException {
         PrintWriter out = response.getWriter();
         HttpSession session = request.getSession();
-        JacksonMapper jackson = new JacksonMapper();
+        UserFacade user = new UserFacade();
         HashMap<String,String> json = new HashMap();
         
 	if (session.isNew()) {
             json.put("status", "200");
-            json.put("message", "session not started");
+            json.put("message", user.getProperty("r4"));
             session.invalidate();
 	} else {
             json.put("status", "200");
-            json.put("message", "session finished");
+            json.put("message", user.getProperty("r5"));
             session.invalidate();
 	}
-        out.print(jackson.pojoToJson(json));
+        out.print(user.writeJSON(json));
     }
 
     @Override

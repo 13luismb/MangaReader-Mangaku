@@ -1,6 +1,5 @@
 package facade;
 
-import Model.ResponseModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import model.UserModel;
 import java.sql.ResultSet;
@@ -22,7 +21,7 @@ public class UserFacade {
     public UserFacade(){
         db = null;
         pReader = null;
-        jackson = null;
+        jackson = new JacksonMapper();
         validator = null;
     }
 
@@ -30,7 +29,6 @@ public class UserFacade {
         
         pReader = PropertiesReader.getInstance();
         db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
-        jackson = new JacksonMapper();
         ResultSet rs, rs1 = null;
         HashMap<String,String> map = new HashMap();  
         try{
@@ -60,7 +58,6 @@ public class UserFacade {
     public HashMap<String,String> getUserData(HttpServletRequest request) throws SQLException{
         pReader = PropertiesReader.getInstance();
         db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
-        jackson = new JacksonMapper();
         ResultSet rs = null;
         
         HashMap<String,String> dataUser = null; //new HashMap<>();
@@ -119,6 +116,10 @@ private boolean isValidated(String username, String password, String email){
         return true;
     }
     return false;
+}
+
+public <T> String writeJSON(HashMap map) throws JsonProcessingException{
+    return jackson.pojoToJson(map);
 }
 
 }
