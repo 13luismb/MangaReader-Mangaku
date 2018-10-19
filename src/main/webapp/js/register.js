@@ -19,16 +19,9 @@ function register(){
     .then(data => {
         console.log(data);
       if (data.status==200){
-          let newDiv = document.createElement('div');
-          let newCont = document.createTextNode("Te has registrado satisfactoriamente!");
-          newDiv.appendChild(newCont);
-          document.body.appendChild(newDiv);
           location.href = "login.html";
       }else{
-          let newDiv = document.createElement('div');
-          let newCont = document.createTextNode("El usuario que has tratado de registrar, o el correo que utilizaste ya existe.");
-          newDiv.appendChild(newCont);
-          document.body.appendChild(newDiv);
+          alert("Error al iniciar sesion, status:"+data.status);
       }
     });
 }
