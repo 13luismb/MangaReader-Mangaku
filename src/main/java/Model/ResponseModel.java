@@ -9,8 +9,26 @@ package Model;
  *
  * @author Usuario
  */
-public class ResponseModel {
-    private String response;
+public class ResponseModel<T> {
+    private String response, message;
+    private T session;
+
+    public T getSession() {
+        return session;
+    }
+
+    public void setSession(T session) {
+        this.session = session;
+    }
+
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
     public String getResponse() {
         return response;

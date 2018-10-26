@@ -63,7 +63,7 @@
                             "Content-type": "application/x-www-form-urlencoded"
                         }
                     }
-                    fetch('.././logout', params)
+                    fetch('.././session', params)
                     .then(res => res.json())
                     .then(data => {
                         localStorage.clear();

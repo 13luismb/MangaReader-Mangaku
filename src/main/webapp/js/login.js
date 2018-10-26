@@ -12,7 +12,7 @@ function login(){
                 headers: new Headers({'Content-Type': 'application/json'}), 
                 body:JSON.stringify(body) 
     };
-    fetch(".././login", params)
+    fetch(".././session", params)
     .then(resp => resp.json())
     .then(data => {
 

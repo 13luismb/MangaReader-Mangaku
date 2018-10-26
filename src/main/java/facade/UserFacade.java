@@ -2,6 +2,7 @@ package facade;
 
 import Model.ResponseModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import java.io.IOException;
 import model.UserModel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,21 +32,20 @@ public class UserFacade {
         pReader = PropertiesReader.getInstance();
         db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
         jackson = new JacksonMapper();
-        ResultSet rs, rs1 = null;
-        HashMap<String,String> map = new HashMap();  
+        ResultSet rs = null;
+        HashMap<String,String> map = new HashMap();
+        String salt = Encrypter.getSalt(10);
         try{
             UserModel user = jackson.jsonToPojo(request,UserModel.class);
-            if (isValidated(user.getName(),user.getPassword(),user.getEmail())){
-                    rs = db.execute(pReader.getValue("q1"), user.getUsername());
-                    rs1 = db.execute(pReader.getValue("q2"), user.getEmail());
-                if(!rs.next() && !rs1.next()){
-                    db.update(pReader.getValue("q3"),user.getUsername().toLowerCase(),Encrypter.getSecurePassword(user.getPassword()),user.getName(),user.getEmail(),db.currentTimestamp(),2);
+            if (isValidated(user.getUsername(),user.getPassword(),user.getEmail())){
+                    rs = db.execute(pReader.getValue("q1"), user.getUsername(), user.getEmail());
+                if(!rs.next()){
+                    db.update(pReader.getValue("q2"),user.getUsername().toLowerCase(),Encrypter.getSecurePassword(user.getPassword() + salt),user.getName(),user.getEmail(),db.currentTimestamp(),2, salt);
                     map.put("status","200");//Mensage
                 }else{
                     map.put("status","500");//Mensage
                 }
                 rs.close();
-                rs1.close();
                 db.close();
             }else{
                 map.put("status","500");
@@ -62,22 +62,27 @@ public class UserFacade {
         db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
         jackson = new JacksonMapper();
         ResultSet rs = null;
+
         
         HashMap<String,String> dataUser = null; //new HashMap<>();
         
         try{
             dataUser = new HashMap<>();
             UserModel user = jackson.jsonToPojo(request,UserModel.class);
-            rs = db.execute(pReader.getValue("q4"), Encrypter.getSecurePassword(user.getPassword()),user.getUsername().toLowerCase(),user.getUsername());
-            
-            if(rs.next()){
-                //Orden: id, type, password, username, name, creationtime, email
-                dataUser.put("id", String.valueOf(rs.getInt(1)));
-                dataUser.put("typeUser", String.valueOf(rs.getInt(2)));
-                dataUser.put("userName", rs.getString(4));
-                dataUser.put("name", rs.getString(5));
-                dataUser.put("email", rs.getString(7));
+            String salt = this.getUserSalt(db.execute(pReader.getValue("q1"), user.getUsername(), user.getUsername()));
+            if (salt != null){
+                    rs = db.execute(pReader.getValue("q3"), Encrypter.getSecurePassword(user.getPassword() + salt),user.getUsername().toLowerCase(),user.getUsername().toLowerCase());
+
+                if(rs.next()){
+                    //Orden: id, type, password, username, name, creationtime, email
+                    dataUser.put("id", String.valueOf(rs.getInt(1)));
+                    dataUser.put("typeUser", String.valueOf(rs.getInt(2)));
+                    dataUser.put("userName", rs.getString(4));
+                    dataUser.put("name", rs.getString(5));
+                    dataUser.put("email", rs.getString(7));
+                }
             }
+            
         }catch(Exception e){
             e.printStackTrace();
         }finally{
@@ -119,6 +124,26 @@ private boolean isValidated(String username, String password, String email){
         return true;
     }
     return false;
+}
+
+public String writeJSON(HashMap json) throws JsonProcessingException{
+    jackson = new JacksonMapper();    
+    return jackson.pojoToJson(json);
+}
+
+private String getUserSalt(ResultSet rs) throws IOException{
+    ResultSet rs1 = rs;
+    String salt = null;
+    pReader = PropertiesReader.getInstance();
+    db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
+        try {
+            if(rs1.next()){
+                salt = rs1.getString(8);
+                return salt;
+            }   } catch (SQLException ex) {
+            Logger.getLogger(UserFacade.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    return salt;
 }
 
 }
