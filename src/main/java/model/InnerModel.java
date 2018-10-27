@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Model;
+package model;
 
 /**
  *
  * @author Usuario
  */
-public class InnerUserModel {
+public class InnerModel {
     private String id, typeuser, username, name, email;
 
     public String getId() {

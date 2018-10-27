@@ -23,8 +23,8 @@ public class JacksonMapper {
         return (T) objMap.readValue(request.getReader().lines().collect(Collectors.joining(System.lineSeparator())), clase);
     }
   
-    public <T> String pojoToJson(HashMap dataMap) throws JsonProcessingException{
-        return objMap.writeValueAsString(dataMap);
+    public <T> String pojoToJson(T data) throws JsonProcessingException{
+        return objMap.writerWithDefaultPrettyPrinter().writeValueAsString(data);
     }
   
   

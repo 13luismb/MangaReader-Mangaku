@@ -5,10 +5,15 @@
  */
 package servlets;
 
+import model.InnerModel;
+import model.ResponseModel;
 import facade.UserFacade;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -31,18 +36,18 @@ public class SessionServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         HttpSession session = request.getSession();
         UserFacade user = new UserFacade();
-        HashMap<String,String> json = new HashMap();
+        ResponseModel<String> data = new ResponseModel<>();
         
 	if (session.isNew()) {
-            json.put("status", "200");
-            json.put("message", user.getProperty("r4"));
+            data.setStatus("200");
+            data.setMessage(user.getProperty("r4"));
             session.invalidate();
 	} else {
-            json.put("status", "200");
-            json.put("message", user.getProperty("r5"));
+            data.setStatus("200");
+            data.setMessage(user.getProperty("r5"));
             session.invalidate();
 	}
-        out.print(user.writeJSON(json));
+        out.print(user.writeJSON(data));
     }
 
     @Override
@@ -51,24 +56,25 @@ public class SessionServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         UserFacade user = new UserFacade();
         HttpSession session = user.checkUser(request);
-        HashMap<String,String> json = new HashMap();
-        
+        ResponseModel<InnerModel> data = new ResponseModel<>();
+
         if(session!=null){
             if(session.isNew()){
-                json.put("status", "200");
-                json.put("message", user.getProperty("r1"));//Modificar con el archivo de propiedades
-                json.put("session", (String) session.getAttribute("session"));
+
+                    data.setStatus("200");
+                    data.setMessage(user.getProperty("r1"));//Modificar con el archivo de propiedades
+                    data.setSession(user.getSessionData());
             }else{
-                json.put("status", "200");
-                json.put("message",user.getProperty("r2"));//Modificar con el archivo de propiedades
+                data.setStatus("200");
+                data.setMessage(user.getProperty("r2"));//Modificar con el archivo de propiedades
                 session.invalidate();
             }
         }else{
-            json.put("status", "500");
-            json.put("message",user.getProperty("r3"));//Modificar con el archio de propiedades
+            data.setStatus("500");
+            data.setMessage(user.getProperty("r3"));//Modificar con el archio de propiedades
         }
-        System.out.println(user.writeJSON(json));
-        out.print(user.writeJSON(json));
+        System.out.println(user.writeJSON(data));
+        out.print(user.writeJSON(data));
     }
-    
+
 }

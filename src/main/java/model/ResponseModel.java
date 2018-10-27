@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Model;
+package model;
 
 /**
  *
  * @author Usuario
  */
 public class ResponseModel<T> {
-    private String response, message;
+    private String status, message;
     private T session;
 
     public T getSession() {
@@ -30,11 +30,11 @@ public class ResponseModel<T> {
         this.message = message;
     }
 
-    public String getResponse() {
-        return response;
+    public String getStatus() {
+        return status;
     }
 
-    public void setResponse(String response) {
-        this.response = response;
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
