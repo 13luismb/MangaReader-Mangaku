@@ -60,13 +60,12 @@ public class SessionServlet extends HttpServlet {
 
         if(session!=null){
             if(session.isNew()){
-
                     data.setStatus("200");
                     data.setMessage(user.getProperty("r1"));//Modificar con el archivo de propiedades
                     data.setSession(user.getSessionData());
             }else{
                 data.setStatus("200");
-                data.setMessage(user.getProperty("r2"));//Modificar con el archivo de propiedades
+                data.setMessage(user.getProperty("r2"));
                 session.invalidate();
             }
         }else{
