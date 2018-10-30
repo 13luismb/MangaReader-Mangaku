@@ -19,7 +19,7 @@ public class UserFacade {
     private PropertiesReader pReader;
     private JacksonMapper jackson;
     private Validator validator;
-    private static InnerModel in;
+    private InnerModel sessionData;
     
     public UserFacade(){
         db = null;
@@ -63,8 +63,6 @@ public class UserFacade {
         db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
         jackson = new JacksonMapper();
         ResultSet rs = null;
-
-        
         InnerModel dataUser = null; //new HashMap<>();
         
         try{
@@ -83,7 +81,6 @@ public class UserFacade {
                     dataUser.setEmail(rs.getString(7));
                 }
             }
-            System.out.println(dataUser);
         }catch(Exception e){
             e.printStackTrace();
         }finally{
@@ -99,11 +96,10 @@ public HttpSession checkUser(HttpServletRequest request) throws JsonProcessingEx
         HttpSession session = null;
         try {
             InnerModel userdata = getUserData(request);
-            in = userdata;
             if(userdata!=null){
+                setSessionData(userdata);
                 session = request.getSession();
-                validator = new Validator();
-                validator.setSessionValues(session, userdata);
+                setSessionValues(session, userdata);
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserFacade.class.getName()).log(Level.SEVERE, null, ex);
@@ -111,8 +107,11 @@ public HttpSession checkUser(HttpServletRequest request) throws JsonProcessingEx
     return session;
 }
 
+private void setSessionData(InnerModel sessionData){
+    this.sessionData = sessionData;
+}
 public InnerModel getSessionData(){
-    return in;
+    return sessionData;
 }
 
 public String getProperty(String propertyValue){
@@ -152,5 +151,12 @@ private String getUserSalt(ResultSet rs) throws IOException{
         }
     return salt;
 }
+    public void setSessionValues(HttpSession session, InnerModel in){
+        session.setAttribute("typeuser", in.getTypeuser());
+        session.setAttribute("id", in.getId());
+        session.setAttribute("name", in.getName());
+        session.setAttribute("username", in.getUsername());
+        session.setAttribute("email", in.getEmail());
+    }
 
 }
