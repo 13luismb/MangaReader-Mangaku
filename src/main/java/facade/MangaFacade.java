@@ -1,14 +1,76 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package facade;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import model.InnerModel;
+import model.MangaModel;
+import model.ResponseModel;
+import model.UserModel;
+import util.DBAccess;
+import util.Encrypter;
+import util.JacksonMapper;
+import util.PropertiesReader;
+import util.Validator;
 
 /**
  *
  * @author Usuario
  */
 public class MangaFacade {
+    private DBAccess db;
+    private PropertiesReader pReader;
+    private JacksonMapper jackson;
+    private static InnerModel in;
     
+    public MangaFacade(){
+        db = null;
+        pReader = null;
+        jackson = null;
+    }
+    //Request debe de recibir solo "name" y "synopsis";
+    public String insertManga(HttpServletRequest request) throws SQLException, JsonProcessingException{
+        
+        pReader = PropertiesReader.getInstance();
+        db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
+        jackson = new JacksonMapper();
+        ResultSet rs = null;
+        ResponseModel<InnerModel> res = new ResponseModel<>();
+        HttpSession session = null;
+        
+        try{
+            session = request.getSession();
+            MangaModel manga = jackson.jsonToPojo(request,MangaModel.class);
+            rs = db.execute(pReader.getValue("q8"),session.getAttribute("id"),manga.getName(),manga.getSynopsis(),true,db.currentTimestamp());
+            db.update(pReader.getValue("q7"),1,rs.getInt(1));
+            res.setStatus("200");
+            rs.close();
+            db.close();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        
+        return jackson.pojoToJson(res);
+    }    
+
+    public InnerModel getSessionData(){
+        return in;
+    }
+
+    public String getProperty(String propertyValue){
+        pReader = PropertiesReader.getInstance();
+        return pReader.getValue(propertyValue);
+    }
+
+    public <T> String writeJSON(T json) throws JsonProcessingException{
+        jackson = new JacksonMapper();    
+        return jackson.pojoToJson(json);
+    }
+
 }
