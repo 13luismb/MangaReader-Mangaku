@@ -5,8 +5,11 @@
  */
 package util;
 
+import facade.UserFacade;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.servlet.http.HttpSession;
+import model.InnerModel;
 
 /**
  *
@@ -53,6 +56,45 @@ public class Validator {
     public boolean LengthValidated(String u, String p, int length){
         if (PermittedLength(u, length) && PermittedLength(p, length)){
             return true;
+        }
+        return false;
+    }
+    
+    private boolean sessionExists(HttpSession session){
+        if (session == null){
+            return false;
+        }
+        return true;
+    }
+    
+    public void setSessionValues(HttpSession session, InnerModel in){
+        session.setAttribute("typeuser", in.getTypeuser());
+        session.setAttribute("id", in.getId());
+        session.setAttribute("name", in.getName());
+        session.setAttribute("username", in.getUsername());
+        session.setAttribute("email", in.getEmail());
+    }
+    
+    public boolean isAdminDelete(HttpSession session){
+        if (sessionExists(session)){
+            if(session.getAttribute("typeuser")== "1"){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        return false;
+    }
+    
+    public boolean isAdminUpdate(HttpSession session){
+        if (sessionExists(session)){
+            if(session.getAttribute("typeuser")== "1"){
+                return true;
+            }
+            else{
+                return false;
+            }
         }
         return false;
     }

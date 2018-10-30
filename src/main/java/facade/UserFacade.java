@@ -102,7 +102,7 @@ public HttpSession checkUser(HttpServletRequest request) throws JsonProcessingEx
             in = userdata;
             if(userdata!=null){
                 session = request.getSession();
-                session.setAttribute("session", jackson.pojoToJson(userdata));
+                validator.setSessionValues(session, userdata);
                 System.out.println(jackson.pojoToJson(userdata));
             }
         } catch (SQLException ex) {
