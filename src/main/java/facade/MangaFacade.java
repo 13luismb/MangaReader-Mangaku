@@ -48,8 +48,14 @@ public class MangaFacade {
             session = request.getSession();
             MangaModel manga = jackson.jsonToPojo(request,MangaModel.class);
             rs = db.execute(pReader.getValue("q8"),session.getAttribute("id"),manga.getName(),manga.getSynopsis(),true,db.currentTimestamp());
-            db.update(pReader.getValue("q7"),1,rs.getInt(1));
-            res.setStatus("200");
+            if(rs.next()){
+                db.update(pReader.getValue("q7"),getGenreId(manga.getGenre()),rs.getInt(1));
+                res.setStatus("200");
+                res.setMessage(pReader.getValue("r6"));
+            }else{
+                res.setStatus("500");
+                res.setMessage(pReader.getValue("r6"));
+            }
             rs.close();
             db.close();
         }catch(Exception e){
@@ -71,6 +77,17 @@ public class MangaFacade {
     public <T> String writeJSON(T json) throws JsonProcessingException{
         jackson = new JacksonMapper();    
         return jackson.pojoToJson(json);
+    }
+    
+    public int getGenreId(String genre) throws SQLException{
+        pReader = PropertiesReader.getInstance();
+        db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
+        ResultSet rs = db.execute(pReader.getValue("qg1"),genre);
+        if(rs.next()){
+            return rs.getInt(1);
+        }else{
+            return 1;
+        }
     }
 
 }

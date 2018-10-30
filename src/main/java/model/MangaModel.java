@@ -11,7 +11,15 @@ package model;
  */
 public class MangaModel {
     
-    private String name,synopsis;
+    private String name,synopsis,genre;
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
     
     public String getName() {
         return name;

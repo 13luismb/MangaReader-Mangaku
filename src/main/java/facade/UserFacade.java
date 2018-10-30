@@ -34,7 +34,7 @@ public class UserFacade {
         db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
         jackson = new JacksonMapper();
         ResultSet rs = null;
-        ResponseModel<InnerModel> res = new ResponseModel<>();
+        ResponseModel<InnerModel> res = new ResponseModel();
         String salt = Encrypter.getSalt(10);
         try{
             UserModel user = jackson.jsonToPojo(request,UserModel.class);
@@ -72,7 +72,7 @@ public class UserFacade {
             UserModel user = jackson.jsonToPojo(request,UserModel.class);
             String salt = this.getUserSalt(db.execute(pReader.getValue("q1"), user.getUsername(), user.getUsername()));
             if (salt != null){
-                    rs = db.execute(pReader.getValue("q3"), Encrypter.getSecurePassword(user.getPassword() + salt),user.getUsername().toLowerCase(),user.getUsername().toLowerCase());
+                rs = db.execute(pReader.getValue("q3"), Encrypter.getSecurePassword(user.getPassword() + salt),user.getUsername().toLowerCase(),user.getUsername().toLowerCase());
 
                 if(rs.next()){
                     //Orden: id, type, password, username, name, creationtime, email
