@@ -102,8 +102,8 @@ public HttpSession checkUser(HttpServletRequest request) throws JsonProcessingEx
             in = userdata;
             if(userdata!=null){
                 session = request.getSession();
+                validator = new Validator();
                 validator.setSessionValues(session, userdata);
-                System.out.println(jackson.pojoToJson(userdata));
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserFacade.class.getName()).log(Level.SEVERE, null, ex);

@@ -60,7 +60,7 @@ public class Validator {
         return false;
     }
     
-    private boolean sessionExists(HttpSession session){
+    public boolean sessionExists(HttpSession session){
         if (session == null){
             return false;
         }
