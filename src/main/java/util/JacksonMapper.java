@@ -22,7 +22,10 @@ public class JacksonMapper {
     public <T> T jsonToPojo(HttpServletRequest request, Class clase) throws IOException{
         return (T) objMap.readValue(request.getReader().lines().collect(Collectors.joining(System.lineSeparator())), clase);
     }
-  
+        public <T> T jsonToPojo(String json, Class clase) throws IOException{
+        return (T) objMap.readValue(json, clase);
+    }
+        
     public <T> String pojoToJson(T data) throws JsonProcessingException{
         return objMap.writerWithDefaultPrettyPrinter().writeValueAsString(data);
     }

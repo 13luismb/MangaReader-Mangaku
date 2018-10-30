@@ -54,7 +54,7 @@ public class SessionServlet extends HttpServlet {
         HttpSession session = user.checkUser(request);
         ResponseModel<InnerModel> data = new ResponseModel<>();
 
-        if(session!=null){
+        if(session.getAttribute("id") != null){
             if(session.isNew()){
                     data.setStatus("200");
                     data.setMessage(user.getProperty("r1"));//Modificar con el archivo de propiedades

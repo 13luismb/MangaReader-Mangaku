@@ -51,15 +51,16 @@ public class UploadServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
             //Hay que refactorizar este verguero y mandarlo al "ChapterFacade"
             //También hay que traer una dirección relativa.
+            //System.out.println(request.getParameter("json"));
             PrintWriter out = response.getWriter();
-		ChapterFacade chapter = new ChapterFacade();
-                String m = chapter.FileUpload(request);
+            ChapterFacade chapter = new ChapterFacade();
+                String m = chapter.FileUpload(request, request.getParameter("json"));
                 switch(m){
                     case "200":out.print("YESSS"); break;
                     case "500":out.print("NOOOO"); break;
                 }
 	}
-	
+        
 	private String getFileName(Part part) {
 		for (String content : part.getHeader("content-disposition").split(";")) {
 			if (content.trim().startsWith("filename")) {

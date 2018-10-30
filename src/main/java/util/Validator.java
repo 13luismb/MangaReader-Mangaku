@@ -67,14 +67,6 @@ public class Validator {
         return true;
     }
     
-    public void setSessionValues(HttpSession session, InnerModel in){
-        session.setAttribute("typeuser", in.getTypeuser());
-        session.setAttribute("id", in.getId());
-        session.setAttribute("name", in.getName());
-        session.setAttribute("username", in.getUsername());
-        session.setAttribute("email", in.getEmail());
-    }
-    
     public boolean isAdminDelete(HttpSession session){
         if (sessionExists(session)){
             if(session.getAttribute("typeuser")== "1"){

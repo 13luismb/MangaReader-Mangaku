@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 import model.ChapterModel;
@@ -27,12 +28,13 @@ import util.Validator;
  *
  * @author Usuario
  */
+@MultipartConfig
 public class ChapterFacade {
     private DBAccess db;
     private PropertiesReader pReader;
     private JacksonMapper jackson;
     private Validator validator;
-    private static ChapterModel chapter;
+
     public ChapterFacade(){
         db = null;
         pReader = null;
@@ -40,22 +42,24 @@ public class ChapterFacade {
         validator = null;
     }
     
-    public ChapterModel chapterCreation(HttpServletRequest request) throws IOException{
+    public ChapterModel chapterCreation(HttpServletRequest request, String st) throws IOException{
         jackson = new JacksonMapper();
         pReader = PropertiesReader.getInstance();
         db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
         validator = new Validator();
         ResultSet rs = null;
-        System.out.println(validator.sessionExists(request.getSession()));
+        ChapterModel cm = null;
+        
         if (validator.sessionExists(request.getSession())){
-            ChapterModel cm = jackson.jsonToPojo(request, ChapterModel.class);
-            chapter = cm;
+            cm = jackson.jsonToPojo(st, ChapterModel.class);
             rs = db.execute(pReader.getValue("q16"), Integer.parseInt(cm.getMangaId()),Integer.parseInt(cm.getChapterNumber()));
             
             try {
+                System.out.println(rs.next());
                 if(!rs.next()){
-                    return cm;
+                    return cm;   
                 }
+
             } catch (SQLException ex) {
                 Logger.getLogger(ChapterFacade.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -64,11 +68,11 @@ public class ChapterFacade {
         return null;
     }
     
-    public String FileUpload(HttpServletRequest request) throws IOException, ServletException{
+    public String FileUpload(HttpServletRequest request, String str) throws IOException, ServletException{
         pReader = PropertiesReader.getInstance();
         db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
         jackson = new JacksonMapper();
-        ChapterModel cm = chapterCreation(request);
+        ChapterModel cm = chapterCreation(request, str);
         
         if (cm != null){
             Collection<Part> files = request.getParts();
@@ -76,10 +80,14 @@ public class ChapterFacade {
             OutputStream os = null;
                 int i = 0;
 		try {
-			String baseDir = "C:\\Users\\Usuario\\eclipse-workspace\\Manga-Reader---Mangaku\\src\\main\\webapp\\manga";
+			String baseDir = "C:\\Users\\kko_0\\OneDrive\\Documents\\NetBeansProjects\\Manga-Reader---Mangaku\\src\\main\\webapp\\manga";
                         String mangaDir = baseDir + "/" + cm.getMangaName().toLowerCase();
                         cm.setChapterLocation(mangaDir);
+                        System.out.println(cm.getChapterNumber() + "" + cm.getChapterName() + "" + cm.getMangaId() + "" +cm.getMangaName());
+                        System.out.println("happening?");
 			for (Part file : files) {
+                                System.out.println(this.getFileName(file));
+                                if(this.getFileName(file) != null){
                                 String finalDir = mangaDir + "/" + String.valueOf(i+1).concat(".jpg");
 				filecontent = file.getInputStream();
 				os = new FileOutputStream(finalDir);
@@ -96,14 +104,27 @@ public class ChapterFacade {
 				}
                                 i++;
 			}
-                db.update(pReader.getValue("q15"), cm.getMangaId(),cm.getChapterNumber(),cm.getChapterName(),cm.getChapterLocation(),i);
+                db.update(pReader.getValue("q15"), Integer.parseInt(cm.getMangaId()),Integer.parseInt(cm.getChapterNumber()),cm.getChapterName(),cm.getChapterLocation(),i);
                 return "200";
+                        }
+                        db.close();
+                        
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
         }
         return "500";
     }
+	private String getFileName(Part part) {
+		for (String content : part.getHeader("content-disposition").split(";")) {
+			if (content.trim().startsWith("filename")) {
+				return content.substring(content.indexOf('=') + 1).trim().replace("\"", "");
+			}
+		}
+		return null;
+	}    
+public void createFolder(String str){
     
-
+}
+        
 }
