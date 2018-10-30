@@ -47,14 +47,14 @@ public class MangaFacade {
         try{
             session = request.getSession();
             MangaModel manga = jackson.jsonToPojo(request,MangaModel.class);
-            rs = db.execute(pReader.getValue("q8"),session.getAttribute("id"),manga.getName(),manga.getSynopsis(),true,db.currentTimestamp());
+            rs = db.execute(pReader.getValue("qma3"),session.getAttribute("id"),manga.getName(),manga.getSynopsis(),true,db.currentTimestamp());
             if(rs.next()){
-                db.update(pReader.getValue("q7"),getGenreId(manga.getGenre()),rs.getInt(1));
+                db.update(pReader.getValue("qma2"),getGenreId(manga.getGenre()),rs.getInt(1));
                 res.setStatus("200");
-                res.setMessage(pReader.getValue("r6"));
+                res.setMessage(pReader.getValue("rm1"));
             }else{
                 res.setStatus("500");
-                res.setMessage(pReader.getValue("r6"));
+                res.setMessage(pReader.getValue("rm2"));
             }
             rs.close();
             db.close();
