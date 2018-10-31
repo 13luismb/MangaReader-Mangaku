@@ -61,7 +61,7 @@ public class Validator {
     }
     
     public boolean sessionExists(HttpSession session){
-        if (session.getAttribute("id") == null){
+        if (session == null){
             return false;
         }
         return true;

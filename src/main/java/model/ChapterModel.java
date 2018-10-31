@@ -10,7 +10,32 @@ package model;
  * @author Usuario
  */
 public class ChapterModel {
-    private String mangaName, mangaId, chapterNumber,chapterName,chapterLocation;
+    private String mangaName,chapterLocation,chapterName;
+    private int  mangaId, chapterNumber, chapterPages;
+
+    public int getMangaId() {
+        return mangaId;
+    }
+
+    public void setMangaId(int mangaId) {
+        this.mangaId = mangaId;
+    }
+
+    public int getChapterNumber() {
+        return chapterNumber;
+    }
+
+    public void setChapterNumber(int chapterNumber) {
+        this.chapterNumber = chapterNumber;
+    }
+
+    public int getChapterPages() {
+        return chapterPages;
+    }
+
+    public void setChapterPages(int chapterPages) {
+        this.chapterPages = chapterPages;
+    }
 
     public String getMangaName() {
         return mangaName;
@@ -18,22 +43,6 @@ public class ChapterModel {
 
     public void setMangaName(String mangaName) {
         this.mangaName = mangaName;
-    }
-
-    public String getMangaId() {
-        return mangaId;
-    }
-
-    public void setMangaId(String mangaId) {
-        this.mangaId = mangaId;
-    }
-
-    public String getChapterNumber() {
-        return chapterNumber;
-    }
-
-    public void setChapterNumber(String chapterNumber) {
-        this.chapterNumber = chapterNumber;
     }
 
     public String getChapterName() {
