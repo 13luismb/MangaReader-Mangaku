@@ -36,11 +36,11 @@ public class SessionServlet extends HttpServlet {
         
 	if (session.isNew()) {
             data.setStatus("200");
-            data.setMessage(user.getProperty("r4"));
+            data.setMessage(user.getProperty("ru4"));
             session.invalidate();
 	} else {
             data.setStatus("200");
-            data.setMessage(user.getProperty("r5"));
+            data.setMessage(user.getProperty("ru5"));
             session.invalidate();
 	}
         out.print(user.writeJSON(data));
@@ -57,16 +57,16 @@ public class SessionServlet extends HttpServlet {
         if(session.getAttribute("id") != null){
             if(session.isNew()){
                     data.setStatus("200");
-                    data.setMessage(user.getProperty("r1"));//Modificar con el archivo de propiedades
+                    data.setMessage(user.getProperty("ru1"));//Modificar con el archivo de propiedades
                     data.setSession(user.getSessionData());
             }else{
                 data.setStatus("200");
-                data.setMessage(user.getProperty("r2"));
+                data.setMessage(user.getProperty("ru2"));
                 session.invalidate();
             }
         }else{
             data.setStatus("500");
-            data.setMessage(user.getProperty("r3"));//Modificar con el archio de propiedades
+            data.setMessage(user.getProperty("ru3"));//Modificar con el archio de propiedades
         }
         System.out.println(user.writeJSON(data));
         out.print(user.writeJSON(data));

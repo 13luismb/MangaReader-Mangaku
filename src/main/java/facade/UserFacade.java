@@ -39,9 +39,9 @@ public class UserFacade {
         try{
             UserModel user = jackson.jsonToPojo(request,UserModel.class);
             if (isValidated(user.getUsername(),user.getPassword(),user.getEmail())){
-                    rs = db.execute(pReader.getValue("q1"), user.getUsername(), user.getEmail());
+                    rs = db.execute(pReader.getValue("qu1"), user.getUsername(), user.getEmail());
                 if(!rs.next()){
-                    db.update(pReader.getValue("q2"),user.getUsername().toLowerCase(),Encrypter.getSecurePassword(user.getPassword() + salt),user.getName(),user.getEmail(),db.currentTimestamp(),2, salt);
+                    db.update(pReader.getValue("qu2"),user.getUsername().toLowerCase(),Encrypter.getSecurePassword(user.getPassword() + salt),user.getName(),user.getEmail(),db.currentTimestamp(),2, salt);
                     res.setStatus("200");//Mensage
                 }else{
                     res.setStatus("500");//Mensage
@@ -68,9 +68,9 @@ public class UserFacade {
         try{
             dataUser = new InnerModel();
             UserModel user = jackson.jsonToPojo(request,UserModel.class);
-            String salt = this.getUserSalt(db.execute(pReader.getValue("q1"), user.getUsername(), user.getUsername()));
+            String salt = this.getUserSalt(db.execute(pReader.getValue("qu1"), user.getUsername(), user.getUsername()));
             if (salt != null){
-                rs = db.execute(pReader.getValue("q3"), Encrypter.getSecurePassword(user.getPassword() + salt),user.getUsername().toLowerCase(),user.getUsername().toLowerCase());
+                rs = db.execute(pReader.getValue("qu3"), Encrypter.getSecurePassword(user.getPassword() + salt),user.getUsername().toLowerCase(),user.getUsername().toLowerCase());
 
                 if(rs.next()){
                     //Orden: id, type, password, username, name, creationtime, email

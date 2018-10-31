@@ -12,6 +12,24 @@ package model;
 public class MangaModel {
     
     private String name,synopsis,genre;
+    private Boolean status;
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
 
     public String getGenre() {
         return genre;

@@ -25,18 +25,17 @@ import javax.servlet.http.Part;
  * @author Usuario
  */
 @MultipartConfig
-@WebServlet(name = "UploadServlet", urlPatterns = {"/upload"})
-public class UploadServlet extends HttpServlet {
+@WebServlet(name = "ChapterServlet", urlPatterns = {"/chapter"})
+public class ChapterServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public UploadServlet() {
+    public ChapterServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
-
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -49,18 +48,29 @@ public class UploadServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-            //Hay que refactorizar este verguero y mandarlo al "ChapterFacade"
-            //También hay que traer una dirección relativa.
-            //System.out.println(request.getParameter("json"));
             PrintWriter out = response.getWriter();
             ChapterFacade chapter = new ChapterFacade();
-                String m = chapter.FileUpload(request, request.getParameter("json"));
+            String m = chapter.chapterCreate(request, request.getParameter("json"));
                 switch(m){
                     case "200":out.print("YESSS"); break;
                     case "500":out.print("NOOOO"); break;
                 }
 	}
+                
+        protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+            PrintWriter out = response.getWriter();
+            ChapterFacade chapter = new ChapterFacade();
+            String m = chapter.chapterDelete(request, request.getParameter("json"));
+                switch(m){
+                    case "200":out.print("YESSS YES YES YES"); break;
+                    case "500":out.print("ALEXA THIS IS SO SAD PLAY DESPACITO"); break;
+                }
+        }
         
+        protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+            
+        }
+             
 	private String getFileName(Part part) {
 		for (String content : part.getHeader("content-disposition").split(";")) {
 			if (content.trim().startsWith("filename")) {
@@ -69,4 +79,5 @@ public class UploadServlet extends HttpServlet {
 		}
 		return null;
 	}
+
 }

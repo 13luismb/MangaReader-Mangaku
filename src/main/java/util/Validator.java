@@ -61,13 +61,13 @@ public class Validator {
     }
     
     public boolean sessionExists(HttpSession session){
-        if (session == null){
+        if (session.getAttribute("id") == null){
             return false;
         }
         return true;
     }
     
-    public boolean isAdminDelete(HttpSession session){
+    public boolean isAdmin(HttpSession session){
         if (sessionExists(session)){
             if(session.getAttribute("typeuser")== "1"){
                 return true;
@@ -78,17 +78,5 @@ public class Validator {
         }
         return false;
     }
-    
-    public boolean isAdminUpdate(HttpSession session){
-        if (sessionExists(session)){
-            if(session.getAttribute("typeuser")== "1"){
-                return true;
-            }
-            else{
-                return false;
-            }
-        }
-        return false;
-    }
-    
+
 }

@@ -17,7 +17,7 @@
 
 
             <!--Navbar-->
-            <nav class="black" style="position:absolute;z-index: 2;">
+            <nav class="black">
                 <div class="nav-wrapper container">
                     <a href="#" class="brand-logo center">Mangaku</a>
                     
@@ -42,9 +42,65 @@
             </nav>
             <!--End Navbar-->
             <!--Div-->
-            <div class="grey" style="position: absolute;height:100vh;width: 100%;z-index: 1;filter:brightness(0.1);background-image: url('../images/wallpaper-2.jpg');">
+                        
+            <div class="grey">
+                <div class="" style="height:50vh">
+                    <div class="container">
+                        <br>
+                        <h3 id="title_manga"class="center">Lorem, ipsum.</h3>
+                        <br>
+                        <span id="synopsis_manga" class="center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo exercitationem odit maiores. Nisi sequi fugit perferendis laborum dolores itaque ducimus modi repellendus, sit minima, maxime aperiam quod? Veritatis nam saepe cumque tempore, ut repellendus libero ab, explicabo, laboriosam autem similique!</span>
+                        <br>
+                        <br>
+                        <div class="row">
+                            <div class="col s8">
+                                    <h6>Genres:</h6>
+                                    <h7 id="genres_manga">Lorem</h7>
+                            </div>
+                            <div class="col s4">
+                                    <h6>Status:</h6>
+                                    <h7 id="status_manga">Lorem</h7>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="black white-text center" style="height:5vh">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Id, magnam?
+                </div>
+            </div>
+            <div class="row">
+                <div class="container">
+                    <br>
+                    <div class="col s8">
+                        
+                        <div class="row">
+                            <div class="col s4">
+                                <h6>Lista de capitulos:</h3>
+                            </div>
+                        </div>
+                        
+                    <ul id="list_chapter" class="collection with-header">
+                        <!--Molde:
+                            <li class="collection-item"><div>Lorem<a href="#!" class="secondary-content"><i class="material-icons black-text">play_arrow</i></a></div></li>
+                        -->
+                    </ul>
+                
+                    </div>
+
+                    <div class="s4">
+                        <h6>
+                            Comentarios:
+                        </h6>
+                    </div>
+                </div>
+            </div>
+            
+
             </div>
 
+              
+            <!--End Div-->
             <div id="modal1" class="modal">
                     <div class="modal-content">
                         <h4 class="center">Crea tu manga!</h4>
@@ -74,57 +130,47 @@
                         <a id="modalbtn" href="#!" class="modal-close waves-effect waves-green btn-flat black white-text">Crear</a>
                     </div>
             </div>
+
+            
+        <div id="btn_edit" class="fixed-action-btn" hidden>
+            <a class="btn-floating btn-large black">
+                <i class="large material-icons">mode_edit</i>
+            </a>
+            <ul>
+                <li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>
+                <li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>
+                <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
+                <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
+            </ul>
+        </div>
+            
         
 
         <script src="../js/creatorManga.js"></script>    
+        <script src="../js/renderNavBar.js"></script>
+        <script src="../js/renderManga.js"></script>
+
+        <!-- Esto se cambiara y se hara el codigo cuando lo habilite-->
         <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var elems = document.querySelectorAll('.fixed-action-btn');
+                var instances = M.FloatingActionButton.init(elems);
+            });
 
-                document.addEventListener('DOMContentLoaded', function() {
-                    var elems = document.querySelectorAll('.dropdown-trigger');
-                    var instances = M.Dropdown.init(elems);
-                });
+            document.addEventListener('DOMContentLoaded', function() {
+                var elems = document.querySelectorAll('.dropdown-trigger');
+                var instances = M.Dropdown.init(elems);
+            });
 
-                document.addEventListener('DOMContentLoaded', function() {
-                    var elems = document.querySelectorAll('.modal');
-                    var instances = M.Modal.init(elems);
-                });
+            document.addEventListener('DOMContentLoaded', function() {
+                var elems = document.querySelectorAll('.modal');
+                var instances = M.Modal.init(elems);
+            });
 
-                document.addEventListener('DOMContentLoaded', function() {
-                    var elems = document.querySelectorAll('select');
-                    var instances = M.FormSelect.init(elems);
-                });
-
-
-
-                const navLogin = document.getElementById('login-register');
-                const navName = document.getElementById('name-logout');
-                var dataUser = localStorage.getItem("userInfo");
-                console.log(JSON.parse(dataUser));
-                if (localStorage.getItem("userInfo") === null || undefined) {
-                    navLogin.hidden = false;
-                    navName.hidden = !navLogin.hidden;
-                } else {
-                    navName.hidden = false;
-                    navLogin.hidden = !navName.hidden;
-                    document.getElementById("user-name").innerHTML = JSON.parse(dataUser).username;
-                }
-                
-                function logout() {
-                    let params = {
-                        method: "GET",
-                        withCredentials: true,
-                        credentials: 'same-origin',
-                        headers: {
-                            "Content-type": "application/x-www-form-urlencoded"
-                        }
-                    }
-                    fetch('.././session', params)
-                    .then(res => res.json())
-                    .then(data => {
-                        localStorage.clear();
-                        location.href = "dashboard.html";
-                    })
-                }
+            document.addEventListener('DOMContentLoaded', function() {
+                var elems = document.querySelectorAll('select');
+                var instances = M.FormSelect.init(elems);
+            });
         </script>
 
     </body>
