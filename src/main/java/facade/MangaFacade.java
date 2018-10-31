@@ -43,17 +43,10 @@ public class MangaFacade {
         try{
             session = request.getSession();
             MangaModel manga = jackson.jsonToPojo(request,MangaModel.class);
-<<<<<<< HEAD
             rs = db.execute(pReader.getValue("qma3"),Integer.parseInt((String) session.getAttribute("id")),manga.getName(),manga.getSynopsis(),true,db.currentTimestamp());
             if(rs.next()){
                 db.update(pReader.getValue("qma2"),getGenreId(manga.getGenre()),rs.getInt(1));
                 manga.setId(rs.getInt(1));
-                res.setSession(manga);
-=======
-            rs = db.execute(pReader.getValue("qma3"),session.getAttribute("id"),manga.getName(),manga.getSynopsis(),true,db.currentTimestamp());
-            if(rs.next()){
-                db.update(pReader.getValue("qma2"),getGenreId(manga.getGenre()),rs.getInt(1));
->>>>>>> 87ebbaafbfdad225119bffc71a806b009e3d2369
                 res.setStatus("200");
                 res.setMessage(pReader.getValue("rm1"));
             }else{
