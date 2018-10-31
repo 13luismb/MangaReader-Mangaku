@@ -99,7 +99,7 @@ public HttpSession checkUser(HttpServletRequest request) throws JsonProcessingEx
             if(userdata!=null){
                 setSessionData(userdata);
                 session = request.getSession();
-                setSessionValues(session, userdata);
+                setSessionValues(session, getSessionData());
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserFacade.class.getName()).log(Level.SEVERE, null, ex);

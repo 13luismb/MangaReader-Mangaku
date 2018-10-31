@@ -50,6 +50,11 @@ public class ChapterServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
             PrintWriter out = response.getWriter();
             ChapterFacade chapter = new ChapterFacade();
+<<<<<<< HEAD:src/main/java/servlets/ChapterServlet.java
+=======
+            //System.out.println(request.getSession(false));
+           // System.out.println(request.getSession(false).getAttribute("id"));
+>>>>>>> 87ebbaafbfdad225119bffc71a806b009e3d2369:src/main/java/servlets/ChapterServlet.java
             String m = chapter.chapterCreate(request, request.getParameter("json"));
                 switch(m){
                     case "200":out.print("YESSS"); break;
@@ -60,7 +65,11 @@ public class ChapterServlet extends HttpServlet {
         protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
             PrintWriter out = response.getWriter();
             ChapterFacade chapter = new ChapterFacade();
+<<<<<<< HEAD:src/main/java/servlets/ChapterServlet.java
             String m = chapter.chapterDelete(request, request.getParameter("json"));
+=======
+            String m = chapter.chapterDelete(request);
+>>>>>>> 87ebbaafbfdad225119bffc71a806b009e3d2369:src/main/java/servlets/ChapterServlet.java
                 switch(m){
                     case "200":out.print("YESSS YES YES YES"); break;
                     case "500":out.print("ALEXA THIS IS SO SAD PLAY DESPACITO"); break;
@@ -68,7 +77,18 @@ public class ChapterServlet extends HttpServlet {
         }
         
         protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+<<<<<<< HEAD:src/main/java/servlets/ChapterServlet.java
             
+=======
+           PrintWriter out = response.getWriter();
+            ChapterFacade chapter = new ChapterFacade();
+            System.out.println(request.getParameter("json"));
+            String m = chapter.chapterUpdate(request, request.getParameter("json"));
+                switch(m){
+                    case "200":out.print("SIIIIIIIIUUUUUUUUU"); break;
+                    case "500":out.print("NO NO NO"); break;
+                }
+>>>>>>> 87ebbaafbfdad225119bffc71a806b009e3d2369:src/main/java/servlets/ChapterServlet.java
         }
              
 	private String getFileName(Part part) {
