@@ -11,7 +11,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -19,6 +22,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
+import model.ChapterModel;
 
 /**
  *
@@ -41,7 +45,17 @@ public class ChapterServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
+	           System.out.println(request.getParameter("data"));
+                   PrintWriter out = response.getWriter();
+                   String data = request.getParameter("data");
+                   ChapterFacade chapter = new ChapterFacade();
+            try {
+                ChapterModel cm = chapter.chapterGet(request, data);
+                System.out.println(chapter.writeJSON(cm));
+            } catch (SQLException ex) {
+                Logger.getLogger(ChapterServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
 	}
 
 	/**
@@ -78,14 +92,4 @@ public class ChapterServlet extends HttpServlet {
                     case "500":out.print("NO NO NO"); break;
                 }
         }
-             
-	private String getFileName(Part part) {
-		for (String content : part.getHeader("content-disposition").split(";")) {
-			if (content.trim().startsWith("filename")) {
-				return content.substring(content.indexOf('=') + 1).trim().replace("\"", "");
-			}
-		}
-		return null;
-	}
-
 }

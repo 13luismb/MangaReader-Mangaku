@@ -5,6 +5,7 @@
  */
 package facade;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -55,8 +56,7 @@ public class ChapterFacade {
         validator = new Validator();
         ResultSet rs = null;
         ChapterModel cm = null;
-        System.out.println(request.getSession().getAttribute("id"));
-        if (validator.sessionExists(request.getSession())){
+       // if (validator.sessionExists(request.getSession())){
             cm = jackson.jsonToPojo(st, ChapterModel.class);
             rs = db.execute(pReader.getValue("qca1"), cm.getMangaId(),cm.getChapterNumber());
             
@@ -69,7 +69,7 @@ public class ChapterFacade {
             } catch (SQLException ex) {
                 Logger.getLogger(ChapterFacade.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
+        //}
        
         return null;
     }
@@ -81,7 +81,7 @@ public class ChapterFacade {
         ChapterModel cm = chapterRequestValid(request, str);
         if (cm != null){
             if(fileUpload(request,cm)){
-                this.requestCreate(request.getSession(), cm, db, pReader, false); //Aqui van datos de session
+                this.requestCreate(request.getSession(), cm, db, pReader, true); //Aqui van datos de session
                 db.close();
                 return "200";
             }
@@ -89,37 +89,17 @@ public class ChapterFacade {
         return "500";
     }
 
-    public void chapterGet(HttpServletRequest req, HttpServletResponse resp) throws FileNotFoundException, IOException{
-            // Get the absolute path of the image
-         ServletContext sc = req.getServletContext();
-         String filename = sc.getRealPath("image.gif");
-
-         // Get the MIME type of the image
-         String mimeType = sc.getMimeType(filename);
-         if (mimeType == null) {
-             sc.log("Could not get MIME type of "+filename);
-             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-             return;
-         }
-         // Set content type
-         resp.setContentType(mimeType);
-
-         // Set content size
-         File file = new File(filename);
-         resp.setContentLength((int)file.length());
-
-         // Open the file and output streams
-         FileInputStream in = new FileInputStream(file);
-         OutputStream out = resp.getOutputStream();
-
-         // Copy the contents of the file to the output stream
-         byte[] buf = new byte[1024];
-         int count = 0;
-         while ((count = in.read(buf)) >= 0) {
-             out.write(buf, 0, count);
-         }
-         in.close();
-         out.close();
+    public ChapterModel chapterGet(HttpServletRequest request, String str) throws IOException, SQLException{
+        pReader = PropertiesReader.getInstance();
+        db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
+        jackson = new JacksonMapper();
+        ChapterModel cm = jackson.jsonToPojo(str, ChapterModel.class);
+        if (cm != null){
+            cm = requestGet(cm, db, pReader);
+            db.close();
+            return cm;
+        }
+        return cm;        
      }
 
     public String chapterUpdate(HttpServletRequest request, String str) throws IOException, ServletException{
@@ -177,6 +157,23 @@ public class ChapterFacade {
         db.update(pReader.getValue("qcu3"), 51, cm.getMangaId(),cm.getChapterNumber(),cm.getChapterName(),cm.getChapterLocation(),cm.getChapterPages());    //Aqui van datos de session    
         }
     }
+    
+    private ChapterModel requestGet(ChapterModel cm, DBAccess db, PropertiesReader pReader) throws SQLException{
+    ResultSet rs = null;
+    rs = db.execute(pReader.getValue("qca2"), cm.getChapterNumber(),cm.getMangaId());
+            try {
+                if(rs.next()){
+                    cm = new ChapterModel();
+                    cm.setChapterLocation(rs.getString(1));
+                    cm.setChapterPages(rs.getInt(2));
+                    return cm;   
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ChapterFacade.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return null;
+    }
+    
     private String getFileName(Part part) {
 		for (String content : part.getHeader("content-disposition").split(";")) {
 			if (content.trim().startsWith("filename")) {
@@ -192,9 +189,10 @@ public class ChapterFacade {
             OutputStream os = null;
                 int i = 0;
 		try {
-			String baseDir = "C:\\Users\\Usuario\\eclipse-workspace\\Manga-Reader---Mangaku\\src\\main\\webapp\\manga";
+			String baseDir = request.getServletContext().getRealPath("/manga");
                         StringBuilder mangaDir = new StringBuilder();
                         mangaDir.append(baseDir).append("/").append(cm.getMangaName().toLowerCase()).append("/").append(cm.getChapterNumber());
+                        System.out.println(mangaDir.toString());
                         this.createFolder(mangaDir.toString());
                         cm.setChapterLocation(mangaDir.toString());
 			for (Part file : files) {
@@ -227,5 +225,41 @@ public class ChapterFacade {
     public void createFolder(String str){
         new File(str).mkdirs();
     }
+    
+    public void downloadFile(HttpServletRequest req, HttpServletResponse resp) throws FileNotFoundException, IOException{
+                    // Get the absolute path of the image
+         ServletContext sc = req.getServletContext();
+         String filename = sc.getRealPath("image.gif");
 
+         // Get the MIME type of the image
+         String mimeType = sc.getMimeType(filename);
+         if (mimeType == null) {
+             sc.log("Could not get MIME type of "+filename);
+             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+             return;
+         }
+         // Set content type
+         resp.setContentType(mimeType);
+
+         // Set content size
+         File file = new File(filename);
+         resp.setContentLength((int)file.length());
+
+         // Open the file and output streams
+         FileInputStream in = new FileInputStream(file);
+         OutputStream out = resp.getOutputStream();
+
+         // Copy the contents of the file to the output stream
+         byte[] buf = new byte[1024];
+         int count = 0;
+         while ((count = in.read(buf)) >= 0) {
+             out.write(buf, 0, count);
+         }
+         in.close();
+         out.close();
+    }
+    public <T> String writeJSON(T json) throws JsonProcessingException{
+    jackson = new JacksonMapper();    
+    return jackson.pojoToJson(json);
+    }
 }
