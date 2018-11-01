@@ -1,6 +1,3 @@
-//Solicitud de los datos del manga
-//Datos del manga, y si yo soy el poseedor.
-//Datos recibidos: status solicitud,synopsis,genre,manga_status,creator
 let params = location.href.split('?')[1];
 getIdManga();
 
@@ -18,18 +15,24 @@ fetch('.././manga?'+params, config)
 .then(data => {
     console.log(data)
     if(data.status == 200 || data.status == 201){
-        $("title_manga").innerText = data.session.name;
-        $("synopsis_manga").innerText = data.session.synopsis;
-        $("genres_manga").innerText = data.session.genre;
-        if(data.session.status){
-            $("status_manga").innerText = "En emision";
+        $("title").innerText = data.data.name;
+        $("synopsis").innerText = data.data.synopsis;
+        $("genres").innerText = data.data.genre;
+        if(data.data.status){
+            $("status").innerText = "En emision";
         }else{
-            $("status_manga").innerText = "Finalizado";
+            $("status").innerText = "Finalizado";
         }
 
         if(data.status == 201){
             $("btn_edit").hidden = false;
+            $("name_edit").value = data.data.name;
+            $("synopsis_edit").innerText = data.data.synopsis;
+            $("genres_edit").innerText = data.data.genre;
         }
+    } else if(data.status == 404){
+        alert(data.message+" Error:"+data.status);
+        location.href = "dashboard.html";
     }
 });
 

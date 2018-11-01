@@ -11,14 +11,14 @@ package model;
  */
 public class ResponseModel<T> {
     private String status, message;
-    private T session;
+    private T data;
 
-    public T getSession() {
-        return session;
+    public T getData() {
+        return data;
     }
 
-    public void setSession(T session) {
-        this.session = session;
+    public void setData(T data) {
+        this.data = data;
     }
 
 

@@ -9,7 +9,7 @@ import facade.UserFacade;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.servlet.http.HttpSession;
-import model.InnerModel;
+import model.SessionModel;
 
 /**
  *

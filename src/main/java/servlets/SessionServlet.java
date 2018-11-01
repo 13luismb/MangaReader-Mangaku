@@ -5,7 +5,7 @@
  */
 package servlets;
 
-import model.InnerModel;
+import model.SessionModel;
 import model.ResponseModel;
 import facade.UserFacade;
 import java.io.IOException;
@@ -52,13 +52,13 @@ public class SessionServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         UserFacade user = new UserFacade();
         HttpSession session = user.checkUser(request);
-        ResponseModel<InnerModel> data = new ResponseModel<>();
+        ResponseModel<SessionModel> data = new ResponseModel<>();
 
         if(session.getAttribute("id") != null){
             if(session.isNew()){
                     data.setStatus("200");
                     data.setMessage(user.getProperty("ru1"));//Modificar con el archivo de propiedades
-                    data.setSession(user.getSessionData());
+                    data.setData(user.getSessionData());
             }else{
                 data.setStatus("200");
                 data.setMessage(user.getProperty("ru2"));
