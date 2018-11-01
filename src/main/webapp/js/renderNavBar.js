@@ -11,6 +11,7 @@ if (localStorage.getItem("userInfo") === null || undefined) {
     document.getElementById("user-name").innerHTML = JSON.parse(dataUser).username;
 }
 
+readGenres();
 
 function logout() {
     let params = {
@@ -27,4 +28,8 @@ function logout() {
         localStorage.clear();
         location.href = "dashboard.html";
     })
+}
+
+function readGenres(){
+    $("genres_manga").innerHTML += '<option value="JABUENO!">JABUENO!</option>';
 }

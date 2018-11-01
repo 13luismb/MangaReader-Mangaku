@@ -2,6 +2,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -9,17 +10,26 @@ import java.util.ArrayList;
  */
 public class MangaModel {
     
-    private String name,synopsis,genre;
+    private String name,synopsis;
+    private List<String> genres;
     private Boolean status;
     private int id;
-    private ArrayList<ChapterModel> chapters;
+    private List<ChapterModel> chapters;
 
-    public ArrayList<ChapterModel> getChapters() {
+    public List<String> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(List<String> genres) {
+        this.genres = genres;
+    }
+    
+    public List<ChapterModel> getChapters() {
         return chapters;
     }
 
-    public void addChapter(ChapterModel chapter) {
-        this.chapters.add(chapter);
+    public void setChapters(List<ChapterModel> chapters) {
+        this.chapters = chapters;
     }
 
     public int getId() {
@@ -36,14 +46,6 @@ public class MangaModel {
 
     public void setStatus(Boolean status) {
         this.status = status;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
     }
     
     public String getName() {

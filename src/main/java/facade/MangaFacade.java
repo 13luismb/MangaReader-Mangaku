@@ -6,6 +6,7 @@ import static com.sun.corba.se.spi.presentation.rmi.StubAdapter.request;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import model.ChapterModel;
@@ -32,7 +33,7 @@ public class MangaFacade {
         pReader = null;
         jackson = null;
     }
-    //Request debe de recibir solo "name" y "synopsis";
+    
     public String insertManga(HttpServletRequest request) throws SQLException, JsonProcessingException{
         
         pReader = PropertiesReader.getInstance();
@@ -47,7 +48,7 @@ public class MangaFacade {
             MangaModel manga = jackson.jsonToPojo(request,MangaModel.class);
             rs = db.execute(pReader.getValue("qma3"),Integer.parseInt((String) session.getAttribute("id")),manga.getName(),manga.getSynopsis(),true,db.currentTimestamp());
             if(rs.next()){
-                db.update(pReader.getValue("qma2"),getGenreId(manga.getGenre()),rs.getInt(1));
+                db.multiUpdate(pReader.getValue("qma2"),getListGenresId(manga.getGenres()),rs.getInt(1));
                 manga.setId(rs.getInt(1));
                 res.setData(manga);
                 res.setStatus("200");
@@ -80,10 +81,10 @@ public class MangaFacade {
                 dataManga.setName(rs.getString(3));
                 dataManga.setSynopsis(rs.getString(4));
                 dataManga.setStatus(rs.getBoolean(5));
-                dataManga.setGenre(getGenresDes(id_manga));
-                //dataManga.setChapters(getChaptersManga(id_manga));
-                HttpSession session = request.getSession();
+                dataManga.setGenres(getGenresDes(id_manga));
                 res.setData(dataManga);
+                
+                HttpSession session = request.getSession();
                 if(!session.isNew()){
                     if(Integer.parseInt((String)session.getAttribute("id")) == rs.getInt(2)){
                         res.setStatus("201");
@@ -197,18 +198,20 @@ public class MangaFacade {
         }
     }
 
-    private String getGenresDes(int id_manga) throws SQLException {
+    private List<String> getGenresDes(int id_manga) throws SQLException {
         pReader = PropertiesReader.getInstance();
         db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
         ResultSet rs = db.execute(pReader.getValue("qma5"), id_manga);
-        rs.next();
-        String genres = rs.getString(1); 
+        List<String> listGenresDes = new ArrayList<>();
+        while(rs.next()){
+            listGenresDes.add(rs.getString(1));
+        }
         rs.close();
         db.close();
-        return genres;
+        return listGenresDes;
     }
 
-    private ArrayList<ChapterModel> getChaptersManga(int id_manga) throws SQLException {
+    private List<ChapterModel> getChaptersManga(int id_manga) throws SQLException {
         pReader = PropertiesReader.getInstance();
         db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
         ArrayList<ChapterModel> chapters = new ArrayList();
@@ -224,5 +227,12 @@ public class MangaFacade {
         return chapters;
     }
 
+    private List<Integer> getListGenresId(List<String> genres) throws SQLException {
+        List<Integer> listGenresId = new ArrayList<>();
+        for(String genre: genres){
+            listGenresId.add(getGenreId(genre));
+        }
+        return listGenresId;     
+    }
 
 }

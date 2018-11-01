@@ -17,7 +17,7 @@ fetch('.././manga?'+params, config)
     if(data.status == 200 || data.status == 201){
         $("title").innerText = data.data.name;
         $("synopsis").innerText = data.data.synopsis;
-        $("genres").innerText = data.data.genre;
+        $("genres").innerText = getGenresText(data.data.genres);
         if(data.data.status){
             $("status").innerText = "En emision";
         }else{
@@ -35,6 +35,14 @@ fetch('.././manga?'+params, config)
         location.href = "dashboard.html";
     }
 });
+
+function getGenresText(genres){
+    var genresText = "";
+    for(var i = 0; i < genres.length; i++)
+        genresText += genres[i]+" ";
+    return genresText
+}
+
 
 function getIdManga(){
     var url_string = window.location.href;

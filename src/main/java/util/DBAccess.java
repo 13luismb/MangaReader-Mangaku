@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.List;
 
 public class DBAccess {
 	private Timestamp ts;
@@ -26,7 +27,7 @@ public class DBAccess {
 	}
 	
 	//Select simples para comprobaciones
-	public ResultSet execute(String query, Object... values) {
+	public ResultSet execute(String query, Object... values) throws SQLException {
 		try {
 			this.pstm = con.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			for (int i = 0; i < values.length; i++) {
@@ -40,7 +41,7 @@ public class DBAccess {
 	}
 	
 	//Sentencias de modificaciones a la DB
-	public int update(String query, Object... values) {
+	public int update(String query, Object... values) throws SQLException {
 		try {
 			this.pstm = con.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			
@@ -53,6 +54,20 @@ public class DBAccess {
 			}
 		return this.res; 
 	}
+        
+        public void multiUpdate(String query, List<Integer> list,int id) throws SQLException {
+                try {
+                    this.pstm = con.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                    for (int i = 0; i < list.size(); i++) {
+                        this.pstm.setObject(1, list.get(i));
+                        this.pstm.setObject(2, id);
+                        this.pstm.addBatch();
+                    }
+                    this.pstm.executeBatch();
+		} catch (SQLException e) {
+                    e.printStackTrace();
+		}
+        }
         
         public Timestamp currentTimestamp(){
             ts = new Timestamp(System.currentTimeMillis());
