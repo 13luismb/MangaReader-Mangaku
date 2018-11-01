@@ -47,5 +47,30 @@ public class MangaServlet extends HttpServlet {
             Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
         } 
     }
-
+    
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+            
+        PrintWriter out = response.getWriter();  
+        MangaFacade mangaFacade = new MangaFacade();    
+        
+        try {
+            out.print(mangaFacade.editManga(request)); 
+        } catch (SQLException ex) {
+            Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }
+    
+    
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        System.out.println("-------------Delete--------------");
+        PrintWriter out = response.getWriter();  
+        MangaFacade mangaFacade = new MangaFacade();    
+        System.out.println("-------------End delete--------------");
+        out.print(mangaFacade.deleteManga(request)); 
+        
+    }
 }

@@ -2,15 +2,11 @@ function $(id){
     return document.getElementById(id);
 }
 
-function alertMessage(){
-    alert($('genres').value);
-}
-
 function createManga(){
     let body={
         name:$('name_manga').value,
         synopsis:$('synopsis_manga').value,
-        genre:$('genres').value
+        genre:$('genres_manga').value
     },
         params={
                 method: "POST", 
@@ -22,7 +18,7 @@ function createManga(){
     .then(data => {
         console.log(data);
       if (data.status==200){
-          location.href = "manga.html?id="+data.session.id;
+          location.href = "manga.html?id="+data.data.id;
       }else{
           alert("Error al crear el manga, status:"+data.status);
       }

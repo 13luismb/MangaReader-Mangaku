@@ -10,8 +10,7 @@
         <script type="text/javascript" src="../js/materialize.min.js"></script>
         
         <ul id='dropdown1' class='dropdown-content'>
-                <li><a href="#modal1" class="modal-trigger" >Crear manga</a></li>
-                <li><a href="#!">Subir capitulo</a></li>
+                <li><a href="#modal_insert" class="modal-trigger" >Crear manga</a></li>
                 <li><a href="#!" onClick="logout()">Log-out</a></li>
         </ul>
 
@@ -40,6 +39,73 @@
                     </ul>
                 </div>
             </nav>
+
+            <div id="btn_edit" class="fixed-action-btn" hidden>
+                    <a class="btn-floating btn-large black">
+                        <i class="large material-icons">mode_edit</i>
+                    </a>
+                    <ul>
+                        <li><a href="#modal_edit" class="btn-floating black tooltipped modal-trigger" data-position="left" data-tooltip="Editar Manga"><i class="material-icons">build</i></a></li>
+                        <li><a class="btn-floating black tooltipped" data-position="left" data-tooltip="Subir capitulo"><i class="material-icons">file_upload</i></a></li>
+                        <li><a id="deletebtn" class="btn-floating black tooltipped" data-position="left" data-tooltip="Eliminar Manga"><i class="material-icons">cancel</i></a></li>
+                    </ul>
+            </div>
+
+            <div id="modal_insert" class="modal">
+                    <div class="modal-content">
+                        <h4 class="center">Crea tu manga!</h4>
+                        <div class="row">
+                                <form>
+                                        <div class="input-field col s6">
+                                                <i class="material-icons prefix">account_circle</i>
+                                                <input placeholder="Name Manga" id="name_manga" type="text" class="validate black-text">
+                                        </div>
+                                        <div class="input-field col s6">
+                                            <select id="genres_manga" multiple>
+                                                    <option value="" disabled selected>Choose your option</option>
+                                            </select>
+                                            <label>Choose manga genre</label>
+                                        </div>
+                                        <div class="input-field col s12">
+                                                <i class="material-icons prefix">insert_emoticon</i>
+                                                <textarea placeholder="Synopsis" id="synopsis_manga" class="materialize-textarea"></textarea>
+                                        </div>                       
+                                </form>
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a id="modalbtn" href="#!" class="modal-close waves-effect waves-green btn-flat black white-text">Crear</a>
+                    </div>
+            </div>
+
+            
+            <div id="modal_edit" class="modal">
+                    <div class="modal-content">
+                        <h4 class="center">Edita tu manga!</h4>
+                        <div class="row">
+                                <form>
+                                        <div class="input-field col s6">
+                                                <i class="material-icons prefix">account_circle</i>
+                                                <input placeholder="Name Manga" id="name_edit" type="text" class="validate black-text">
+                                        </div>
+                                        <div class="input-field col s6">
+                                            <select id="genres_edit" multiple>
+                                                    <option value="" disabled selected>Choose your option</option>
+                                            </select>
+                                            <label>Choose manga genre</label>
+                                        </div>
+                                        <div class="input-field col s12">
+                                                <i class="material-icons prefix">insert_emoticon</i>
+                                                <textarea placeholder="Synopsis" id="synopsis_edit" class="materialize-textarea"></textarea>
+                                        </div>                       
+                                </form>
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a id="modalbtn" href="#!" class="modal-close waves-effect waves-green btn-flat black white-text">Crear</a>
+                    </div>
+            </div>
+
             <!--End Navbar-->
             <!--Div-->
                         
@@ -47,19 +113,19 @@
                 <div class="" style="height:50vh">
                     <div class="container">
                         <br>
-                        <h3 id="title_manga"class="center">Lorem, ipsum.</h3>
+                        <h3 id="title"class="center">Lorem, ipsum.</h3>
                         <br>
-                        <span id="synopsis_manga" class="center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo exercitationem odit maiores. Nisi sequi fugit perferendis laborum dolores itaque ducimus modi repellendus, sit minima, maxime aperiam quod? Veritatis nam saepe cumque tempore, ut repellendus libero ab, explicabo, laboriosam autem similique!</span>
+                        <span id="synopsis" class="center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo exercitationem odit maiores. Nisi sequi fugit perferendis laborum dolores itaque ducimus modi repellendus, sit minima, maxime aperiam quod? Veritatis nam saepe cumque tempore, ut repellendus libero ab, explicabo, laboriosam autem similique!</span>
                         <br>
                         <br>
                         <div class="row">
                             <div class="col s8">
                                     <h6>Genres:</h6>
-                                    <h7 id="genres_manga">Lorem</h7>
+                                    <h7 id="genres">Lorem</h7>
                             </div>
                             <div class="col s4">
                                     <h6>Status:</h6>
-                                    <h7 id="status_manga">Lorem</h7>
+                                    <h7 id="status">Lorem</h7>
                             </div>
                         </div>
                         
@@ -84,6 +150,9 @@
                         <!--Molde:
                             <li class="collection-item"><div>Lorem<a href="#!" class="secondary-content"><i class="material-icons black-text">play_arrow</i></a></div></li>
                         -->
+                        <li class="collection-item"><div>Capitulo chabacano 1<a href="#!" class="secondary-content"><i class="material-icons black-text">play_arrow</i></a></div></li>
+                        <li class="collection-item"><div>Capitulo chabacano 2<a href="#!" class="secondary-content"><i class="material-icons black-text">play_arrow</i></a></div></li>
+                        <li class="collection-item"><div>Capitulo chabacano 3<a href="#!" class="secondary-content"><i class="material-icons black-text">play_arrow</i></a></div></li>
                     </ul>
                 
                     </div>
@@ -95,61 +164,15 @@
                     </div>
                 </div>
             </div>
-            
-
-            </div>
 
               
             <!--End Div-->
-            <div id="modal1" class="modal">
-                    <div class="modal-content">
-                        <h4 class="center">Crea tu manga!</h4>
-                        <div class="row">
-                                <form>
-                                        <div class="input-field col s6">
-                                                <i class="material-icons prefix">account_circle</i>
-                                                <input placeholder="Name Manga" id="name_manga" type="text" class="validate black-text">
-                                        </div>
-                                        <div class="input-field col s6">
-                                            <select id="genres">
-                                                    <option value="" disabled selected>Choose your option</option>
-                                                    <option value="Shōnen">Shōnen</option>
-                                                    <option value="Shōjo">Shōjo</option>
-                                                    <option value="Seinen">Seinen</option>
-                                            </select>
-                                            <label>Choose manga genre</label>
-                                        </div>
-                                        <div class="input-field col s12">
-                                                <i class="material-icons prefix">insert_emoticon</i>
-                                                <textarea placeholder="Synopsis" id="synopsis_manga" class="materialize-textarea"></textarea>
-                                        </div>                       
-                                </form>
-                            </div>
-                    </div>
-                    <div class="modal-footer">
-                        <a id="modalbtn" href="#!" class="modal-close waves-effect waves-green btn-flat black white-text">Crear</a>
-                    </div>
-            </div>
-
-            
-        <div id="btn_edit" class="fixed-action-btn" hidden>
-            <a class="btn-floating btn-large black">
-                <i class="large material-icons">mode_edit</i>
-            </a>
-            <ul>
-                <li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>
-                <li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>
-                <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
-                <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
-            </ul>
-        </div>
-            
-        
 
         <script src="../js/creatorManga.js"></script>    
         <script src="../js/renderNavBar.js"></script>
         <script src="../js/renderManga.js"></script>
-
+        <script src="../js/editManga.js"></script>
+        <script src="../js/searchManga.js"></script>
         <!-- Esto se cambiara y se hara el codigo cuando lo habilite-->
         <script>
             document.addEventListener('DOMContentLoaded', function() {
@@ -170,6 +193,11 @@
             document.addEventListener('DOMContentLoaded', function() {
                 var elems = document.querySelectorAll('select');
                 var instances = M.FormSelect.init(elems);
+            });
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var elems = document.querySelectorAll('.tooltipped');
+                var instances = M.Tooltip.init(elems);
             });
         </script>
 

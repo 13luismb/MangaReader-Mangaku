@@ -9,7 +9,7 @@ package model;
  *
  * @author Usuario
  */
-public class InnerModel {
+public class SessionModel {
     private String id, typeuser, username, name, email;
 
     public String getId() {

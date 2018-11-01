@@ -1,7 +1,7 @@
 package facade;
 
 import model.UserModel;
-import model.InnerModel;
+import model.SessionModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -19,7 +19,7 @@ public class UserFacade {
     private PropertiesReader pReader;
     private JacksonMapper jackson;
     private Validator validator;
-    private InnerModel sessionData;
+    private SessionModel sessionData;
     
     public UserFacade(){
         db = null;
@@ -34,7 +34,7 @@ public class UserFacade {
         db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
         jackson = new JacksonMapper();
         ResultSet rs = null;
-        ResponseModel<InnerModel> res = new ResponseModel();
+        ResponseModel<SessionModel> res = new ResponseModel();
         String salt = Encrypter.getSalt(10);
         try{
             UserModel user = jackson.jsonToPojo(request,UserModel.class);
@@ -58,15 +58,15 @@ public class UserFacade {
         
         }    
     
-    private InnerModel getUserData(HttpServletRequest request) throws SQLException{
+    private SessionModel getUserData(HttpServletRequest request) throws SQLException{
         pReader = PropertiesReader.getInstance();
         db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
         jackson = new JacksonMapper();
         ResultSet rs = null;
-        InnerModel dataUser = null; //new HashMap<>();
+        SessionModel dataUser = null; //new HashMap<>();
         
         try{
-            dataUser = new InnerModel();
+            dataUser = new SessionModel();
             UserModel user = jackson.jsonToPojo(request,UserModel.class);
             String salt = this.getUserSalt(db.execute(pReader.getValue("qu1"), user.getUsername(), user.getUsername()));
             if (salt != null){
@@ -95,7 +95,7 @@ public class UserFacade {
 public HttpSession checkUser(HttpServletRequest request) throws JsonProcessingException{ //Este corrobora que el HashMap no este null para crear una session y retornarla
         HttpSession session = null;
         try {
-            InnerModel userdata = getUserData(request);
+            SessionModel userdata = getUserData(request);
             if(userdata!=null){
                 setSessionData(userdata);
                 session = request.getSession();
@@ -107,10 +107,10 @@ public HttpSession checkUser(HttpServletRequest request) throws JsonProcessingEx
     return session;
 }
 
-private void setSessionData(InnerModel sessionData){
+private void setSessionData(SessionModel sessionData){
     this.sessionData = sessionData;
 }
-public InnerModel getSessionData(){
+public SessionModel getSessionData(){
     return sessionData;
 }
 
@@ -151,7 +151,7 @@ private String getUserSalt(ResultSet rs) throws IOException{
         }
     return salt;
 }
-    public void setSessionValues(HttpSession session, InnerModel in){
+    public void setSessionValues(HttpSession session, SessionModel in){
         session.setAttribute("typeuser", in.getTypeuser());
         session.setAttribute("id", in.getId());
         session.setAttribute("name", in.getName());

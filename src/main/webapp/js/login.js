@@ -19,7 +19,8 @@ function login(){
         console.log(data);
         
       if (data.status==200){
-          localStorage.setItem("userInfo",JSON.stringify(data.session));
+          
+          localStorage.setItem("userInfo",JSON.stringify(data.data));
           location.href = "dashboard.html";
       }else{
           alert("Usuario o contrase;a erronea, status:" + data.status);
