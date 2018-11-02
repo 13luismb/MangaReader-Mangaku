@@ -50,7 +50,7 @@ public class ChapterFacade {
         validator = null;
     }
     
-    public ChapterModel chapterRequestValid(HttpServletRequest request, String st) throws IOException{ //Listo
+    public ChapterModel chapterRequestValid(HttpServletRequest request, String st) throws IOException, SQLException{ //Listo
         jackson = new JacksonMapper();
         pReader = PropertiesReader.getInstance();
         db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
@@ -76,7 +76,7 @@ public class ChapterFacade {
         return null;
     }
     
-    public String chapterCreate(HttpServletRequest request) throws IOException, ServletException{ //Refactorizar
+    public String chapterCreate(HttpServletRequest request) throws IOException, ServletException, SQLException{ //Refactorizar
         pReader = PropertiesReader.getInstance();
         db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
         jackson = new JacksonMapper();

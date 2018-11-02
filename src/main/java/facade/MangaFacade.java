@@ -82,8 +82,8 @@ public class MangaFacade {
                 dataManga.setSynopsis(rs.getString(4));
                 dataManga.setStatus(rs.getBoolean(5));
                 dataManga.setGenres(getGenresDes(id_manga));
+                dataManga.setChapters(getChaptersManga(id_manga));
                 res.setData(dataManga);
-                
                 HttpSession session = request.getSession();
                 if(!session.isNew()){
                     if(Integer.parseInt((String)session.getAttribute("id")) == rs.getInt(2)){
@@ -216,12 +216,14 @@ public class MangaFacade {
         db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
         ArrayList<ChapterModel> chapters = new ArrayList();
         ChapterModel chapter = null;
-        ResultSet rs = db.execute(pReader.getValue("qca2"), id_manga);
+        ResultSet rs = db.execute(pReader.getValue("qca4"), id_manga);
         while (rs.next()){
             chapter = new ChapterModel();
+            chapter.setChapterId(rs.getInt(1));
             chapter.setChapterNumber(rs.getInt(3));
             chapter.setChapterName(rs.getString(4));
-        }                    
+            chapters.add(chapter);
+        }
         rs.close();
         db.close();
         return chapters;

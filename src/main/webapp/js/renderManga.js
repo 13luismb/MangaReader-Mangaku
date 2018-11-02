@@ -23,6 +23,7 @@ fetch('.././manga?'+params, config)
         }else{
             $("status").innerText = "Finalizado";
         }
+        fillChapter(data.data.chapters);
 
         if(data.status == 201){
             $("btn_edit").hidden = false;
@@ -51,6 +52,12 @@ fetch('.././manga?'+params, config)
         }
     }
 }*/
+
+function fillChapter(chapters){
+    chapters.forEach(element => {
+        $("list_chapter").innerHTML += '<li class="collection-item"><div>'+element.chapterName+'<a href="chapter.html?id='+element.chapterId+'&page=1" class="secondary-content"><i class="material-icons black-text">play_arrow</i></a></div></li>';
+    });
+}
 
 function getStatus(status){
     if(status){
