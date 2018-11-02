@@ -107,6 +107,47 @@ public HttpSession checkUser(HttpServletRequest request) throws JsonProcessingEx
     return session;
 }
 
+public String sessionCreate(HttpServletRequest request) throws JsonProcessingException{
+    pReader = PropertiesReader.getInstance();
+    jackson = new JacksonMapper();
+    ResponseModel<SessionModel> data = new ResponseModel<>();
+    HttpSession session = checkUser(request);
+        if(session.getAttribute("id") != null){
+            if(session.isNew()){
+                    data.setStatus("200");
+                    data.setMessage(pReader.getValue("ru1"));
+                    data.setData(getSessionData());
+            }else{
+                data.setStatus("200");
+                data.setMessage(pReader.getValue("ru2"));
+                session.invalidate();
+            }
+        }else{
+            data.setStatus("500");
+            data.setMessage(pReader.getValue("ru3"));
+        }
+        return jackson.pojoToJson(data);
+}
+
+public String sessionDestroy(HttpServletRequest request) throws JsonProcessingException{
+        pReader = PropertiesReader.getInstance();
+        jackson = new JacksonMapper();       
+        HttpSession session = request.getSession();
+        ResponseModel<String> data = new ResponseModel<>();
+        
+	if (session.isNew()) {
+            data.setStatus("200");
+            data.setMessage(pReader.getValue("ru4"));
+            session.invalidate();
+	} else {
+            data.setStatus("200");
+            data.setMessage(pReader.getValue("ru5"));
+            session.invalidate();
+	}
+        return jackson.pojoToJson(data);
+}
+
+
 private void setSessionData(SessionModel sessionData){
     this.sessionData = sessionData;
 }

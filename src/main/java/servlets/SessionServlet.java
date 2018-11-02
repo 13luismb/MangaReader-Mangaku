@@ -5,6 +5,7 @@
  */
 package servlets;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import model.SessionModel;
 import model.ResponseModel;
 import facade.UserFacade;
@@ -30,20 +31,13 @@ public class SessionServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         PrintWriter out = response.getWriter();
-        HttpSession session = request.getSession();
         UserFacade user = new UserFacade();
-        ResponseModel<String> data = new ResponseModel<>();
-        
-	if (session.isNew()) {
-            data.setStatus("200");
-            data.setMessage(user.getProperty("ru4"));
-            session.invalidate();
-	} else {
-            data.setStatus("200");
-            data.setMessage(user.getProperty("ru5"));
-            session.invalidate();
-	}
-        out.print(user.writeJSON(data));
+       
+        try{
+            out.print(user.sessionDestroy(request));
+        }catch(JsonProcessingException e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -51,25 +45,12 @@ public class SessionServlet extends HttpServlet {
             throws ServletException, IOException {
         PrintWriter out = response.getWriter();
         UserFacade user = new UserFacade();
-        HttpSession session = user.checkUser(request);
-        ResponseModel<SessionModel> data = new ResponseModel<>();
-
-        if(session.getAttribute("id") != null){
-            if(session.isNew()){
-                    data.setStatus("200");
-                    data.setMessage(user.getProperty("ru1"));//Modificar con el archivo de propiedades
-                    data.setData(user.getSessionData());
-            }else{
-                data.setStatus("200");
-                data.setMessage(user.getProperty("ru2"));
-                session.invalidate();
-            }
-        }else{
-            data.setStatus("500");
-            data.setMessage(user.getProperty("ru3"));//Modificar con el archio de propiedades
+        
+        try{
+            out.print(user.sessionCreate(request));
+        }catch(JsonProcessingException e){
+            e.printStackTrace();
         }
-        System.out.println(user.writeJSON(data));
-        out.print(user.writeJSON(data));
+  
     }
-
 }

@@ -51,7 +51,6 @@ public class MangaServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-            
         PrintWriter out = response.getWriter();  
         MangaFacade mangaFacade = new MangaFacade();    
         
