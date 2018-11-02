@@ -255,4 +255,35 @@ public class MangaFacade {
         return jackson.pojoToJson(genres);
     }*/
 
+    
+    public String mangaSearch(HttpServletRequest request) throws JsonProcessingException{
+        jackson = new JacksonMapper();
+        pReader = PropertiesReader.getInstance();
+        db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
+        ArrayList<MangaModel> groupSMangas = new ArrayList<>();
+        ResultSet rs = null;
+        int i = 0;
+        String sQuery = getSearchValue(request.getParameter("s"));
+        try{
+            rs = db.execute(pReader.getValue("qs1"), sQuery);
+            while(rs.next()){
+                 groupSMangas.add(new MangaModel());
+                 groupSMangas.get(i).setId(rs.getInt(1));
+                 groupSMangas.get(i).setName(rs.getString(3));
+                 groupSMangas.get(i).setSynopsis(rs.getString(4));
+                 groupSMangas.get(i).setStatus(rs.getBoolean(5));
+                 i++;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }     
+        System.out.println(jackson.pojoToJson(groupSMangas));
+        return jackson.pojoToJson(groupSMangas);
+    }
+    
+        private String getSearchValue(String value){
+        StringBuilder pSearch = new StringBuilder();
+        pSearch.append("%").append(value).append("%");
+            return pSearch.toString();
+        }
 }

@@ -59,7 +59,7 @@ public class ChapterFacade {
         ChapterModel cm = null;
        // if (validator.sessionExists(request.getSession())){
         System.out.println(st);     
-       cm = jackson.jsonToPojo(st, ChapterModel.class);
+        cm = jackson.jsonToPojo(st, ChapterModel.class);
             rs = db.execute(pReader.getValue("qca2"), cm.getMangaId(),cm.getChapterNumber());
             
             try {

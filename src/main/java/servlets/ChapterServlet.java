@@ -57,11 +57,12 @@ public class ChapterServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
             PrintWriter out = response.getWriter();
             ChapterFacade chapter = new ChapterFacade();
-            try{
-            out.print(chapter.chapterCreate(request));
-            }catch(IOException | ServletException e){
-                e.printStackTrace();
-            }
+                try {
+                    out.print(chapter.chapterCreate(request));
+                } catch (SQLException ex) {
+                    Logger.getLogger(ChapterServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
 	}
                 
         protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
