@@ -235,4 +235,22 @@ public class MangaFacade {
         return listGenresId;     
     }
 
+    /*
+    FASE DE PRUEBA GENEROS DINAMICOS
+    public String getListGenres(HttpServletRequest request) throws SQLException, JsonProcessingException {
+        pReader = PropertiesReader.getInstance();
+        db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
+        ResultSet rs = db.execute(pReader.getValue("qma1"));
+        List<String> listGenresDes = new ArrayList<>();
+        jackson = new JacksonMapper();
+        GenresModel genres = new GenresModel();
+        while(rs.next()){
+            listGenresDes.add(rs.getString(2));
+        }
+        genres.setGenres(listGenresDes);
+        rs.close();
+        db.close();
+        return jackson.pojoToJson(genres);
+    }*/
+
 }

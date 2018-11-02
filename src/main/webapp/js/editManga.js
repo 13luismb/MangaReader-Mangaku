@@ -6,8 +6,8 @@ function editManga(){
     let body={
         name:$('name_edit').value,
         synopsis:$('synopsis_edit').value,
-        genre:$('genres_edit').value,
-        status:$('status_edit').value,
+        //genre:$('genres_edit').value,
+        status:getStatusText($('status_edit').value),
         id:getIdManga()
     },
         params={
@@ -25,6 +25,14 @@ function editManga(){
           alert("Error al crear el manga, status:"+data.status);
       }
     });
+}
+
+function getStatusText(status){
+    if(status == "En emision"){
+        return true;
+    }else{
+        return false;
+    }
 }
 
 function deleteManga(){
@@ -51,5 +59,5 @@ function deleteManga(){
         }
     });
 }
-
+$('editbtn').addEventListener('click',editManga);
 $('deletebtn').addEventListener('click',deleteManga);
