@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import model.ChapterModel;
+import model.ResponseModel;
 import util.DBAccess;
 import util.JacksonMapper;
 import util.PropertiesReader;
@@ -57,8 +58,9 @@ public class ChapterFacade {
         ResultSet rs = null;
         ChapterModel cm = null;
        // if (validator.sessionExists(request.getSession())){
-            cm = jackson.jsonToPojo(st, ChapterModel.class);
-            rs = db.execute(pReader.getValue("qca1"), cm.getMangaId(),cm.getChapterNumber());
+        System.out.println(st);     
+       cm = jackson.jsonToPojo(st, ChapterModel.class);
+            rs = db.execute(pReader.getValue("qca2"), cm.getMangaId(),cm.getChapterNumber());
             
             try {
                 System.out.println(rs.next());
@@ -74,48 +76,88 @@ public class ChapterFacade {
         return null;
     }
     
-    public String chapterCreate(HttpServletRequest request, String str) throws IOException, ServletException{ //Refactorizar
+    public String chapterCreate(HttpServletRequest request) throws IOException, ServletException{ //Refactorizar
         pReader = PropertiesReader.getInstance();
         db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
         jackson = new JacksonMapper();
-        ChapterModel cm = chapterRequestValid(request, str);
+        ResponseModel<ChapterModel> res = new ResponseModel();
+        String m = request.getParameter("json");
+        System.out.println(m);
+        ChapterModel cm = chapterRequestValid(request, m);
         if (cm != null){
             if(fileUpload(request,cm)){
-                this.requestCreate(request.getSession(), cm, db, pReader, true); //Aqui van datos de session
-                db.close();
-                return "200";
-            }
-        }
-        return "500";
+                if(requestCreate(request.getSession(), cm, db, pReader, true)){ //Aqui van datos de session
+                    db.close();
+                    res.setData(cm);
+                    res.setStatus("201");
+                    res.setMessage(pReader.getValue("rc1")); //
+                }else{
+                    res.setStatus("403");
+                    res.setMessage(pReader.getValue("rc2")); //
+                }
+            }else{
+                    res.setStatus("400");
+                    res.setMessage(pReader.getValue("rc3")); //
+                }
+        }else{
+                    res.setStatus("500");
+                    res.setMessage(pReader.getValue("rc4")); //
+                }
+    db.close();
+    return jackson.pojoToJson(res);
     }
 
-    public ChapterModel chapterGet(HttpServletRequest request, String str) throws IOException, SQLException{
+    public void chapterGet(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException{
         pReader = PropertiesReader.getInstance();
         db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
         jackson = new JacksonMapper();
-        ChapterModel cm = jackson.jsonToPojo(str, ChapterModel.class);
-        if (cm != null){
-            cm = requestGet(cm, db, pReader);
+        ResponseModel<ChapterModel> res = new ResponseModel();
+        ChapterModel cm = new ChapterModel();
+        int id_chapter = Integer.parseInt(request.getParameter("id"));
+            if (requestGet(cm, db, pReader, id_chapter)){
+                db.close();
+               /* res.setData(cm);
+                res.setStatus("200");
+                res.setMessage(pReader.getValue("rc5"));*/
+                this.downloadFile(request, response, cm);
+            }else{
+                res.setStatus("403");
+                res.setMessage(pReader.getValue("rc6")); //
+            }
             db.close();
-            return cm;
-        }
-        return cm;        
+           // return jackson.pojoToJson(res);
+            
      }
 
-    public String chapterUpdate(HttpServletRequest request, String str) throws IOException, ServletException{
+    public String chapterUpdate(HttpServletRequest request) throws IOException, ServletException{
         pReader = PropertiesReader.getInstance();
         db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
         validator = new Validator();
-        ChapterModel cm = chapterRequestValid(request, str);
+        jackson = new JacksonMapper();
+        ResponseModel<ChapterModel> res = new ResponseModel();
+        ChapterModel cm = jackson.jsonToPojo(request, ChapterModel.class) ;
         
         if(cm != null){
-            if(fileUpload(request,cm)){
-                this.requestCreate(request.getSession(), cm, db, pReader, true); //Aqui van datos de session
-                db.close();
-                return "200";
-            }
-        }
-        return "500";
+          //  if(fileUpload(request,cm)){
+                if(requestUpdate(request.getSession(), cm, db, pReader, true)){ //Aqui van datos de session
+                    db.close();
+                    res.setData(cm);
+                    res.setStatus("200");
+                    res.setMessage(pReader.getValue("rc7")); //
+                }else{
+                    res.setStatus("403");
+                    res.setMessage(pReader.getValue("rc8")); //
+                } 
+           /* }else{
+                res.setStatus("400");
+                res.setMessage(pReader.getValue("rc3")); //
+            }*/
+        }else{
+                    res.setStatus("500");
+                    res.setMessage(pReader.getValue("rc4")); //
+                }
+        db.close();
+        return jackson.pojoToJson(res);
 }
 
     public String chapterDelete(HttpServletRequest request) throws IOException, ServletException{
@@ -123,55 +165,94 @@ public class ChapterFacade {
         db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
         validator = new Validator();
         jackson = new JacksonMapper();
+        ResponseModel<ChapterModel> res = new ResponseModel();
         ChapterModel cm = jackson.jsonToPojo(request, ChapterModel.class);
             if(cm != null){
-                this.requestDelete(request.getSession(), cm, db, pReader, false); //Aqui van datos de la session
-                db.close();
-                return "200";
-            }
-        return "500";
+                if(requestDelete(request.getSession(), cm, db, pReader, false)){ //Aqui van datos de la session
+                    db.close();
+                    res.setStatus("200");
+                    res.setMessage(pReader.getValue("rc9")); //
+                }else{
+                    res.setStatus("403");
+                    res.setMessage(pReader.getValue("rc10")); //
+                }
+            }else{
+                    res.setStatus("500");
+                    res.setMessage(pReader.getValue("rc4")); //
+                }
+            db.close();
+            return jackson.pojoToJson(res);
 }
     
-    private void requestUpdate(HttpSession session, ChapterModel cm, DBAccess db, PropertiesReader pReader, boolean isAdmin) 
+    private boolean requestUpdate(HttpSession session, ChapterModel cm, DBAccess db, PropertiesReader pReader, boolean isAdmin) 
         throws IOException, ServletException{
-        if(isAdmin){
-        db.update(pReader.getValue("qcx1"), cm.getChapterNumber(),cm.getChapterName(),cm.getChapterLocation(),cm.getChapterPages(),cm.getMangaId(),cm.getChapterNumber());
-        }else{
-        db.update(pReader.getValue("qcu1"), cm.getChapterNumber(),cm.getChapterName(),cm.getChapterLocation(),cm.getChapterPages(),cm.getMangaId(),cm.getChapterNumber(), 51); //Aqui van datos de session    
+        ResultSet rs = null;
+        try{
+           rs = db.execute(pReader.getValue("qca1"), cm.getChapterId());
+            if(rs.next()){   
+                if(isAdmin){
+                db.update(pReader.getValue("qcx1"), cm.getChapterNumber(),cm.getChapterName(),cm.getChapterPages(),cm.getMangaId(),cm.getChapterId());
+                }else{
+                db.update(pReader.getValue("qcu1"), cm.getChapterNumber(),cm.getChapterName(),cm.getChapterLocation(),cm.getChapterPages(),cm.getChapterId(), 51); //Aqui van datos de session    
+                }
+                return true;
+            }  
+        }catch (Exception e){
+            e.printStackTrace();
         }
+        return false;
 }
-    private void requestDelete(HttpSession session, ChapterModel cm, DBAccess db, PropertiesReader pReader, boolean isAdmin)
+    private boolean requestDelete(HttpSession session, ChapterModel cm, DBAccess db, PropertiesReader pReader, boolean isAdmin)
             throws IOException, ServletException{
-        if(isAdmin){
-                db.update(pReader.getValue("qcx2"), cm.getMangaId(), cm.getChapterNumber());
-        }else{
-                db.update(pReader.getValue("qcu2"), cm.getMangaId(), cm.getChapterNumber(),51); //Aqui van los valores de sesion
-        }    
-    }
-    
-    private void requestCreate(HttpSession session, ChapterModel cm, DBAccess db, PropertiesReader pReader, boolean isAdmin)
-            throws IOException, ServletException{
-        if (isAdmin){
-        db.update(pReader.getValue("qcx3"), cm.getMangaId(),cm.getChapterNumber(),cm.getChapterName(),cm.getChapterLocation(),cm.getChapterPages());    
-        }else{
-        db.update(pReader.getValue("qcu3"), 51, cm.getMangaId(),cm.getChapterNumber(),cm.getChapterName(),cm.getChapterLocation(),cm.getChapterPages());    //Aqui van datos de session    
+        ResultSet rs = null;
+        try{
+            rs = db.execute(pReader.getValue("qca1"), cm.getChapterId());
+            if(rs.next()){
+                if(isAdmin){
+                        db.update(pReader.getValue("qcx2"), cm.getChapterId());
+                }else{
+                        db.update(pReader.getValue("qcu2"), cm.getChapterId(),51); //Aqui van los valores de sesion
+                } 
+                return true;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
         }
+        return false;
     }
     
-    private ChapterModel requestGet(ChapterModel cm, DBAccess db, PropertiesReader pReader) throws SQLException{
-    ResultSet rs = null;
-    rs = db.execute(pReader.getValue("qca2"), cm.getChapterNumber(),cm.getMangaId());
-            try {
+    private boolean requestCreate(HttpSession session, ChapterModel cm, DBAccess db, PropertiesReader pReader, boolean isAdmin)
+            throws IOException, ServletException{
+        ResultSet rs = null;
+        try{
+            if (isAdmin){
+            rs = db.execute(pReader.getValue("qcx3"), cm.getMangaId(),cm.getChapterNumber(),cm.getChapterName(),cm.getChapterLocation(),cm.getChapterPages());    
+            }else{
+            rs = db.execute(pReader.getValue("qcu3"), 51, cm.getMangaId(),cm.getChapterNumber(),cm.getChapterName(),cm.getChapterLocation(),cm.getChapterPages());    //Aqui van datos de session    
+            }
                 if(rs.next()){
-                    cm = new ChapterModel();
+                    cm.setChapterId(rs.getInt(1));
+                    return true;
+                }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    private boolean requestGet(ChapterModel cm, DBAccess db, PropertiesReader pReader, int num) throws SQLException{
+    ResultSet rs = null;
+            try {
+            rs = db.execute(pReader.getValue("qca3"), num);
+                if(rs.next()){
                     cm.setChapterLocation(rs.getString(1));
                     cm.setChapterPages(rs.getInt(2));
-                    return cm;   
+                    return true;   
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ChapterFacade.class.getName()).log(Level.SEVERE, null, ex);
             }
-            return null;
+            return false;
     }
     
     private String getFileName(Part part) {
@@ -191,13 +272,13 @@ public class ChapterFacade {
 		try {
 			String baseDir = request.getServletContext().getRealPath("/manga");
                         StringBuilder mangaDir = new StringBuilder();
-                        mangaDir.append(baseDir).append("/").append(cm.getMangaName().toLowerCase()).append("/").append(cm.getChapterNumber());
+                        mangaDir.append(baseDir).append("\\").append(cm.getMangaName().toLowerCase()).append("\\").append(cm.getChapterNumber());
                         System.out.println(mangaDir.toString());
                         this.createFolder(mangaDir.toString());
                         cm.setChapterLocation(mangaDir.toString());
 			for (Part file : files) {
                                 if(this.getFileName(file) != null){
-                                    String finalDir = mangaDir.toString() + "/" + String.valueOf(i+1).concat(".jpg");
+                                    String finalDir = mangaDir.toString() + "\\" + String.valueOf(i+1).concat(".jpg");
                                     filecontent = file.getInputStream();
                                     os = new FileOutputStream(finalDir);
                                     int read = 0;
@@ -226,10 +307,33 @@ public class ChapterFacade {
         new File(str).mkdirs();
     }
     
-    public void downloadFile(HttpServletRequest req, HttpServletResponse resp) throws FileNotFoundException, IOException{
-                    // Get the absolute path of the image
+    public void downloadFile(HttpServletRequest request, HttpServletResponse response, ChapterModel cm) throws FileNotFoundException, IOException{
+       
+        // You must tell the browser the file type you are going to send
+        // for example application/pdf, text/plain, text/html, image/jpg
+        response.setContentType("image/jpg");
+
+        // Make sure to show the download dialog
+        response.setHeader("Content-disposition","attachment; filename=slack.jpg");
+
+        // Assume file name is retrieved from database
+        // For example D:\\file\\test.pdf
+        String name = request.getParameter("page");
+        File my_file = new File(cm.getChapterLocation()+"\\"+name+".jpg");
+
+        // This should send the file to browser
+        OutputStream out = response.getOutputStream();
+        FileInputStream in = new FileInputStream(my_file);
+        byte[] buffer = new byte[4096];
+        int length;
+        while ((length = in.read(buffer)) > 0){
+           out.write(buffer, 0, length);
+        }
+        in.close();
+        out.flush();
+        /*            // Get the absolute path of the image
          ServletContext sc = req.getServletContext();
-         String filename = sc.getRealPath("image.gif");
+         String filename = "C:\\Users\\Usuario\\eclipse-workspace\\Manga-Reader---Mangaku\\src\\main\\webapp\\manga\\naruto\\12\\1.jpeg";//sc.getRealPath("image.gif");
 
          // Get the MIME type of the image
          String mimeType = sc.getMimeType(filename);
@@ -256,10 +360,10 @@ public class ChapterFacade {
              out.write(buf, 0, count);
          }
          in.close();
-         out.close();
+         out.close();*/
     }
     public <T> String writeJSON(T json) throws JsonProcessingException{
     jackson = new JacksonMapper();    
-    return jackson.pojoToJson(json);
+        return jackson.pojoToJson(json);
     }
 }

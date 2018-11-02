@@ -11,7 +11,15 @@ package model;
  */
 public class ChapterModel {
     private String mangaName,chapterLocation,chapterName;
-    private int  mangaId, chapterNumber, chapterPages;
+    private int  mangaId, chapterNumber, chapterPages, chapterId;
+
+    public int getChapterId() {
+        return chapterId;
+    }
+
+    public void setChapterId(int chapterId) {
+        this.chapterId = chapterId;
+    }
 
     public int getMangaId() {
         return mangaId;
