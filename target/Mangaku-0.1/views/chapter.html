@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Perfil</title>
+</head>
+<h3 id="user">Name of Manga: </h3>
+<div id="div">
+
+</div>
+<div id="handler">
+    <img id="image"></br>
+    <button id="previous">Anterior</button>
+    <button id="dashboard">Home</button>
+    <button id="next">Siguiente</button>
+</div>
+
+<body>
+    <script type="text/javascript">
+        function $(id) {
+            return document.getElementById(id);
+        }
+
+        let x = location.search.split(/\=/),
+            y = x[1].split(/\&/),
+            chapter = y[0],
+            page = x[2],
+            URL = ".././chapter?id=" + chapter + "&page=" + page;
+        if (x[2] == 1) {
+            $('handler').removeChild($('previous'));
+        }
+
+        function fill(data) {
+            if (x[2] == data.chapterPages) {
+                $('handler').removeChild($('next'));
+            }
+            $('image').src = ".././chapter?id=" + chapter + "&page=" + page;
+        }
+
+        function load() {
+            fetch(URL, {
+                    method: 'GET'
+                })
+                .then(response => response.blob())
+                .then(data => fill(data));
+        }
+
+        function previous() {
+            prepage = parseInt(page) - 1;
+            location.href = 'chapter.html?id=' + y[0] + '&page=' + prepage;
+        }
+
+        function next() {
+            nextpage = parseInt(page) + 1;
+            location.href = 'chapter.html?id=' + y[0] + '&page=' + nextpage;
+        }
+
+        function dashboard() {
+            location.href = 'dashboard.html';
+        }
+        window.addEventListener('load', load, true);
+        $('next').addEventListener('click', next);
+        $('dashboard').addEventListener('click', dashboard);
+        $('previous').addEventListener('click', previous);
+    </script>
+
+</body>
+
+</html>
