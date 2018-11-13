@@ -17,6 +17,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import model.SessionModel;
 
 /**
  *
@@ -40,7 +41,6 @@ public class MangaServlet extends HttpServlet {
             
         PrintWriter out = response.getWriter();  
         MangaFacade mangaFacade = new MangaFacade();    
-        
         try {
             out.print(mangaFacade.insertManga(request)); 
         } catch (SQLException ex) {

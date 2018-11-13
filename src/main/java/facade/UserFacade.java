@@ -23,19 +23,17 @@ public class UserFacade {
     
     public UserFacade(){
         db = null;
-        pReader = null;
-        jackson = null;
-        validator = null;
+        pReader = PropertiesReader.getInstance();
+        jackson = new JacksonMapper();
+        validator = new Validator();
     }
 
     public String insertUser(HttpServletRequest request) throws SQLException, JsonProcessingException{
-        
-        pReader = PropertiesReader.getInstance();
-        db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
-        jackson = new JacksonMapper();
+        db = this.getConnection();
         ResultSet rs = null;
         ResponseModel<SessionModel> res = new ResponseModel();
         String salt = Encrypter.getSalt(10);
+        
         try{
             UserModel user = jackson.jsonToPojo(request,UserModel.class);
             if (isValidated(user.getUsername(),user.getPassword(),user.getEmail())){
@@ -59,11 +57,9 @@ public class UserFacade {
         }    
     
     private SessionModel getUserData(HttpServletRequest request) throws SQLException{
-        pReader = PropertiesReader.getInstance();
-        db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
-        jackson = new JacksonMapper();
+        db = this.getConnection();
         ResultSet rs = null;
-        SessionModel dataUser = null; //new HashMap<>();
+        SessionModel dataUser = null; 
         
         try{
             dataUser = new SessionModel();
@@ -74,8 +70,8 @@ public class UserFacade {
 
                 if(rs.next()){
                     //Orden: id, type, password, username, name, creationtime, email
-                    dataUser.setId(String.valueOf(rs.getInt(1)));
-                    dataUser.setTypeuser(String.valueOf(rs.getInt(2)));
+                    dataUser.setId(rs.getInt(1));
+                    dataUser.setTypeuser(rs.getInt(2));
                     dataUser.setUsername(rs.getString(4));
                     dataUser.setName(rs.getString(5));
                     dataUser.setEmail(rs.getString(7));
@@ -108,11 +104,11 @@ public HttpSession checkUser(HttpServletRequest request) throws JsonProcessingEx
 }
 
 public String sessionCreate(HttpServletRequest request) throws JsonProcessingException{
-    pReader = PropertiesReader.getInstance();
-    jackson = new JacksonMapper();
     ResponseModel<SessionModel> data = new ResponseModel<>();
     HttpSession session = checkUser(request);
-        if(session.getAttribute("id") != null){
+    SessionModel sm = (SessionModel) session.getAttribute("session");
+    System.out.println(sm.getUsername());
+        if(sm.getId() != 0){
             if(session.isNew()){
                     data.setStatus("200");
                     data.setMessage(pReader.getValue("ru1"));
@@ -129,9 +125,7 @@ public String sessionCreate(HttpServletRequest request) throws JsonProcessingExc
         return jackson.pojoToJson(data);
 }
 
-public String sessionDestroy(HttpServletRequest request) throws JsonProcessingException{
-        pReader = PropertiesReader.getInstance();
-        jackson = new JacksonMapper();       
+public String sessionDestroy(HttpServletRequest request) throws JsonProcessingException{       
         HttpSession session = request.getSession();
         ResponseModel<String> data = new ResponseModel<>();
         
@@ -181,8 +175,6 @@ public <T> String writeJSON(T json) throws JsonProcessingException{
 private String getUserSalt(ResultSet rs) throws IOException{
     ResultSet rs1 = rs;
     String salt = null;
-    pReader = PropertiesReader.getInstance();
-    db = new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
         try {
             if(rs1.next()){
                 salt = rs1.getString(8);
@@ -193,11 +185,14 @@ private String getUserSalt(ResultSet rs) throws IOException{
     return salt;
 }
     public void setSessionValues(HttpSession session, SessionModel in){
-        session.setAttribute("typeuser", in.getTypeuser());
+        /*session.setAttribute("typeuser", in.getTypeuser());
         session.setAttribute("id", in.getId());
         session.setAttribute("name", in.getName());
         session.setAttribute("username", in.getUsername());
-        session.setAttribute("email", in.getEmail());
+        session.setAttribute("email", in.getEmail());*/
+        session.setAttribute("session", in);
     }
-
+ public DBAccess getConnection(){
+        return new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
+    }
 }

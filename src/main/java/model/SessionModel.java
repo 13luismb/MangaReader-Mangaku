@@ -10,21 +10,22 @@ package model;
  * @author Usuario
  */
 public class SessionModel {
-    private String id, typeuser, username, name, email;
+    private String username, name, email;
+    private int id, typeuser;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getTypeuser() {
+    public int getTypeuser() {
         return typeuser;
     }
 
-    public void setTypeuser(String typeuser) {
+    public void setTypeuser(int typeuser) {
         this.typeuser = typeuser;
     }
 
