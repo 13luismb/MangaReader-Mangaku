@@ -24,7 +24,7 @@ import model.SessionModel;
  *
  * @author Usuario
  */
-@WebFilter(filterName = "ChapterFilter", urlPatterns = {"/chapter"})
+@WebFilter(filterName = "ChapterFilter", urlPatterns = {""}) //insertar el urlpatterns a /chapter cuando haya front
 public class ChapterFilter implements Filter {
   
     /**
@@ -48,7 +48,6 @@ public class ChapterFilter implements Filter {
 		// TODO Auto-generated method stub'
 		HttpServletResponse response = (HttpServletResponse) res;
 		HttpServletRequest request = (HttpServletRequest) req;
-		
 		response.setHeader("Access-Control-Allow-Origin", "*");
 	    response.setHeader("Access-Control-Allow-Methods", "GET,DELETE,POST,PUT");
 	    //response.setHeader("Access-Control-Allow-Headers", "Content-Type,Origin,Accept");
@@ -78,15 +77,16 @@ public class ChapterFilter implements Filter {
 
         public boolean typeUserSet(HttpServletRequest request){
             SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
-            if (sm.getTypeuser() == 1){
+        switch (sm.getTypeuser()) {
+            case 1:
                 request.setAttribute("isAdmin", true);
                 return true;
-            }else if (sm.getTypeuser() == 2){
+            case 2:
                 request.setAttribute("isAdmin", false);
                 return true;
-            }else{
+            default:
                 return false;
-            }
+        }
         }
 	/**
 	 * @see Filter#init(FilterConfig)
