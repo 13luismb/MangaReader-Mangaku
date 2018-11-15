@@ -8,9 +8,11 @@ package model;
 /**
  *
  * @author Usuario
+ * @param <T>
  */
 public class ResponseModel<T> {
-    private String status, message;
+    private String message;
+    private int status;
     private T data;
 
     public T getData() {
@@ -30,11 +32,11 @@ public class ResponseModel<T> {
         this.message = message;
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 }

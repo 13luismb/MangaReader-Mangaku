@@ -53,10 +53,10 @@ public class MangaFacade {
                 db.multiUpdate(pReader.getValue("qma2"),getListGenresId(manga.getGenres()),rs.getInt(1));
                 manga.setId(rs.getInt(1));
                 res.setData(manga);
-                res.setStatus("200");
+                res.setStatus(200);
                 res.setMessage(pReader.getValue("rm1"));
             }else{
-                res.setStatus("500");
+                res.setStatus(500);
                 res.setMessage(pReader.getValue("rm2"));
             }
             rs.close();
@@ -88,20 +88,20 @@ public class MangaFacade {
                 res.setData(dataManga);
                 if(!session.isNew()){
                     if(sm.getId() == rs.getInt(2)){
-                        res.setStatus("201");
+                        res.setStatus(201);
                         res.setMessage(pReader.getValue("rm5"));
                     }else{
-                        res.setStatus("200");
+                        res.setStatus(200);
                         res.setMessage(pReader.getValue("rm4"));
                     }
                 }else{
                     session.invalidate();
-                    res.setStatus("200");
+                    res.setStatus(200);
                     res.setMessage(pReader.getValue("rm6"));
                 }
             }else{
                 res.setMessage(pReader.getValue("rm3"));
-                res.setStatus("404");
+                res.setStatus(404);
             }
             rs.close();
             db.close();
@@ -125,10 +125,10 @@ public class MangaFacade {
             if(rs.next()){
                 db.update(pReader.getValue("qmu1"),manga.getName(),manga.getSynopsis(),manga.getStatus(),manga.getId());
                 res.setData(manga);
-                res.setStatus("200");
+                res.setStatus(200);
                 res.setMessage(pReader.getValue("rm6"));
             }else{
-                res.setStatus("500");
+                res.setStatus(500);
                 res.setMessage(pReader.getValue("rm4"));
             }
             rs.close();
@@ -151,12 +151,11 @@ public class MangaFacade {
         try{
             rs = db.execute(pReader.getValue("qmu3"),id_manga,sm.getId());
             if(rs.next()){
-                db.update(pReader.getValue("qma6"),id_manga);
                 db.update(pReader.getValue("qmu2"),id_manga);
-                res.setStatus("200");
+                res.setStatus(200);
                 res.setMessage(pReader.getValue("rm7"));
             }else{
-                res.setStatus("500");
+                res.setStatus(500);
                 res.setMessage(pReader.getValue("rm4"));
             }
             rs.close();
@@ -255,15 +254,14 @@ public class MangaFacade {
         ArrayList<MangaModel> groupSMangas = new ArrayList<>();
         ResultSet rs = null;
         int i = 0;
-        String sQuery = getSearchValue(request.getParameter("s"));
         try{
-            rs = db.execute(pReader.getValue("qs1"), sQuery);
+            rs = doSearch(request, db);
             while(rs.next()){
                  groupSMangas.add(new MangaModel());
                  groupSMangas.get(i).setId(rs.getInt(1));
-                 groupSMangas.get(i).setName(rs.getString(3));
-                 groupSMangas.get(i).setSynopsis(rs.getString(4));
-                 groupSMangas.get(i).setStatus(rs.getBoolean(5));
+                 groupSMangas.get(i).setName(rs.getString(2));
+                 groupSMangas.get(i).setSynopsis(rs.getString(3));
+                 groupSMangas.get(i).setStatus(rs.getBoolean(4));
                  i++;
             }
         }catch(Exception e){
@@ -277,6 +275,24 @@ public class MangaFacade {
         StringBuilder pSearch = new StringBuilder();
         pSearch.append("%").append(value).append("%");
             return pSearch.toString();
+        }
+        
+        private ResultSet doSearch(HttpServletRequest request, DBAccess db){
+            String query, value = null;
+            ResultSet rs = null;
+            if (request.getParameter("genre") == null){
+                query = "qs1";
+                value = getSearchValue(request.getParameter("s"));
+            }else{
+                query = "qs2";
+                value = request.getParameter("genre");
+            }
+                try{
+                   rs = db.execute(pReader.getValue(query), value);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            return rs;
         }
         
          public DBAccess getConnection(){

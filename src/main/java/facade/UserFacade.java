@@ -40,14 +40,14 @@ public class UserFacade {
                     rs = db.execute(pReader.getValue("qu1"), user.getUsername(), user.getEmail());
                 if(!rs.next()){
                     db.update(pReader.getValue("qu2"),user.getUsername().toLowerCase(),Encrypter.getSecurePassword(user.getPassword() + salt),user.getName(),user.getEmail(),db.currentTimestamp(),2, salt);
-                    res.setStatus("200");//Mensage
+                    res.setStatus(200);//Mensage
                 }else{
-                    res.setStatus("500");//Mensage
+                    res.setStatus(500);//Mensage
                 }
                 rs.close();
                 db.close();
             }else{
-               res.setStatus("403");
+               res.setStatus(403);
             }
         }catch(Exception e){
             e.printStackTrace();
@@ -110,16 +110,16 @@ public String sessionCreate(HttpServletRequest request) throws JsonProcessingExc
     System.out.println(sm.getUsername());
         if(sm.getId() != 0){
             if(session.isNew()){
-                    data.setStatus("200");
+                    data.setStatus(200);
                     data.setMessage(pReader.getValue("ru1"));
                     data.setData(getSessionData());
             }else{
-                data.setStatus("200");
+                data.setStatus(200);
                 data.setMessage(pReader.getValue("ru2"));
                 session.invalidate();
             }
         }else{
-            data.setStatus("500");
+            data.setStatus(500);
             data.setMessage(pReader.getValue("ru3"));
         }
         return jackson.pojoToJson(data);
@@ -130,11 +130,11 @@ public String sessionDestroy(HttpServletRequest request) throws JsonProcessingEx
         ResponseModel<String> data = new ResponseModel<>();
         
 	if (session.isNew()) {
-            data.setStatus("200");
+            data.setStatus(200);
             data.setMessage(pReader.getValue("ru4"));
             session.invalidate();
 	} else {
-            data.setStatus("200");
+            data.setStatus(200);
             data.setMessage(pReader.getValue("ru5"));
             session.invalidate();
 	}

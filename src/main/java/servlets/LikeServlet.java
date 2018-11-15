@@ -27,7 +27,11 @@ public class LikeServlet extends HttpServlet {
         LikeFacade likes = new LikeFacade();
         
         try{
-
+            if (request.getParameter("mid") == null){
+                out.print(likes.getChapterLike(request));
+            }else{
+                out.print(likes.getMangaLike(request));
+            }
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -56,7 +60,11 @@ public class LikeServlet extends HttpServlet {
         LikeFacade likes = new LikeFacade();
         
         try{
-            
+            if (request.getParameter("mid") == null){
+                out.print(likes.deleteChapterLike(request));
+            }else{
+                out.print(likes.deleteMangaLike(request));
+            }
         }catch(Exception e){
             e.printStackTrace();
         }

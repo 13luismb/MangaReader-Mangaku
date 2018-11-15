@@ -38,20 +38,23 @@ public class LikeFacade {
     public String doMangaLike(HttpServletRequest request) throws SQLException, JsonProcessingException{
         db = this.getConnection();
         ResponseModel<LikeModel> resp = new ResponseModel<>();
-        ResultSet rs = null;
+        ResultSet rs, rs1;
         HttpSession session = request.getSession();
         SessionModel sm = (SessionModel) session.getAttribute("session");
         LikeModel lm = new LikeModel();
         int id = Integer.valueOf(request.getParameter("mid"));
-        int user = 51;
-        System.out.println(id); 
+        
         try{
-            rs = db.execute("ql1",user, id); //has to be fixed
+            rs = db.execute(pReader.getValue("ql1"), 51, id);
                 if(!rs.next()){
-                    db.update("ql2", user, id);
+                    rs1 = db.execute(pReader.getValue("ql2"), 51, id);
+                    if (rs1.next()){
                     lm.setIsLiked(true);
-                    resp.setStatus("200");
+                    resp.setStatus(200);
                     resp.setData(lm);
+                    rs1.close();
+                    rs.close();
+                    }
                }
         }catch (Exception e){
             e.printStackTrace();
@@ -60,49 +63,139 @@ public class LikeFacade {
         return jackson.pojoToJson(resp);
     }
     
-  /*  public String getMangaLike(HttpServletRequest request){
+    public String getMangaLike(HttpServletRequest request) throws JsonProcessingException{
         db = this.getConnection();
         ResponseModel<LikeModel> resp = new ResponseModel<>();
-        ResultSet rs = null;
+        ResultSet rs;
         HttpSession session = request.getSession();
+        SessionModel sm = (SessionModel) session.getAttribute("session");
+        LikeModel lm = new LikeModel();
+        int id = Integer.valueOf(request.getParameter("mid"));
+        
+        try{
+            rs = db.execute(pReader.getValue("ql1"), 51, id);
+                if(rs.next()){
+                    lm.setIsLiked(true);
+                    resp.setStatus(200);
+                    resp.setData(lm);
+                }else{
+                    lm.setIsLiked(false);
+                    resp.setStatus(200);
+                    resp.setData(lm);
+                }
+                rs.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        db.close();
+        return jackson.pojoToJson(resp);
     }
     
-    public String deleteMangaLike(HttpServletRequest request){
+    public String deleteMangaLike(HttpServletRequest request) throws JsonProcessingException{
+        db = this.getConnection();
+        ResponseModel<LikeModel> resp = new ResponseModel<>();
+        ResultSet rs;
+        HttpSession session = request.getSession();
+        SessionModel sm = (SessionModel) session.getAttribute("session");
+        LikeModel lm = new LikeModel();
+        int id = Integer.valueOf(request.getParameter("mid"));
         
-    }*/
+        try{
+            rs = db.execute(pReader.getValue("ql1"), 51, id);
+                if(rs.next()){
+                    db.update(pReader.getValue("ql3"), 51, id);
+                    lm.setIsLiked(false);
+                    resp.setStatus(200);
+                    resp.setData(lm);
+                    rs.close();
+               }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        db.close();
+        return jackson.pojoToJson(resp);
+    }
     
     public String doChapterLike(HttpServletRequest request) throws JsonProcessingException{
         db = this.getConnection();
         ResponseModel<LikeModel> resp = new ResponseModel<>();
-        ResultSet rs = null;
+        ResultSet rs, rs1;
         HttpSession session = request.getSession();
         SessionModel sm = (SessionModel) session.getAttribute("session");
         LikeModel lm = new LikeModel();
-        int value = Integer.valueOf(request.getParameter("cid"));
+        int id = Integer.valueOf(request.getParameter("cid"));
+        
         try{
-            rs = db.execute("ql4",51,value);
+            rs = db.execute(pReader.getValue("ql4"), 51, id);
                 if(!rs.next()){
-                    db.update("ql5", 51,value);
+                    rs1 = db.execute(pReader.getValue("ql5"), 51, id);
+                    if (rs1.next()){
                     lm.setIsLiked(true);
-                    resp.setStatus("200");
+                    resp.setStatus(200);
                     resp.setData(lm);
-                }
+                    rs1.close();
+                    rs.close();
+                    }
+               }
         }catch (Exception e){
             e.printStackTrace();
-        }  
+        }
+        db.close();
         return jackson.pojoToJson(resp);
     }
     
-    /*public String getChapterLike(HttpServletRequest request){
+    public String getChapterLike(HttpServletRequest request) throws JsonProcessingException{
         db = this.getConnection();
         ResponseModel<LikeModel> resp = new ResponseModel<>();
-        ResultSet rs = null;
+        ResultSet rs;
         HttpSession session = request.getSession();
+        SessionModel sm = (SessionModel) session.getAttribute("session");
+        LikeModel lm = new LikeModel();
+        int id = Integer.valueOf(request.getParameter("cid"));
+        
+        try{
+            rs = db.execute(pReader.getValue("ql4"), 51, id);
+                if(rs.next()){
+                    lm.setIsLiked(true);
+                    resp.setStatus(200);
+                    resp.setData(lm);
+                }else{
+                    lm.setIsLiked(false);
+                    resp.setStatus(200);
+                    resp.setData(lm);
+                }
+                rs.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        db.close();
+        return jackson.pojoToJson(resp);
     }    
     
-    public String deleteChapterLike(HttpServletRequest request){
+    public String deleteChapterLike(HttpServletRequest request) throws JsonProcessingException{
+                db = this.getConnection();
+        ResponseModel<LikeModel> resp = new ResponseModel<>();
+        ResultSet rs;
+        HttpSession session = request.getSession();
+        SessionModel sm = (SessionModel) session.getAttribute("session");
+        LikeModel lm = new LikeModel();
+        int id = Integer.valueOf(request.getParameter("cid"));
         
-    }*/
+        try{
+            rs = db.execute(pReader.getValue("ql4"), 51, id);
+                if(rs.next()){
+                    db.update(pReader.getValue("ql6"), 51, id);
+                    lm.setIsLiked(false);
+                    resp.setStatus(200);
+                    resp.setData(lm);
+                    rs.close();
+               }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        db.close();
+        return jackson.pojoToJson(resp);
+    }
     
         
     public DBAccess getConnection(){

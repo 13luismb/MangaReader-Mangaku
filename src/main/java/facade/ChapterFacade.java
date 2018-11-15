@@ -84,18 +84,18 @@ public class ChapterFacade {
                 if(requestCreate(request.getSession(), cm, db, pReader, true)){ //Aqui van datos de session
                     db.close();
                     res.setData(cm);
-                    res.setStatus("201");
+                    res.setStatus(201);
                     res.setMessage(pReader.getValue("rc1")); //
                 }else{
-                    res.setStatus("403");
+                    res.setStatus(403);
                     res.setMessage(pReader.getValue("rc2")); //
                 }
             }else{
-                    res.setStatus("400");
+                    res.setStatus(400);
                     res.setMessage(pReader.getValue("rc3")); //
                 }
         }else{
-                    res.setStatus("500");
+                    res.setStatus(500);
                     res.setMessage(pReader.getValue("rc4")); //
                 }
     db.close();
@@ -114,7 +114,7 @@ public class ChapterFacade {
                 res.setMessage(pReader.getValue("rc5"));*/
                 this.downloadFile(request, response, cm);
             }else{
-                res.setStatus("403");
+                res.setStatus(403);
                 res.setMessage(pReader.getValue("rc6")); //
             }
             db.close();
@@ -132,10 +132,10 @@ public class ChapterFacade {
                 if(requestUpdate(request.getSession(), cm, db, pReader, true)){ //Aqui van datos de session
                     db.close();
                     res.setData(cm);
-                    res.setStatus("200");
+                    res.setStatus(200);
                     res.setMessage(pReader.getValue("rc7")); //
                 }else{
-                    res.setStatus("403");
+                    res.setStatus(403);
                     res.setMessage(pReader.getValue("rc8")); //
                 } 
            /* }else{
@@ -143,7 +143,7 @@ public class ChapterFacade {
                 res.setMessage(pReader.getValue("rc3")); //
             }*/
         }else{
-                    res.setStatus("500");
+                    res.setStatus(500);
                     res.setMessage(pReader.getValue("rc4")); //
                 }
         db.close();
@@ -157,14 +157,14 @@ public class ChapterFacade {
             if(cm != null){
                 if(requestDelete(request.getSession(), cm, db, pReader, true)){ //Aqui van datos de la session
                     db.close();
-                    res.setStatus("200");
+                    res.setStatus(200);
                     res.setMessage(pReader.getValue("rc9")); //
                 }else{
-                    res.setStatus("403");
+                    res.setStatus(403);
                     res.setMessage(pReader.getValue("rc10")); //
                 }
             }else{
-                    res.setStatus("500");
+                    res.setStatus(500);
                     res.setMessage(pReader.getValue("rc4")); //
                 }
             db.close();
