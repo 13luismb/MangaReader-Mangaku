@@ -80,6 +80,7 @@ public class ChapterFacade {
         ChapterModel cm = chapterRequestValid(request, m);
         
         if (cm != null){
+            this.getMangaName(cm, db);
             if(fileUpload(request,cm)){
                 if(requestCreate(request.getSession(), cm, db, pReader, true)){ //Aqui van datos de session
                     db.close();
@@ -300,13 +301,12 @@ public class ChapterFacade {
         // for example application/pdf, text/plain, text/html, image/jpg
         response.setContentType("image/jpg");
 
-        // Make sure to show the download dialog
-        response.setHeader("Content-disposition","attachment; filename=slack.jpg");
-
         // Assume file name is retrieved from database
         // For example D:\\file\\test.pdf
         String name = request.getParameter("page");
         File my_file = new File(cm.getChapterLocation()+"\\"+name+".jpg");
+                // Make sure to show the download dialog
+        response.setHeader("Content-disposition","attachment; filename="+name+".jpg");
 
         // This should send the file to browser
         OutputStream out = response.getOutputStream();
@@ -352,6 +352,19 @@ public class ChapterFacade {
     public <T> String writeJSON(T json) throws JsonProcessingException{
     jackson = new JacksonMapper();    
         return jackson.pojoToJson(json);
+    }
+    
+    private void getMangaName(ChapterModel cm, DBAccess db){
+        ResultSet rs = null;
+        
+        try{
+            rs = db.execute(pReader.getValue("qca5"), cm.getMangaId());
+            if (rs.next()){
+                cm.setMangaName(rs.getString(1));
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
     
     public DBAccess getConnection(){
