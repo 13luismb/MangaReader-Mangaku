@@ -156,7 +156,9 @@ public class ChapterFacade {
         ResponseModel<ChapterModel> res = new ResponseModel();
         ChapterModel cm = jackson.jsonToPojo(request, ChapterModel.class);
             if(cm != null){
+                this.getChapterPath(cm, db);
                 if(requestDelete(request.getSession(), cm, db, pReader, true)){ //Aqui van datos de la session
+                    this.deleteAllFiles(cm);
                     db.close();
                     res.setStatus(200);
                     res.setMessage(pReader.getValue("rc9")); //
@@ -362,6 +364,38 @@ public class ChapterFacade {
             if (rs.next()){
                 cm.setMangaName(rs.getString(1));
             }
+            rs.close();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    
+    private void deleteAllFiles(ChapterModel cm){
+        File dir = new File(cm.getChapterLocation());
+		
+		if(dir.isDirectory() == false) {
+			System.out.println("Not a directory. Do nothing");
+			return;
+		}
+		File[] listFiles = dir.listFiles();
+		for(File file : listFiles){
+			System.out.println("Deleting "+file.getName());
+			file.delete();
+		}
+		//now directory is empty, so we can delete it
+		System.out.println("Deleting Directory. Success = "+dir.delete());
+    }
+    
+    private void getChapterPath(ChapterModel cm, DBAccess db){
+        ResultSet rs = null;
+        
+        try{
+            rs = db.execute(pReader.getValue("qca6"), cm.getChapterId());
+                    if(rs.next()){
+                    cm.setChapterLocation(rs.getString(1));
+                    cm.getChapterLocation();
+                    }
+            rs.close();
         }catch(Exception e){
             e.printStackTrace();
         }

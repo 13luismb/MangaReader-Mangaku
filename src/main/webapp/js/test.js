@@ -98,13 +98,13 @@ function doDislike(data) {
         .then(data => {
             console.log(data.data);
             if (!data.data.isLiked) {
-                let v = $('likeBtn').className.replace("liked","").trim();
+                let v = $('likeBtn').className.replace("liked", "").trim();
                 $('likeBtn').className = v;
             }
         })
 }
 
-$('likeBtn').addEventListener('click', function() {like();});
+$('likeBtn').addEventListener('click', function() { like(); });
 
 //----------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------
@@ -158,13 +158,13 @@ function doDislike(data) {
         .then(data => {
             console.log(data.data);
             if (!data.data.isLiked) {
-                let v = $('likeBtn').className.replace("liked","").trim();
+                let v = $('likeBtn').className.replace("liked", "").trim();
                 $('likeBtn').className = v;
             }
         })
 }
 
-$('likeBtn').addEventListener('click', function() {like();});
+$('likeBtn').addEventListener('click', function() { like(); });
 
 //----------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------
@@ -175,5 +175,43 @@ $('likeBtn').addEventListener('click', function() {like();});
 //----------------------------------------------------------------------------------------------------------------
 
 
+function upload() {
+    var url = ".././chapter";
+    let body = {
+        chapterName: $('chname').value,
+        chapterNumber: $('chnumb').value,
+        mangaId: location.search.split(/\=/)[1]
+    }
+    var formData = new FormData();
+    var files = $("files").files;
+    for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        formData.append('photos[]', file, i + 1);
+    }
+    let json = JSON.stringify(body);
+    formData.append('json', json);
+    fetch(url, {
+            body: formData,
+            method: 'POST'
+        })
+        .then(resp => resp.json())
+        .then(data => {
+            console.log(data);
+        });
+}
 
-
+function deleteF() {
+    var url = ".././chapter";
+    var body = {
+        chapterId: location.search.split(/\=/)[1]
+    }
+    let json = JSON.stringify(body);
+    fetch(url, {
+            method: 'DELETE',
+            body: json
+        })
+        .then(resp => resp.json())
+        .then(data => {
+            console.log(data);
+        });
+}
