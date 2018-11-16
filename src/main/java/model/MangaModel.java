@@ -15,6 +15,15 @@ public class MangaModel {
     private Boolean status;
     private int id;
     private List<ChapterModel> chapters;
+    private List<CommentModel> comment;
+
+    public List<CommentModel> getComment() {
+        return comment;
+    }
+
+    public void setComment(List<CommentModel> comment) {
+        this.comment = comment;
+    }
 
     public List<String> getGenres() {
         return genres;

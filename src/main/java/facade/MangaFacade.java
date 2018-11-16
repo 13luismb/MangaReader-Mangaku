@@ -17,7 +17,7 @@ import util.DBAccess;
 import util.JacksonMapper;
 import util.PropertiesReader;
 import util.Validator;
-
+import facade.CommentFacade;
 /**
  *
  * @author Usuario
@@ -71,6 +71,7 @@ public class MangaFacade {
     public String getManga(HttpServletRequest request) throws JsonProcessingException{
         db = this.getConnection();
         ResultSet rs = null;
+        CommentFacade cFacade = new CommentFacade();
         ResponseModel<MangaModel> res = new ResponseModel<>();
         MangaModel dataManga = new MangaModel();
         HttpSession session = request.getSession();
@@ -85,6 +86,7 @@ public class MangaFacade {
                 dataManga.setStatus(rs.getBoolean(5));
                 dataManga.setGenres(getGenresDes(id_manga));
                 dataManga.setChapters(getChaptersManga(id_manga));
+                dataManga.setComment(cFacade.getListComment(id_manga,sm.getId()));
                 res.setData(dataManga);
                 if(!session.isNew()){
                     if(sm.getId() == rs.getInt(2)){
@@ -206,7 +208,7 @@ public class MangaFacade {
     }
 
     private List<ChapterModel> getChaptersManga(int id_manga) throws SQLException {
-       db = this.getConnection();
+        db = this.getConnection();
         ArrayList<ChapterModel> chapters = new ArrayList();
         ChapterModel chapter = null;
         ResultSet rs = db.execute(pReader.getValue("qca4"), id_manga);
