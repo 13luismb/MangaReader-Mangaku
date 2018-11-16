@@ -80,6 +80,7 @@ public class ChapterFacade {
         ChapterModel cm = chapterRequestValid(request, m);
         
         if (cm != null){
+            this.getMangaName(cm, db);
             if(fileUpload(request,cm)){
                 if(requestCreate(request.getSession(), cm, db, pReader, true)){ //Aqui van datos de session
                     db.close();
@@ -155,7 +156,9 @@ public class ChapterFacade {
         ResponseModel<ChapterModel> res = new ResponseModel();
         ChapterModel cm = jackson.jsonToPojo(request, ChapterModel.class);
             if(cm != null){
+                this.getChapterPath(cm, db);
                 if(requestDelete(request.getSession(), cm, db, pReader, true)){ //Aqui van datos de la session
+                    this.deleteAllFiles(cm);
                     db.close();
                     res.setStatus(200);
                     res.setMessage(pReader.getValue("rc9")); //
@@ -300,13 +303,12 @@ public class ChapterFacade {
         // for example application/pdf, text/plain, text/html, image/jpg
         response.setContentType("image/jpg");
 
-        // Make sure to show the download dialog
-        response.setHeader("Content-disposition","attachment; filename=slack.jpg");
-
         // Assume file name is retrieved from database
         // For example D:\\file\\test.pdf
         String name = request.getParameter("page");
         File my_file = new File(cm.getChapterLocation()+"\\"+name+".jpg");
+                // Make sure to show the download dialog
+        response.setHeader("Content-disposition","attachment; filename="+name+".jpg");
 
         // This should send the file to browser
         OutputStream out = response.getOutputStream();
@@ -352,6 +354,51 @@ public class ChapterFacade {
     public <T> String writeJSON(T json) throws JsonProcessingException{
     jackson = new JacksonMapper();    
         return jackson.pojoToJson(json);
+    }
+    
+    private void getMangaName(ChapterModel cm, DBAccess db){
+        ResultSet rs = null;
+        
+        try{
+            rs = db.execute(pReader.getValue("qca5"), cm.getMangaId());
+            if (rs.next()){
+                cm.setMangaName(rs.getString(1));
+            }
+            rs.close();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    
+    private void deleteAllFiles(ChapterModel cm){
+        File dir = new File(cm.getChapterLocation());
+		
+		if(dir.isDirectory() == false) {
+			System.out.println("Not a directory. Do nothing");
+			return;
+		}
+		File[] listFiles = dir.listFiles();
+		for(File file : listFiles){
+			System.out.println("Deleting "+file.getName());
+			file.delete();
+		}
+		//now directory is empty, so we can delete it
+		System.out.println("Deleting Directory. Success = "+dir.delete());
+    }
+    
+    private void getChapterPath(ChapterModel cm, DBAccess db){
+        ResultSet rs = null;
+        
+        try{
+            rs = db.execute(pReader.getValue("qca6"), cm.getChapterId());
+                    if(rs.next()){
+                    cm.setChapterLocation(rs.getString(1));
+                    cm.getChapterLocation();
+                    }
+            rs.close();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
     
     public DBAccess getConnection(){

@@ -42,7 +42,6 @@ public class LikeServlet extends HttpServlet {
             throws ServletException, IOException {
         PrintWriter out = response.getWriter();
         LikeFacade likes = new LikeFacade();
-        
         try{
             if (request.getParameter("mid") == null){
                 out.print(likes.doChapterLike(request));

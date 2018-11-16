@@ -43,7 +43,6 @@ public class LikeFacade {
         SessionModel sm = (SessionModel) session.getAttribute("session");
         LikeModel lm = new LikeModel();
         int id = Integer.valueOf(request.getParameter("mid"));
-        
         try{
             rs = db.execute(pReader.getValue("ql1"), 51, id);
                 if(!rs.next()){

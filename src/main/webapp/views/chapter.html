@@ -16,53 +16,7 @@
 </div>
 
 <body>
-    <script type="text/javascript">
-        function $(id) {
-            return document.getElementById(id);
-        }
-
-        let x = location.search.split(/\=/),
-            y = x[1].split(/\&/),
-            chapter = y[0],
-            page = x[2],
-            URL = ".././chapter?id=" + chapter + "&page=" + page;
-        if (x[2] == 1) {
-            $('handler').removeChild($('previous'));
-        }
-
-        function fill(data) {
-            if (x[2] == data.chapterPages) {
-                $('handler').removeChild($('next'));
-            }
-            $('image').src = ".././chapter?id=" + chapter + "&page=" + page;
-        }
-
-        function load() {
-            fetch(URL, {
-                    method: 'GET'
-                })
-                .then(response => response.blob())
-                .then(data => fill(data));
-        }
-
-        function previous() {
-            prepage = parseInt(page) - 1;
-            location.href = 'chapter.html?id=' + y[0] + '&page=' + prepage;
-        }
-
-        function next() {
-            nextpage = parseInt(page) + 1;
-            location.href = 'chapter.html?id=' + y[0] + '&page=' + nextpage;
-        }
-
-        function dashboard() {
-            location.href = 'dashboard.html';
-        }
-        window.addEventListener('load', load, true);
-        $('next').addEventListener('click', next);
-        $('dashboard').addEventListener('click', dashboard);
-        $('previous').addEventListener('click', previous);
-    </script>
+    <script type="text/javascript" src="../js/chapter.js"></script>
 
 </body>
 

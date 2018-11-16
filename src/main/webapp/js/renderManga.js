@@ -1,3 +1,16 @@
+window.onload = function() {
+    let x = location.search.split(/\=/)[1];
+    let url = ".././likes?mid=" + x;
+    fetch(url, { method: 'GET' })
+        .then(resp => resp.json())
+        .then(data => {
+            console.log("hola");
+            if (data.data.isLiked) {
+                $('likeBtn').className += " liked";
+            }
+        })
+    }
+
 let params = location.href.split('?')[1];
 getIdManga();
 
@@ -86,6 +99,46 @@ function getIdManga(){
     }
 }
 
+function like() {
+    if ($('likeBtn').className.includes("liked")) {
+        doDislike();
+    } else {
+        doLike();
+    }
+}
+
+
+function doLike(data) {
+    let x = location.search.split(/\=/)[1];
+    let url = ".././likes?mid=" + x;
+    console.log(url);
+    fetch(url, { method: 'POST' })
+        .then(resp => resp.json())
+        .then(data => {
+            console.log(data.data.isLiked);
+            if (data.data.isLiked) {
+                $('likeBtn').className += " liked";
+            }
+        })
+}
+
+function doDislike(data) {
+    let x = location.search.split(/\=/)[1];
+    let url = ".././likes?mid=" + x;
+    fetch(url, { method: 'DELETE' })
+        .then(resp => resp.json())
+        .then(data => {
+            console.log(data.data);
+            if (!data.data.isLiked) {
+                let v = $('likeBtn').className.replace("liked","").trim(); //esto hay que cambiarlo, no se como hacer que se mantenga la clase sin el "liked"
+                $('likeBtn').className = v;
+            }
+        })
+}
+
+$('likeBtn').addEventListener('click', function() {like();});
+
 function $(id){
     return document.getElementById(id);
 }
+
