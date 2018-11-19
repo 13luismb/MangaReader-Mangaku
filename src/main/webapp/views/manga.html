@@ -19,7 +19,7 @@
                 })
                 .then(resp => resp.json())
                 .then(data => {
-                    console.log("hola");
+                    //console.log("hola");
                     if (data.isLiked) {
                         $('likeBtn').className += " liked";
                     }
@@ -177,12 +177,13 @@
     </div>
     <div class="row">
         <div class="container">
+            <p id="likeBtn" class="left-bottom">&hearts;</p>
             <br>
             <div class="col s8">
 
                 <div class="row">
                     <div class="col s4">
-                        <h6>Lista de capitulos:</h3>
+                        <h6>Lista de capitulos:</h6>
                     </div>
                 </div>
 
@@ -198,6 +199,14 @@
                 <h6>
                     Comentarios:
                 </h6>
+                <br>
+
+                <ul id="list_comment" class="collection with-header">
+                    <!--Molde:
+                            <li class="collection-item"><div>Lorem<a href="#!" class="secondary-content"><i class="material-icons black-text">play_arrow</i></a></div></li>                            
+                        -->
+                </ul>
+
             </div>
         </div>
     </div>

@@ -28,6 +28,9 @@ public class CommentServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+            PrintWriter out = response.getWriter();
+            CommentFacade commentFacade = new CommentFacade();
+            out.print(commentFacade.getComments(request));
     }
 
     @Override
@@ -58,7 +61,11 @@ public class CommentServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
             PrintWriter out = response.getWriter();
             CommentFacade commentFacade = new CommentFacade();
-            out.print(commentFacade.deleteComment(request));
+            if(request.getAttribute("isChapter")!=null){
+                out.print(commentFacade.deleteComment(request));
+            }else{
+                out.print(commentFacade.deleteCommentChapter(request));
+            }
     }
 
 }

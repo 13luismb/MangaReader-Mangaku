@@ -78,6 +78,8 @@ public class MangaFacade {
         SessionModel sm = (SessionModel) session.getAttribute("session");
         int id_manga = Integer.parseInt(request.getParameter("id"));
         
+        
+        
         try{
             rs = db.execute(pReader.getValue("qma4"), id_manga);
             if(rs.next()){
@@ -86,9 +88,10 @@ public class MangaFacade {
                 dataManga.setStatus(rs.getBoolean(5));
                 dataManga.setGenres(getGenresDes(id_manga));
                 dataManga.setChapters(getChaptersManga(id_manga));
-                dataManga.setComment(cFacade.getListComment(id_manga,sm.getId()));
-                res.setData(dataManga);
-                if(!session.isNew()){
+                
+                
+                if(!session.isNew() && sm!=null){
+                    dataManga.setComment(cFacade.getListComment(id_manga,sm.getId()));
                     if(sm.getId() == rs.getInt(2)){
                         res.setStatus(201);
                         res.setMessage(pReader.getValue("rm5"));
@@ -97,10 +100,12 @@ public class MangaFacade {
                         res.setMessage(pReader.getValue("rm4"));
                     }
                 }else{
+                    dataManga.setComment(cFacade.getListComment(id_manga,0));
                     session.invalidate();
                     res.setStatus(200);
                     res.setMessage(pReader.getValue("rm6"));
                 }
+                res.setData(dataManga);
             }else{
                 res.setMessage(pReader.getValue("rm3"));
                 res.setStatus(404);

@@ -44,9 +44,9 @@ public class LikeFacade {
         LikeModel lm = new LikeModel();
         int id = Integer.valueOf(request.getParameter("mid"));
         try{
-            rs = db.execute(pReader.getValue("ql1"), 51, id);
+            rs = db.execute(pReader.getValue("ql1"), sm.getId(), id);
                 if(!rs.next()){
-                    rs1 = db.execute(pReader.getValue("ql2"), 51, id);
+                    rs1 = db.execute(pReader.getValue("ql2"), sm.getId(), id);
                     if (rs1.next()){
                     lm.setIsLiked(true);
                     resp.setStatus(200);
@@ -72,7 +72,7 @@ public class LikeFacade {
         int id = Integer.valueOf(request.getParameter("mid"));
         
         try{
-            rs = db.execute(pReader.getValue("ql1"), 51, id);
+            rs = db.execute(pReader.getValue("ql1"), sm.getId(), id);
                 if(rs.next()){
                     lm.setIsLiked(true);
                     resp.setStatus(200);
@@ -100,9 +100,9 @@ public class LikeFacade {
         int id = Integer.valueOf(request.getParameter("mid"));
         
         try{
-            rs = db.execute(pReader.getValue("ql1"), 51, id);
+            rs = db.execute(pReader.getValue("ql1"), sm.getId(), id);
                 if(rs.next()){
-                    db.update(pReader.getValue("ql3"), 51, id);
+                    db.update(pReader.getValue("ql3"), sm.getId(), id);
                     lm.setIsLiked(false);
                     resp.setStatus(200);
                     resp.setData(lm);
@@ -125,9 +125,9 @@ public class LikeFacade {
         int id = Integer.valueOf(request.getParameter("cid"));
         
         try{
-            rs = db.execute(pReader.getValue("ql4"), 51, id);
+            rs = db.execute(pReader.getValue("ql4"), sm.getId(), id);
                 if(!rs.next()){
-                    rs1 = db.execute(pReader.getValue("ql5"), 51, id);
+                    rs1 = db.execute(pReader.getValue("ql5"), sm.getId(), id);
                     if (rs1.next()){
                     lm.setIsLiked(true);
                     resp.setStatus(200);
@@ -153,7 +153,7 @@ public class LikeFacade {
         int id = Integer.valueOf(request.getParameter("cid"));
         
         try{
-            rs = db.execute(pReader.getValue("ql4"), 51, id);
+            rs = db.execute(pReader.getValue("ql4"), sm.getId(), id);
                 if(rs.next()){
                     lm.setIsLiked(true);
                     resp.setStatus(200);
@@ -181,9 +181,9 @@ public class LikeFacade {
         int id = Integer.valueOf(request.getParameter("cid"));
         
         try{
-            rs = db.execute(pReader.getValue("ql4"), 51, id);
+            rs = db.execute(pReader.getValue("ql4"), sm.getId(), id);
                 if(rs.next()){
-                    db.update(pReader.getValue("ql6"), 51, id);
+                    db.update(pReader.getValue("ql6"), sm.getId(), id);
                     lm.setIsLiked(false);
                     resp.setStatus(200);
                     resp.setData(lm);

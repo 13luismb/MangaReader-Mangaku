@@ -14,6 +14,15 @@ public class CommentModel {
     private int id;
     private String nameCreator;
     private boolean isYour;
+    private boolean status;
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
 
     public boolean isIsYour() {
         return isYour;

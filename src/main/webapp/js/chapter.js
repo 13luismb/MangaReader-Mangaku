@@ -21,6 +21,7 @@
         function load() {
             imageLoad();
             likeLoad();
+            commentLoad();
         }
 
 
@@ -39,13 +40,33 @@
                 .then(resp => resp.json())
                 .then(data => {
                     if (data.data.isLiked) {
-                        $('likeBtn').className += " liked";
+                        $('likeBtn2').className += " liked";
                     }
                 });
         }
 
         function commentLoad(){
-
+            let params = location.href.split('?')[1];
+            console.log(params);            
+            let config = {
+                method: "GET",
+                withCredentials: true,
+                credentials: 'same-origin',
+                headers: {
+                    "Content-type": "application/x-www-form-urlencoded"
+                }
+            };
+            
+            fetch('.././comment?'+params, config)
+            .then(res => res.json())
+            .then(data => {
+                if(data.status == 200){
+                    console.log(data);
+                    fillComment(data.data);
+                }else{
+                    console.log(data);
+                }
+            });
         }
 
         function previous() {
@@ -64,7 +85,7 @@
 
 
         function like() {
-            if ($('likeBtn').className.includes("liked")) {
+            if ($('likeBtn2').className.includes("liked")) {
                 doDislike();
             } else {
                 doLike();
@@ -79,7 +100,7 @@
                 .then(resp => resp.json())
                 .then(data => {
                     if (data.data.isLiked) {
-                        $('likeBtn').className += " liked";
+                        $('likeBtn2').className += " liked";
                     }
                 })
         }
@@ -91,13 +112,13 @@
                 .then(resp => resp.json())
                 .then(data => {
                     if (!data.data.isLiked) {
-                        let v = $('likeBtn').className.replace("liked","").trim();
-                        $('likeBtn').className = v;
+                        let v = $('likeBtn2').className.replace("liked","").trim();
+                        $('likeBtn2').className = v;
                     }
                 })
         }
 
-       // $('likeBtn').addEventListener('click', function() {like();});
+       $('likeBtn2').addEventListener('click', function() {like();});
         window.addEventListener('load', load, true);
         $('next').addEventListener('click', next);
         $('dashboard').addEventListener('click', dashboard);

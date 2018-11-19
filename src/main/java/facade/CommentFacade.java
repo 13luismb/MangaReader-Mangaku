@@ -44,7 +44,6 @@ public class CommentFacade {
     public String insertComment(HttpServletRequest request) throws SQLException, JsonProcessingException{
         
         db = this.getConnection();
-        ResultSet rs = null;
         ResponseModel<CommentModel> res = new ResponseModel<>();
         HttpSession session = null;
         
@@ -53,19 +52,25 @@ public class CommentFacade {
             CommentModel comment = jackson.jsonToPojo(request,CommentModel.class);
             SessionModel sm = (SessionModel) session.getAttribute("session");
             int idManga = Integer.valueOf(request.getParameter("id"));
+            System.out.println(request.getParameter("id"));
             //System.out.println(sm.getName());
-            db.execute(pReader.getValue("qcm1"),20,idManga,comment.getContent(),db.currentTimestamp());
+            if(request.getParameter("page")==null){
+                db.update(pReader.getValue("qcm1"),sm.getId(),idManga,comment.getContent(),db.currentTimestamp());
+            }else{
+                db.update(pReader.getValue("qcm5"),sm.getId(),idManga,comment.getContent(),db.currentTimestamp());
+            }
+            
+            
             res.setData(comment);
             res.setStatus(200);
             res.setMessage(pReader.getValue("rcm1"));
-            rs.close();
             db.close();
         }catch(Exception e){
             e.printStackTrace();
         }
         return jackson.pojoToJson(res);
     }
-    
+    //Llamado usualmente desde otro facade
     public List<CommentModel> getListComment(int id_manga,int id_user) throws JsonProcessingException, SQLException{
         db = this.getConnection();
         ArrayList<CommentModel> comments = new ArrayList();
@@ -84,22 +89,41 @@ public class CommentFacade {
         return comments;
     }
     
+    
+    public List<CommentModel> getListCommentChapter(int id_chapter,int id_user) throws JsonProcessingException, SQLException{
+        db = this.getConnection();
+        ArrayList<CommentModel> comments = new ArrayList();
+        CommentModel comment = null;
+        ResultSet rs = db.execute(pReader.getValue("qcm7"), id_chapter);
+        while (rs.next()){
+            comment = new CommentModel();
+            comment.setId(rs.getInt(1));
+            comment.setContent(rs.getString(4));
+            comment.setIsYour(rs.getInt(2)==id_user);
+            comment.setNameCreator(getNameCreator(rs.getInt(2)));
+            comments.add(comment);
+        }
+        rs.close();
+        db.close();
+        return comments;
+    }
+    
     public String deleteComment(HttpServletRequest request) throws JsonProcessingException {
         db = this.getConnection();
         ResultSet rs = null;
-        ResponseModel<MangaModel> res = new ResponseModel<>();
-        int id_manga = Integer.parseInt(request.getParameter("id"));
+        ResponseModel<CommentModel> res = new ResponseModel<>();
+        int id_comment = Integer.parseInt(request.getParameter("id"));
         HttpSession session = request.getSession();
         SessionModel sm = (SessionModel) session.getAttribute("session");
         try{
-            rs = db.execute(pReader.getValue("qmu3"),id_manga,sm.getId());
+            rs = db.execute(pReader.getValue("qcm4"),id_comment,sm.getId());
             if(rs.next()){
-                db.update(pReader.getValue("qmu2"),id_manga);
+                db.update(pReader.getValue("qcm3"),"Delete",id_comment);
                 res.setStatus(200);
-                res.setMessage(pReader.getValue("rm7"));
+                res.setMessage(pReader.getValue("rcm2"));
             }else{
-                res.setStatus(500);
-                res.setMessage(pReader.getValue("rm4"));
+                res.setStatus(404);
+                res.setMessage(pReader.getValue("rcm3"));
             }
             rs.close();
             db.close();
@@ -133,6 +157,54 @@ public class CommentFacade {
     
     public DBAccess getConnection(){
         return new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
+    }
+
+    public String getComments(HttpServletRequest request) throws JsonProcessingException {
+        ResultSet rs = null;
+        ResponseModel<List<CommentModel>> res = new ResponseModel<>();
+        HttpSession session = null;
+        
+        try{
+            session = request.getSession();
+            SessionModel sm = (SessionModel) session.getAttribute("session");
+            int idChapter = Integer.valueOf(request.getParameter("id"));
+            if(sm!=null){
+                res.setData(getListCommentChapter(idChapter,sm.getId()));
+            }else{
+                res.setData(getListCommentChapter(idChapter,0));
+            }
+            
+            res.setStatus(200);
+            res.setMessage(pReader.getValue("rmc4"));
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return jackson.pojoToJson(res);
+    }
+
+    public String deleteCommentChapter(HttpServletRequest request) throws JsonProcessingException {
+        db = this.getConnection();
+        ResultSet rs = null;
+        ResponseModel<CommentModel> res = new ResponseModel<>();
+        int id_comment = Integer.parseInt(request.getParameter("id"));
+        HttpSession session = request.getSession();
+        SessionModel sm = (SessionModel) session.getAttribute("session");
+        try{
+            rs = db.execute(pReader.getValue("qcm6"),id_comment,sm.getId());
+            if(rs.next()){
+                db.update(pReader.getValue("qcm8"),"Delete",id_comment);
+                res.setStatus(200);
+                res.setMessage(pReader.getValue("rcm2"));
+            }else{
+                res.setStatus(404);
+                res.setMessage(pReader.getValue("rcm3"));
+            }
+            rs.close();
+            db.close();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return jackson.pojoToJson(res);
     }
     
 }
