@@ -37,9 +37,23 @@ public class ChapterServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
+    
+        protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+                   ChapterFacade chapter = new ChapterFacade();
+            try {
+                /* out.print(chapter.chapterGet(request));
+                System.out.println(chapter.chapterGet(request));*/
+                PrintWriter out = response.getWriter();
+                out.print(chapter.getChapterInfo(request));
+            } catch (SQLException ex) {
+                Logger.getLogger(ChapterServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+	}
+    
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-                   //PrintWriter out = response.getWriter();
                    ChapterFacade chapter = new ChapterFacade();
             try {
                 /* out.print(chapter.chapterGet(request));

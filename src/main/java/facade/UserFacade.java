@@ -192,7 +192,7 @@ private String getUserSalt(ResultSet rs) throws IOException{
         session.setAttribute("email", in.getEmail());*/
         session.setAttribute("session", in);
     }
- public DBAccess getConnection(){
+ private DBAccess getConnection(){
         return new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
     }
 }

@@ -302,7 +302,7 @@ public class MangaFacade {
             return rs;
         }
         
-         public DBAccess getConnection(){
+         private DBAccess getConnection(){
         return new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
     }
 }
