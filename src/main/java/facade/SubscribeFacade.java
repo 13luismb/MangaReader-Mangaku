@@ -102,7 +102,7 @@ public class SubscribeFacade {
         ResponseModel<SubscribeModel> resp = new ResponseModel<>();
         SubscribeModel sub = new SubscribeModel();
         try{
-            rs = db.execute(pReader.getValue("qsu1"), sm.getId(),id);
+            rs = db.execute(pReader.getValue("qsu1"), 51,id);
             if (rs.next()){
                 sub.setIsSubscribed(true);
                 resp.setStatus(201);
