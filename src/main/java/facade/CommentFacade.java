@@ -79,14 +79,18 @@ public class CommentFacade {
         while (rs.next()){
             comment = new CommentModel();
             comment.setId(rs.getInt(1));
-            comment.setContent(rs.getString(4));
+            if(!rs.getBoolean(6)){
+                comment.setContent(rs.getString(4));
+            }
             comment.setIsYour(rs.getInt(2)==id_user);
             comment.setNameCreator(getNameCreator(rs.getInt(2)));
+            comment.setDelete(rs.getBoolean(6));
             comments.add(comment);
         }
         rs.close();
         db.close();
         return comments;
+
     }
     
     
@@ -98,9 +102,12 @@ public class CommentFacade {
         while (rs.next()){
             comment = new CommentModel();
             comment.setId(rs.getInt(1));
-            comment.setContent(rs.getString(4));
+            if(!rs.getBoolean(6)){
+                comment.setContent(rs.getString(4));
+            }
             comment.setIsYour(rs.getInt(2)==id_user);
             comment.setNameCreator(getNameCreator(rs.getInt(2)));
+            comment.setDelete(rs.getBoolean(6));
             comments.add(comment);
         }
         rs.close();
@@ -118,13 +125,14 @@ public class CommentFacade {
         try{
             rs = db.execute(pReader.getValue("qcm4"),id_comment,sm.getId());
             if(rs.next()){
-                db.update(pReader.getValue("qcm3"),"Delete",id_comment);
+                db.update(pReader.getValue("qcm3"),true,id_comment);
                 res.setStatus(200);
                 res.setMessage(pReader.getValue("rcm2"));
             }else{
                 res.setStatus(404);
                 res.setMessage(pReader.getValue("rcm3"));
             }
+            System.out.println(writeJSON(res));
             rs.close();
             db.close();
         }catch(Exception e){
@@ -187,18 +195,20 @@ public class CommentFacade {
         ResultSet rs = null;
         ResponseModel<CommentModel> res = new ResponseModel<>();
         int id_comment = Integer.parseInt(request.getParameter("id"));
+        System.out.println(id_comment);
         HttpSession session = request.getSession();
         SessionModel sm = (SessionModel) session.getAttribute("session");
         try{
             rs = db.execute(pReader.getValue("qcm6"),id_comment,sm.getId());
             if(rs.next()){
-                db.update(pReader.getValue("qcm8"),"Delete",id_comment);
+                db.update(pReader.getValue("qcm8"),true,id_comment);
                 res.setStatus(200);
                 res.setMessage(pReader.getValue("rcm2"));
             }else{
                 res.setStatus(404);
                 res.setMessage(pReader.getValue("rcm3"));
             }
+            System.out.println(writeJSON(res));
             rs.close();
             db.close();
         }catch(Exception e){

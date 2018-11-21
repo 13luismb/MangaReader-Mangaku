@@ -14,14 +14,14 @@ public class CommentModel {
     private int id;
     private String nameCreator;
     private boolean isYour;
-    private boolean status;
+    private boolean delete;
 
-    public boolean isStatus() {
-        return status;
+    public boolean isDelete() {
+        return delete;
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setDelete(boolean delete) {
+        this.delete = delete;
     }
 
     public boolean isIsYour() {
