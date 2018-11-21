@@ -46,7 +46,7 @@ public class ChapterFilter implements Filter {
 		HttpServletResponse response = (HttpServletResponse) res;
 		HttpServletRequest request = (HttpServletRequest) req;
 		response.setHeader("Access-Control-Allow-Origin", "*");
-	    response.setHeader("Access-Control-Allow-Methods", "GET,DELETE,POST,PUT");
+                response.setHeader("Access-Control-Allow-Methods", "GET,DELETE,POST,PUT");
 	    //response.setHeader("Access-Control-Allow-Headers", "Content-Type,Origin,Accept");
 		String method = request.getMethod();
                 switch (method){
@@ -68,7 +68,6 @@ public class ChapterFilter implements Filter {
                             chain.doFilter(request, response);
                         }
                         break;
-                        
                 }
 	}
 

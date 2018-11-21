@@ -127,12 +127,11 @@ public class ChapterFacade {
      }
 
     public String getChapterInfo(HttpServletRequest request) throws SQLException, JsonProcessingException{
-         db = this.getConnection();
+        db = this.getConnection();
         ResponseModel<ChapterModel> res = new ResponseModel();
         ChapterModel cm = new ChapterModel();
         int id_chapter = Integer.parseInt(request.getParameter("id"));
             if (requestGet(cm, db, pReader, id_chapter)){
-                
                 db.close();
                 res.setData(cm);
                 res.setStatus(200);

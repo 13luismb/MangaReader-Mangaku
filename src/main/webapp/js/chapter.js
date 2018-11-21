@@ -71,12 +71,39 @@
                 }
             });
         }
+
+        function completeChapter(){
+            let params = location.href.split('?')[1];
+            let config = {
+                method: "POST",
+                withCredentials: true,
+                credentials: 'same-origin',
+                headers: {
+                    "Content-type": "application/x-www-form-urlencoded"
+                }
+            };
+            
+            fetch('.././tracker?'+params, config)
+            .then(res => res.json())
+            .then(data => {
+                if(data.status == 200){
+                    console.log(data);
+                }
+            });
+        }
         
         function doInfoMatch(data){
-            if (x[2] == data.data.chapterPages) {
-                //aqui le metes lo del tracker
-                        $('next').addEventListener('click', nextChapter);
+            console.log(data);
+            if(data.status==200){
+                if (x[2] == data.data.chapterPages) {
+                    completeChapter();
+                    $('next').addEventListener('click', nextChapter);
+                }
+            }else if(data.status == 403){
+                alert(data.message+" Error:"+data.status);
+                location.href = "dashboard.html";
             }
+                
         }
 
         function previous() {
@@ -140,7 +167,7 @@
                 })
         }
 
-       $('likeBtn2').addEventListener('click', function() {like();});
+        $('likeBtn2').addEventListener('click', function() {like();});
         window.addEventListener('load', load, true);
         $('next').addEventListener('click', next);
         $('dashboard').addEventListener('click', dashboard);

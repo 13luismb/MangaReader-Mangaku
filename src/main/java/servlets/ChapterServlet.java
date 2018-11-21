@@ -40,7 +40,7 @@ public class ChapterServlet extends HttpServlet {
     
         protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-                   ChapterFacade chapter = new ChapterFacade();
+                ChapterFacade chapter = new ChapterFacade();
             try {
                 /* out.print(chapter.chapterGet(request));
                 System.out.println(chapter.chapterGet(request));*/
