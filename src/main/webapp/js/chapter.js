@@ -7,14 +7,8 @@
             chapter = y[0],
             page = x[2],
             URL = ".././chapter?id=" + chapter + "&page=" + page;
-        if (x[2] == 1) {
-            $('handler').removeChild($('previous'));
-        }
 
         function fill(data) {
-            if (x[2] == data.chapterPages) {
-                $('handler').removeChild($('next'));
-            }
             $('image').src = ".././chapter?id=" + chapter + "&page=" + page;
         }
 
@@ -22,6 +16,7 @@
             imageLoad();
             likeLoad();
             commentLoad();
+            dataLoad();
         }
 
 
@@ -31,6 +26,14 @@
                 })
                 .then(response => response.blob())
                 .then(data => fill(data));
+        }
+        
+        function dataLoad(){
+            fetch(URL, {
+                    method: 'OPTIONS'
+                })
+                .then(response => response.json())
+                .then(data => doInfoMatch(data));
         }
 
         function likeLoad(){
@@ -68,6 +71,13 @@
                 }
             });
         }
+        
+        function doInfoMatch(data){
+            if (x[2] == data.data.chapterPages) {
+                //aqui le metes lo del tracker
+                        $('next').addEventListener('click', nextChapter);
+            }
+        }
 
         function previous() {
             prepage = parseInt(page) - 1;
@@ -77,6 +87,18 @@
         function next() {
             nextpage = parseInt(page) + 1;
             location.href = 'chapter.html?id=' + y[0] + '&page=' + nextpage;
+        }
+        
+        function nextChapter(){
+            x = parseInt(y[0]);
+            chapter = x+1;
+            location.href = 'chapter.html?id=' + chapter + '&page=1';
+        }
+        
+        function previousChapter(){
+            x = parseInt(y[0]);
+            chapter = x-1;
+            location.href = 'chapter.html?id=' + chapter + '&page=1';
         }
 
         function dashboard() {
@@ -122,4 +144,9 @@
         window.addEventListener('load', load, true);
         $('next').addEventListener('click', next);
         $('dashboard').addEventListener('click', dashboard);
-        $('previous').addEventListener('click', previous);
+        
+        if (x[2] == 1) {
+            $('previous').addEventListener('click', previousChapter);
+        }else{
+            $('previous').addEventListener('click', previous);
+        }

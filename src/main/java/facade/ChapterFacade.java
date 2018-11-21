@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -87,6 +88,8 @@ public class ChapterFacade {
                     res.setData(cm);
                     res.setStatus(201);
                     res.setMessage(pReader.getValue("rc1")); //
+                    SubscribeFacade subs = new SubscribeFacade();
+                    subs.sendMail(request, pReader, cm);
                 }else{
                     res.setStatus(403);
                     res.setMessage(pReader.getValue("rc2")); //
@@ -123,6 +126,26 @@ public class ChapterFacade {
             
      }
 
+    public String getChapterInfo(HttpServletRequest request) throws SQLException, JsonProcessingException{
+         db = this.getConnection();
+        ResponseModel<ChapterModel> res = new ResponseModel();
+        ChapterModel cm = new ChapterModel();
+        int id_chapter = Integer.parseInt(request.getParameter("id"));
+            if (requestGet(cm, db, pReader, id_chapter)){
+                
+                db.close();
+                res.setData(cm);
+                res.setStatus(200);
+                res.setMessage(pReader.getValue("rc5"));
+            }else{
+                res.setStatus(403);
+                res.setMessage(pReader.getValue("rc6")); //
+            }
+            db.close();
+           return jackson.pojoToJson(res);
+            
+    }
+    
     public String chapterUpdate(HttpServletRequest request) throws IOException, ServletException{
         db = this.getConnection();
         ResponseModel<ChapterModel> res = new ResponseModel();
@@ -310,6 +333,11 @@ public class ChapterFacade {
                 // Make sure to show the download dialog
         response.setHeader("Content-disposition","attachment; filename="+name+".jpg");
 
+        ResponseModel<ChapterModel> resp = new ResponseModel<>();
+        resp.setStatus(200);
+        resp.setMessage("wtf");
+        resp.setData(cm);
+        
         // This should send the file to browser
         OutputStream out = response.getOutputStream();
         FileInputStream in = new FileInputStream(my_file);
@@ -318,6 +346,7 @@ public class ChapterFacade {
         while ((length = in.read(buffer)) > 0){
            out.write(buffer, 0, length);
         }
+        
         in.close();
         out.flush();
         /*            // Get the absolute path of the image
@@ -401,7 +430,7 @@ public class ChapterFacade {
         }
     }
     
-    public DBAccess getConnection(){
+    private DBAccess getConnection(){
         return new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
     }
 }
