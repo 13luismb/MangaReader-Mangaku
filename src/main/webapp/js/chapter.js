@@ -44,10 +44,10 @@
                 .then(data => {
                     if(data.status!=500){
                         if (data.data.isLiked) {
-                            $('likeBtn2').className += " liked";
+                            $('likeBtn').className += " liked";
                         }
                     }else{
-                        $('likeBtn2').hidden = true;
+                        $('likeBtn').hidden = true;
                     }
                 });
         }
@@ -138,7 +138,7 @@
 
 
         function like() {
-            if ($('likeBtn2').className.includes("liked")) {
+            if ($('likeBtn').className.includes("liked")) {
                 doDislike();
             } else {
                 doLike();
@@ -153,7 +153,7 @@
                 .then(resp => resp.json())
                 .then(data => {
                     if (data.data.isLiked) {
-                        $('likeBtn2').className += " liked";
+                        $('likeBtn').className += " liked";
                     }
                 })
         }
@@ -165,13 +165,13 @@
                 .then(resp => resp.json())
                 .then(data => {
                     if (!data.data.isLiked) {
-                        let v = $('likeBtn2').className.replace("liked","").trim();
-                        $('likeBtn2').className = v;
+                        let v = $('likeBtn').className.replace("liked","").trim();
+                        $('likeBtn').className = v;
                     }
                 })
         }
 
-        $('likeBtn2').addEventListener('click', function() {like();});
+        $('likeBtn').addEventListener('click', function() {like();});
         window.addEventListener('load', load, true);
         $('next').addEventListener('click', next);
         $('dashboard').addEventListener('click', dashboard);

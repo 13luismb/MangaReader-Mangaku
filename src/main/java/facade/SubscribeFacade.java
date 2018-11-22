@@ -8,7 +8,6 @@ package facade;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import model.ChapterModel;
 import model.ResponseModel;
@@ -25,7 +24,7 @@ import util.Validator;
  * @author Usuario
  */
 public class SubscribeFacade {
-     private DBAccess db;
+    private DBAccess db;
     private PropertiesReader pReader;
     private JacksonMapper jackson;
     private static SessionModel in;
@@ -95,14 +94,16 @@ public class SubscribeFacade {
     }
     
     public String getSubscriptionStatus(HttpServletRequest request) throws JsonProcessingException{
-        db = this.getConnection();
+
         ResultSet rs = null;
         SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
         int id = Integer.valueOf(request.getParameter("id"));
         ResponseModel<SubscribeModel> resp = new ResponseModel<>();
         SubscribeModel sub = new SubscribeModel();
         try{
-            rs = db.execute(pReader.getValue("qsu1"), 51,id);
+            if(sm != null){
+            db = this.getConnection();
+            rs = db.execute(pReader.getValue("qsu1"), sm.getId(),id);
             if (rs.next()){
                 sub.setIsSubscribed(true);
                 resp.setStatus(201);
@@ -115,14 +116,16 @@ public class SubscribeFacade {
                 resp.setData(sub);
             }
             rs.close();
+            db.close();
+            }
         }catch(Exception e){
             e.printStackTrace();
         }
-        db.close();
+
         return jackson.pojoToJson(resp);
     }
     
-    public void sendMail(HttpServletRequest request, PropertiesReader pReader, ChapterModel cm){
+    protected void sendMail(HttpServletRequest request, PropertiesReader pReader, ChapterModel cm){
         db = this.getConnection();
         ArrayList<String> groupAddress = new ArrayList<>();
         ResultSet rs = null;

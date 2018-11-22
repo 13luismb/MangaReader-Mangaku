@@ -40,9 +40,9 @@ public class UserFacade {
                     rs = db.execute(pReader.getValue("qu1"), user.getUsername(), user.getEmail());
                 if(!rs.next()){
                     db.update(pReader.getValue("qu2"),user.getUsername().toLowerCase(),Encrypter.getSecurePassword(user.getPassword() + salt),user.getName(),user.getEmail(),db.currentTimestamp(),2, salt);
-                    res.setStatus(200);//Mensage
+                    res.setStatus(200);
                 }else{
-                    res.setStatus(500);//Mensage
+                    res.setStatus(500);
                 }
                 rs.close();
                 db.close();
@@ -88,7 +88,7 @@ public class UserFacade {
         
     }
     
-public HttpSession checkUser(HttpServletRequest request) throws JsonProcessingException{ //Este corrobora que el HashMap no este null para crear una session y retornarla
+public HttpSession checkUser(HttpServletRequest request) throws JsonProcessingException{
         HttpSession session = null;
         try {
             SessionModel userdata = getUserData(request);
@@ -149,7 +149,7 @@ public SessionModel getSessionData(){
     return sessionData;
 }
 
-public String getProperty(String propertyValue){
+private String getProperty(String propertyValue){
     pReader = PropertiesReader.getInstance();
     return pReader.getValue(propertyValue);
 }
@@ -184,15 +184,11 @@ private String getUserSalt(ResultSet rs) throws IOException{
         }
     return salt;
 }
-    public void setSessionValues(HttpSession session, SessionModel in){
-        /*session.setAttribute("typeuser", in.getTypeuser());
-        session.setAttribute("id", in.getId());
-        session.setAttribute("name", in.getName());
-        session.setAttribute("username", in.getUsername());
-        session.setAttribute("email", in.getEmail());*/
+    private void setSessionValues(HttpSession session, SessionModel in){
         session.setAttribute("session", in);
     }
- private DBAccess getConnection(){
+    
+    private DBAccess getConnection(){
         return new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
     }
 }

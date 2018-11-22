@@ -21,7 +21,7 @@ import model.SessionModel;
  *
  * @author Usuario
  */
-@WebFilter(filterName = "ChapterFilter", urlPatterns = {""}) //insertar el urlpatterns a /chapter cuando haya front
+@WebFilter(filterName = "ChapterFilter", urlPatterns = {"/chapter"}) //insertar el urlpatterns a /chapter cuando haya front
 public class ChapterFilter implements Filter {
   
     /**
@@ -46,9 +46,9 @@ public class ChapterFilter implements Filter {
 		HttpServletResponse response = (HttpServletResponse) res;
 		HttpServletRequest request = (HttpServletRequest) req;
 		response.setHeader("Access-Control-Allow-Origin", "*");
-                response.setHeader("Access-Control-Allow-Methods", "GET,DELETE,POST,PUT");
-	    //response.setHeader("Access-Control-Allow-Headers", "Content-Type,Origin,Accept");
+                response.setHeader("Access-Control-Allow-Methods", "GET,DELETE,POST,PUT,OPTIONS");
 		String method = request.getMethod();
+                
                 switch (method){
                     case "GET": 
                         chain.doFilter(request, response);
@@ -67,6 +67,9 @@ public class ChapterFilter implements Filter {
                         if (typeUserSet(request)){
                             chain.doFilter(request, response);
                         }
+                        break;
+                    case "OPTIONS":
+                        chain.doFilter(request, response);
                         break;
                 }
 	}

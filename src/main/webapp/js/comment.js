@@ -2,12 +2,12 @@ function fillComment(comments){
     comments.forEach(element => {
         if(!element.delete){
             if(element.isYour){
-                $("list_comment").innerHTML += '<li class="collection-item"><div>'+'<b>'+element.nameCreator+'</b>'+':'+element.content+'<a href="#!" class="secondary-content comment"><i class="material-icons black-text '+element.id+'">cancel</i></a></div></li>';
+                $("list_comment").innerHTML += '<li class="collection-item"><div>'+'<b>'+element.nameCreator+'</b>'+': '+element.content+'<a href="#!" class="secondary-content comment"><i class="material-icons black-text '+element.id+'">cancel</i></a></div></li>';
             }else{
                 $("list_comment").innerHTML += '<li class="collection-item"><div>'+element.nameCreator+':'+element.content+'</div></li>';
             }
         }else{
-            $("list_comment").innerHTML += '<li class="collection-item"><div><b>El comentario de '+element.nameCreator+'fue eliminado</b></div></li>';
+            $("list_comment").innerHTML += '<li class="collection-item"><div><b>El comentario de '+element.nameCreator+' fue eliminado</b></div></li>';
         }
         
     });

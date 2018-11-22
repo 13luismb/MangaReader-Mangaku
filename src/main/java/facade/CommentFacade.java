@@ -52,8 +52,7 @@ public class CommentFacade {
             CommentModel comment = jackson.jsonToPojo(request,CommentModel.class);
             SessionModel sm = (SessionModel) session.getAttribute("session");
             int idManga = Integer.valueOf(request.getParameter("id"));
-            System.out.println(request.getParameter("id"));
-            //System.out.println(sm.getName());
+            
             if(request.getParameter("page")==null){
                 db.update(pReader.getValue("qcm1"),sm.getId(),idManga,comment.getContent(),db.currentTimestamp());
             }else{
@@ -70,6 +69,7 @@ public class CommentFacade {
         }
         return jackson.pojoToJson(res);
     }
+    
     //Llamado usualmente desde otro facade
     public List<CommentModel> getListComment(int id_manga,int id_user) throws JsonProcessingException, SQLException{
         db = this.getConnection();
@@ -168,7 +168,6 @@ public class CommentFacade {
     }
 
     public String getComments(HttpServletRequest request) throws JsonProcessingException {
-        ResultSet rs = null;
         ResponseModel<List<CommentModel>> res = new ResponseModel<>();
         HttpSession session = null;
         
@@ -198,6 +197,7 @@ public class CommentFacade {
         System.out.println(id_comment);
         HttpSession session = request.getSession();
         SessionModel sm = (SessionModel) session.getAttribute("session");
+        
         try{
             rs = db.execute(pReader.getValue("qcm6"),id_comment,sm.getId());
             if(rs.next()){
