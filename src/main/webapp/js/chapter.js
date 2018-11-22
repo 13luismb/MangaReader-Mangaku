@@ -42,8 +42,12 @@
             fetch(url, { method: 'GET' })
                 .then(resp => resp.json())
                 .then(data => {
-                    if (data.data.isLiked) {
-                        $('likeBtn2').className += " liked";
+                    if(data.status!=500){
+                        if (data.data.isLiked) {
+                            $('likeBtn2').className += " liked";
+                        }
+                    }else{
+                        $('likeBtn2').hidden = true;
                     }
                 });
         }

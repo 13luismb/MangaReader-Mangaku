@@ -63,7 +63,7 @@ public class LikeFacade {
     }
     
     public String getMangaLike(HttpServletRequest request) throws JsonProcessingException{
-        db = this.getConnection();
+        
         ResponseModel<LikeModel> resp = new ResponseModel<>();
         ResultSet rs;
         HttpSession session = request.getSession();
@@ -72,7 +72,9 @@ public class LikeFacade {
         int id = Integer.valueOf(request.getParameter("mid"));
         
         try{
-            rs = db.execute(pReader.getValue("ql1"), sm.getId(), id);
+            if(sm!=null){
+                db = this.getConnection();
+                rs = db.execute(pReader.getValue("ql1"), sm.getId(), id);
                 if(rs.next()){
                     lm.setIsLiked(true);
                     resp.setStatus(200);
@@ -82,11 +84,15 @@ public class LikeFacade {
                     resp.setStatus(200);
                     resp.setData(lm);
                 }
+                db.close();
                 rs.close();
+            }else{
+                resp.setStatus(500);
+            }
+            
         }catch (Exception e){
             e.printStackTrace();
         }
-        db.close();
         return jackson.pojoToJson(resp);
     }
     
@@ -144,7 +150,7 @@ public class LikeFacade {
     }
     
     public String getChapterLike(HttpServletRequest request) throws JsonProcessingException{
-        db = this.getConnection();
+        
         ResponseModel<LikeModel> resp = new ResponseModel<>();
         ResultSet rs;
         HttpSession session = request.getSession();
@@ -153,7 +159,9 @@ public class LikeFacade {
         int id = Integer.valueOf(request.getParameter("cid"));
         
         try{
-            rs = db.execute(pReader.getValue("ql4"), sm.getId(), id);
+            if(sm!=null){
+                db = this.getConnection();
+                rs = db.execute(pReader.getValue("ql4"), sm.getId(), id);
                 if(rs.next()){
                     lm.setIsLiked(true);
                     resp.setStatus(200);
@@ -164,10 +172,15 @@ public class LikeFacade {
                     resp.setData(lm);
                 }
                 rs.close();
+                db.close();
+            }else{
+                resp.setStatus(500);
+            }
+            
         }catch (Exception e){
             e.printStackTrace();
         }
-        db.close();
+        
         return jackson.pojoToJson(resp);
     }    
     

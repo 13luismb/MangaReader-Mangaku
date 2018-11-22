@@ -5,8 +5,12 @@ window.onload = function() {
         .then(resp => resp.json())
         .then(data => {
             //console.log("hola");
-            if (data.data.isLiked) {
-                $('likeBtn').className += " liked";
+            if(data.status!=500){
+                if (data.data.isLiked) {
+                    $('likeBtn').className += " liked";
+                }
+            }else{
+                $('likeBtn').hidden = true;
             }
         })
     }
