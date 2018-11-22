@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Mangaku</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link type="text/css" rel="stylesheet" href="../css/materialize.min.css"  media="screen,projection"/>
+    </head>
+    <body class="grey">
+        <script type="text/javascript" src="../js/materialize.min.js"></script>
+        
+        <ul id='dropdown1' class='dropdown-content'>
+                <li><a href="#modal1" class="modal-trigger" >Crear manga</a></li>
+                <li><a href="#!">Subir capitulo</a></li>
+                <li><a href="#!" onClick="logout()">Log-out</a></li>
+        </ul>
+
+
+    <!--Navbar-->
+    <nav class="black">
+        <div class="nav-wrapper container">
+            <a href="#" class="brand-logo center">Mangaku</a>
+
+            <form class="left hide-on-med-and-down" style="width:40%;">
+                <div class="input-field">
+                    <input id="search" placeholder="Busca tus mangas favoritos aqui" type="search" required>
+                    <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+                    <i class="material-icons">close</i>
+                </div>
+            </form>
+            <!-- Login and register-->
+            <ul id="login-register" class="hide-on-med-and-down right">
+                <li><a id="login" href="login.html">Login</a></li>
+                <li><a id="register" class="btn-large grey darken-2 pulse" href="register.html">Register</a></li>
+            </ul>
+            <!-- User-name and log-out-->
+            <ul id="name-logout" class="hide-on-med-and-down right" hidden>
+                <li>
+                    <a id="user-name" href="config.html"></a>
+                </li>
+                <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Opciones<i class="material-icons right">arrow_drop_down</i></a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div id="modal_insert" class="modal">
+        <div class="modal-content">
+            <h4 class="center">Crea tu manga!</h4>
+            <div class="row">
+                <form>
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">account_circle</i>
+                        <input placeholder="Name Manga" id="name_manga" type="text" class="validate black-text">
+                    </div>
+                    <div class="input-field col s6">
+                        <select id="genres_manga" multiple>
+                                                    <option value="" disabled>Choose your option</option>
+                                                    <option value="Shonen">Shonen</option>
+                                                    <option value="Shojo">Shojo</option>
+                                                    <option value="Seinen">Seinen</option>
+                                                    <option value="Shonen">Josei</option>
+                                                    <option value="Shojo">Komodo</option>
+                                                    <option value="Seinen">Mecha</option>
+                                                    <option value="Shonen">Spokon</option>
+                                            </select>
+                        <label>Choose manga genre</label>
+                    </div>
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">insert_emoticon</i>
+                        <textarea placeholder="Synopsis" id="synopsis_manga" class="materialize-textarea"></textarea>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a id="modalbtn" href="#!" class="modal-close waves-effect waves-green btn-flat black white-text">Crear</a>
+        </div>
+    </div>
+
+    <!--End Navbar-->
+
+            <!--Div fondo-->
+            <!--
+                <div class="black" style="height:100vh;width: 100%;filter:brightness(0.1);background-image: url('../images/wallpaper-2.jpg');">
+                </div>
+
+            -->
+            <div class="white container" style="padding: 20px;">
+                <h3 id="text-result" style="text-align: center">Busqueda relacionada</h3>
+                <br>
+                    <ul class="collapsible" id="result">
+                        <!--
+                        <li>
+                            <div class="collapsible-header">
+                                <i class="material-icons">whatshot</i>Third</div>
+                            <div class="collapsible-body">
+                                <span>Lorem ipsum dolor sit amet.</span>
+                                <br>
+                                <br>
+                                <br>
+                                <div>
+                                    <a class="secondary-content waves-effect waves-light btn-floating btn-large black"><i class="material-icons white-text">play_arrow</i></a>
+                                </div>
+                            </div>
+                        </li>
+                        -->
+                    </ul>
+            </div>
+        
+
+        <script src="../js/creatorManga.js"></script>
+        <script src="../js/renderNavBar.js"></script>
+        <script src="../js/searchManga.js"></script>     
+        <script>
+
+            window.onload = function(){
+            var url_string = window.location.href;
+            var url = new URL(url_string);
+            var id = url.searchParams.get("s");
+            if(id === null || undefined){
+                location.href = "dashboard.html";
+            }else{
+                requestData(id);
+            }
+}
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    var elems = document.querySelectorAll('.collapsible');
+                    var instances = M.Collapsible.init(elems);
+                });
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    var elems = document.querySelectorAll('.dropdown-trigger');
+                    var instances = M.Dropdown.init(elems);
+                });
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    var elems = document.querySelectorAll('.modal');
+                    var instances = M.Modal.init(elems);
+                });
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    var elems = document.querySelectorAll('select');
+                    var instances = M.FormSelect.init(elems);
+                });
+
+        </script>
+
+    </body>
+</html>
