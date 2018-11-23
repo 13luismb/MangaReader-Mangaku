@@ -66,7 +66,10 @@ public class TrackerFacade {
                     rstwo.close();
                 }else{
                     rstwo = db.execute(pReader.getValue("qt1"), sm.getId(),getMangaId(id,db));
-                    db.update(pReader.getValue("qt2"),rstwo.getInt(1),id);
+                    if (rstwo.next()){
+                        System.out.println(rstwo.getInt(1));
+                        db.update(pReader.getValue("qt2"),rstwo.getInt(1),id);
+                    }
                     rstwo.close();
                     resp.setMessage(pReader.getValue("rst1"));
                     resp.setStatus(200);

@@ -115,17 +115,12 @@ public class ChapterFacade {
         int id_chapter = Integer.parseInt(request.getParameter("id"));
             if (requestGet(cm, db, pReader, id_chapter)){
                 db.close();
-               /* res.setData(cm);
-                res.setStatus("200");
-                res.setMessage(pReader.getValue("rc5"));*/
                 this.downloadFile(request, response, cm);
             }else{
                 res.setStatus(403);
                 res.setMessage(pReader.getValue("rc6")); //
             }
-            db.close();
-           // return jackson.pojoToJson(res);
-            
+            db.close();          
      }
 
     public String getChapterInfo(HttpServletRequest request) throws SQLException, JsonProcessingException{
@@ -154,23 +149,18 @@ public class ChapterFacade {
         SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
         
         if(cm != null){
-          //  if(fileUpload(request,cm)){
-                if(requestUpdate(sm, cm, db, pReader, (Boolean) request.getAttribute("isAdmin"))){ //Aqui van datos de session
+                if(requestUpdate(sm, cm, db, pReader, (Boolean) request.getAttribute("isAdmin"))){
                     db.close();
                     res.setData(cm);
                     res.setStatus(200);
-                    res.setMessage(pReader.getValue("rc7")); //
+                    res.setMessage(pReader.getValue("rc7"));
                 }else{
                     res.setStatus(403);
-                    res.setMessage(pReader.getValue("rc8")); //
+                    res.setMessage(pReader.getValue("rc8"));
                 } 
-           /* }else{
-                res.setStatus("400");
-                res.setMessage(pReader.getValue("rc3")); //
-            }*/
         }else{
                     res.setStatus(500);
-                    res.setMessage(pReader.getValue("rc4")); //
+                    res.setMessage(pReader.getValue("rc4"));
                 }
         db.close();
         return jackson.pojoToJson(res);
@@ -184,18 +174,18 @@ public class ChapterFacade {
         
             if(cm != null){
                 this.getChapterPath(cm, db);
-                if(requestDelete(sm, cm, db, pReader, (Boolean) request.getAttribute("isAdmin"))){ //Aqui van datos de la session
+                if(requestDelete(sm, cm, db, pReader, (Boolean) request.getAttribute("isAdmin"))){
                     this.deleteAllFiles(cm);
                     db.close();
                     res.setStatus(200);
-                    res.setMessage(pReader.getValue("rc9")); //
+                    res.setMessage(pReader.getValue("rc9"));
                 }else{
                     res.setStatus(403);
-                    res.setMessage(pReader.getValue("rc10")); //
+                    res.setMessage(pReader.getValue("rc10"));
                 }
             }else{
                     res.setStatus(500);
-                    res.setMessage(pReader.getValue("rc4")); //
+                    res.setMessage(pReader.getValue("rc4"));
                 }
             db.close();
             return jackson.pojoToJson(res);
@@ -210,7 +200,7 @@ public class ChapterFacade {
                 if(isAdmin){
                 db.update(pReader.getValue("qcx1"), cm.getChapterNumber(),cm.getChapterName(),cm.getChapterPages(),cm.getMangaId(),cm.getChapterId());
                 }else{
-                db.update(pReader.getValue("qcu1"), cm.getChapterNumber(),cm.getChapterName(),cm.getChapterLocation(),cm.getChapterPages(),cm.getChapterId(), sm.getId()); //Aqui van datos de session    
+                db.update(pReader.getValue("qcu1"), cm.getChapterNumber(),cm.getChapterName(),cm.getChapterLocation(),cm.getChapterPages(),cm.getChapterId(), sm.getId());
                 }
                 return true;
             }  
@@ -228,7 +218,7 @@ public class ChapterFacade {
                 if(isAdmin){
                         db.update(pReader.getValue("qcx2"), cm.getChapterId());
                 }else{
-                        db.update(pReader.getValue("qcu2"), cm.getChapterId(),sm.getId()); //Aqui van los valores de sesion
+                        db.update(pReader.getValue("qcu2"), cm.getChapterId(),sm.getId());
                 } 
                 return true;
             }
@@ -245,7 +235,7 @@ public class ChapterFacade {
             if (isAdmin){
             rs = db.execute(pReader.getValue("qcx3"), cm.getMangaId(),cm.getChapterNumber(),cm.getChapterName(),cm.getChapterLocation(),cm.getChapterPages());    
             }else{
-            rs = db.execute(pReader.getValue("qcu3"), sm.getId(), cm.getMangaId(),cm.getChapterNumber(),cm.getChapterName(),cm.getChapterLocation(),cm.getChapterPages());    //Aqui van datos de session    
+            rs = db.execute(pReader.getValue("qcu3"), sm.getId(), cm.getMangaId(),cm.getChapterNumber(),cm.getChapterName(),cm.getChapterLocation(),cm.getChapterPages());  
             }
                 if(rs.next()){
                     cm.setChapterId(rs.getInt(1));

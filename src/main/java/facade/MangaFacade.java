@@ -2,7 +2,6 @@
 package facade;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import static com.sun.corba.se.spi.presentation.rmi.StubAdapter.request;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -17,7 +16,10 @@ import util.DBAccess;
 import util.JacksonMapper;
 import util.PropertiesReader;
 import util.Validator;
-import facade.CommentFacade;
+//import facade.CommentFacade;
+import java.io.File;
+import java.io.IOException;
+import org.apache.commons.io.FileUtils;
 /**
  *
  * @author Usuario
@@ -155,9 +157,13 @@ public class MangaFacade {
         int id_manga = Integer.parseInt(request.getParameter("id"));
         HttpSession session = request.getSession();
         SessionModel sm = (SessionModel) session.getAttribute("session");
+        MangaModel ma = new MangaModel();
+        
         try{
             rs = db.execute(pReader.getValue("qmu3"),id_manga,sm.getId());
             if(rs.next()){
+                ma.setName(rs.getString(3));
+                this.deleteMangaData(request, ma);
                 db.update(pReader.getValue("qmu2"),id_manga);
                 res.setStatus(200);
                 res.setMessage(pReader.getValue("rm7"));
@@ -300,6 +306,13 @@ public class MangaFacade {
                     e.printStackTrace();
                 }
             return rs;
+        }
+        
+        private void deleteMangaData(HttpServletRequest request, MangaModel manga) throws IOException{
+            String path = request.getServletContext().getContextPath();
+            String directory = path + "\\" + manga.getName();
+            FileUtils.deleteDirectory(new File(directory));
+            System.out.println("Lo borré todo durisimo");
         }
         
          private DBAccess getConnection(){
