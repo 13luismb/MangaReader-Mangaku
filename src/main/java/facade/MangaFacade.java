@@ -89,7 +89,7 @@ public class MangaFacade {
                 dataManga.setSynopsis(rs.getString(4));
                 dataManga.setStatus(rs.getBoolean(5));
                 dataManga.setGenres(getGenresDes(id_manga));
-                dataManga.setChapters(getChaptersManga(id_manga));
+                dataManga.setChapters(getChaptersManga(id_manga,sm));
                 
                 
                 if(!session.isNew() && sm!=null){
@@ -218,16 +218,22 @@ public class MangaFacade {
         return listGenresDes;
     }
 
-    private List<ChapterModel> getChaptersManga(int id_manga) throws SQLException {
+    private List<ChapterModel> getChaptersManga(int id_manga,SessionModel sm) throws SQLException {
         db = this.getConnection();
         ArrayList<ChapterModel> chapters = new ArrayList();
         ChapterModel chapter = null;
         ResultSet rs = db.execute(pReader.getValue("qca4"), id_manga);
+        int tracker = getTracker(id_manga,sm,db);
         while (rs.next()){
             chapter = new ChapterModel();
             chapter.setChapterId(rs.getInt(1));
             chapter.setChapterNumber(rs.getInt(3));
             chapter.setChapterName(rs.getString(4));
+            if(tracker>0){
+                chapter.setTracker(getVisualitation(rs.getInt(1),tracker,db));
+            }else{
+                chapter.setTracker(false);
+            }
             chapters.add(chapter);
         }
         rs.close();
@@ -317,5 +323,46 @@ public class MangaFacade {
         
          private DBAccess getConnection(){
         return new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
+    }
+
+    private boolean getVisualitation(int chapter_id, int tracker,DBAccess db) throws SQLException {
+        ResultSet rs = null;
+        try{
+            rs = db.execute(pReader.getValue("qt4"), tracker,chapter_id);
+            if(rs.next()){
+                rs.close();
+                return true;
+            }else{
+                rs.close();
+                return false;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        
+    }
+
+    private int getTracker(int id_manga, SessionModel sm,DBAccess db) throws SQLException {
+        try{
+            ResultSet rs = null;
+            if(sm!=null){
+                rs = db.execute(pReader.getValue("qt3"),sm.getId(),id_manga);
+                if(rs.next()){
+                    int tracker = rs.getInt(1);
+                    rs.close();
+                    return tracker;
+                }else{
+                    rs.close();
+                    return 0;
+                }
+            }else{
+                return 0;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            return 0;
+        }
+        
     }
 }

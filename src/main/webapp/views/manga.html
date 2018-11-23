@@ -66,7 +66,7 @@
         </a>
         <ul>
             <li><a href="#modal_edit" class="btn-floating black tooltipped modal-trigger" data-position="left" data-tooltip="Editar Manga"><i class="material-icons">build</i></a></li>
-            <li><a class="btn-floating black tooltipped" data-position="left" data-tooltip="Subir capitulo"><i class="material-icons">file_upload</i></a></li>
+            <li><a href="#modal_add" class="btn-floating black tooltipped modal-trigger" data-position="left" data-tooltip="Subir capitulo"><i class="material-icons">file_upload</i></a></li>
             <li><a id="deletebtn" class="btn-floating black tooltipped" data-position="left" data-tooltip="Eliminar Manga"><i class="material-icons">cancel</i></a></li>
         </ul>
     </div>
@@ -146,10 +146,42 @@
         </div>
     </div>
 
+    <div id="modal_add" class="modal">
+            <div class="modal-content">
+                <h4 class="center">Nuevo Capitulo</h4>
+                <div class="row">
+                        <div class="input-field col s6">
+                            <i class="material-icons prefix">account_circle</i>
+                            <input placeholder="Name Chapter" id="chname" type="text" class="validate black-text">
+                        </div>
+                        <div class="input-field col s6">
+                                <i class="material-icons prefix">account_circle</i>
+                                <input placeholder="Number Chapter" id="chnumb" type="text" class="validate black-text">
+                        </div>
+                        <br><br><br><br>
+                        <form action="#">
+                                <div class="file-field input-field">
+                                  <div class="btn black">
+                                    <span>File</span>
+                                    <input id="files" type="file" multiple>
+                                  </div>
+                                  <div class="file-path-wrapper">
+                                    <input class="file-path validate" type="text" placeholder="Upload one or more files">
+                                  </div>
+                                </div>
+                        </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a id="addbtn" href="#!" class="modal-close waves-effect waves-green btn-flat black white-text">Crear</a>
+            </div>
+        </div>
+
+
     <!--End Navbar-->
     <!--Div-->
 
-    <div class="grey">
+    <div class="black white-text">
         <div class="" style="height:50vh">
             <div class="container">
                 <br>
@@ -223,6 +255,39 @@
     <script src="../js/subscribe.js"></script>
     <script src="../js/searchManga.js"></script>
 
+    <script>
+
+    
+
+    function upload() {
+        var url = ".././chapter";
+        let body = {
+            chapterName: $('chname').value,
+            chapterNumber: $('chnumb').value,
+            mangaId: location.search.split(/\=/)[1]
+        }
+
+        var formData = new FormData();
+        var files = $("files").files;
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            formData.append('photos[]', file, i + 1);
+        }
+        let json = JSON.stringify(body);
+        formData.append('json', json);
+        fetch(url, {
+                body: formData,
+                method: 'POST'
+            })
+            .then(resp => resp.json())
+            .then(data => {
+                console.log(data);
+            });
+    }
+
+    $('addbtn').addEventListener('click',upload);
+    </script>
+
     <!-- Esto se cambiara y se hara el codigo cuando lo habilite-->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -248,6 +313,11 @@
         document.addEventListener('DOMContentLoaded', function() {
             var elems = document.querySelectorAll('.tooltipped');
             var instances = M.Tooltip.init(elems);
+        });
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.chips');
+            var instances = M.Chips.init(elems);
         });
     </script>
 

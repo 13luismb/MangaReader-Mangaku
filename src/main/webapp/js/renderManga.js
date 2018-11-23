@@ -34,12 +34,8 @@ fetch('.././manga?'+params, config)
     if(data.status == 200 || data.status == 201){
         $("title").innerText = data.data.name;
         $("synopsis").innerText = data.data.synopsis;
-        $("genres").innerText = getGenresText(data.data.genres);
-        if(data.data.status){
-            $("status").innerText = "En emision";
-        }else{
-            $("status").innerText = "Finalizado";
-        }
+        $("genres").innerHTML = getGenresText(data.data.genres);
+        $("status").innerHTML = getStatus(data.data.status);
         fillChapter(data.data.chapters);
         fillComment(data.data.comment);
         if(data.status == 201){
@@ -72,22 +68,36 @@ fetch('.././manga?'+params, config)
 
 function fillChapter(chapters){
     chapters.forEach(element => {
-        $("list_chapter").innerHTML += '<li class="collection-item"><div>'+element.chapterName+'<a href="chapter.html?id='+element.chapterId+'&page=1" class="secondary-content"><i class="material-icons black-text">play_arrow</i></a></div></li>';
+        if(element.tracker){
+            $("list_chapter").innerHTML += '<li class="collection-item"><div>'+element.chapterName+'<a href="chapter.html?id='+element.chapterId+'&page=1" class="secondary-content"><i class="material-icons black-text">play_arrow</i></a><a id="tracker-'+element.chapterId+'" class="secondary-content"><i class="material-icons black-text">visibility</i></a></div></li>';
+            $("tracker-"+element.chapterId).addEventListener("click",disTrack);
+        }else{
+            $("list_chapter").innerHTML += '<li class="collection-item"><div>'+element.chapterName+'<a href="chapter.html?id='+element.chapterId+'&page=1" class="secondary-content"><i class="material-icons black-text">play_arrow</i></a><a class="secondary-content"><i id="tracker-'+element.chapterId+'" class="material-icons black-text">visibility_off</i></a></div></li>';
+            $("tracker-"+element.chapterId).addEventListener("click",track);
+        }
     });
+}
+
+function disTrack(){
+    console.log(event.target.id);
+}
+
+function track(){
+    console.log(event.target.id);
 }
 
 function getStatus(status){
     if(status){
-        return "En emision";
+        return '<div class="chip grey darken-3 white-text">En emision</div>';
     }else{
-        return "Finalizado";
+        return '<div class="chip grey darken-3 white-text">Finalizado</div>';
     }
 }
 
 function getGenresText(genres){
     var genresText = "";
     for(var i = 0; i < genres.length; i++)
-        genresText += genres[i]+" ";
+        genresText += '<div class="chip grey darken-3 white-text">'+genres[i]+'</div>';
     return genresText
 }
 

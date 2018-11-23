@@ -12,6 +12,15 @@ package model;
 public class ChapterModel {
     private String mangaName,chapterLocation,chapterName;
     private int  mangaId, chapterNumber, chapterPages, chapterId;
+    private boolean tracker;
+
+    public boolean isTracker() {
+        return tracker;
+    }
+
+    public void setTracker(boolean tracker) {
+        this.tracker = tracker;
+    }
 
     public int getChapterId() {
         return chapterId;
