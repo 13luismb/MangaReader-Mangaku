@@ -36,7 +36,7 @@ public class LikeFacade {
     }
     
     public String doMangaLike(HttpServletRequest request) throws SQLException, JsonProcessingException{
-        db = this.getConnection();
+        db = DBAccess.getConnection(pReader);
         ResponseModel<LikeModel> resp = new ResponseModel<>();
         ResultSet rs, rs1;
         HttpSession session = request.getSession();
@@ -73,7 +73,7 @@ public class LikeFacade {
         
         try{
             if(sm!=null){
-                db = this.getConnection();
+                db = DBAccess.getConnection(pReader);
                 rs = db.execute(pReader.getValue("ql1"), sm.getId(), id);
                 if(rs.next()){
                     lm.setIsLiked(true);
@@ -97,7 +97,7 @@ public class LikeFacade {
     }
     
     public String deleteMangaLike(HttpServletRequest request) throws JsonProcessingException{
-        db = this.getConnection();
+        db = DBAccess.getConnection(pReader);
         ResponseModel<LikeModel> resp = new ResponseModel<>();
         ResultSet rs;
         HttpSession session = request.getSession();
@@ -122,7 +122,7 @@ public class LikeFacade {
     }
     
     public String doChapterLike(HttpServletRequest request) throws JsonProcessingException{
-        db = this.getConnection();
+        db = DBAccess.getConnection(pReader);
         ResponseModel<LikeModel> resp = new ResponseModel<>();
         ResultSet rs, rs1;
         HttpSession session = request.getSession();
@@ -160,7 +160,7 @@ public class LikeFacade {
         
         try{
             if(sm!=null){
-                db = this.getConnection();
+                db = DBAccess.getConnection(pReader);
                 rs = db.execute(pReader.getValue("ql4"), sm.getId(), id);
                 if(rs.next()){
                     lm.setIsLiked(true);
@@ -185,7 +185,7 @@ public class LikeFacade {
     }    
     
     public String deleteChapterLike(HttpServletRequest request) throws JsonProcessingException{
-                db = this.getConnection();
+        db = DBAccess.getConnection(pReader);
         ResponseModel<LikeModel> resp = new ResponseModel<>();
         ResultSet rs;
         HttpSession session = request.getSession();
@@ -209,8 +209,4 @@ public class LikeFacade {
         return jackson.pojoToJson(resp);
     }
     
-        
-    private DBAccess getConnection(){
-        return new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
-    }
 }

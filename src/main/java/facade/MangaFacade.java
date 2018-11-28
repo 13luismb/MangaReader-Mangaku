@@ -39,8 +39,7 @@ public class MangaFacade {
     }
     
     public String insertManga(HttpServletRequest request) throws SQLException, JsonProcessingException{
-        
-        db = this.getConnection();
+        db = DBAccess.getConnection(pReader);
         ResultSet rs = null;
         ResponseModel<MangaModel> res = new ResponseModel<>();
         HttpSession session = null;
@@ -71,7 +70,7 @@ public class MangaFacade {
     }
     
     public String getManga(HttpServletRequest request) throws JsonProcessingException{
-        db = this.getConnection();
+        db = DBAccess.getConnection(pReader);
         ResultSet rs = null;
         CommentFacade cFacade = new CommentFacade();
         ResponseModel<MangaModel> res = new ResponseModel<>();
@@ -122,7 +121,7 @@ public class MangaFacade {
     }
     
     public String editManga(HttpServletRequest request) throws SQLException, JsonProcessingException{
-        db = this.getConnection();
+        db = DBAccess.getConnection(pReader);
         ResultSet rs = null;
         ResponseModel<MangaModel> res = new ResponseModel<>();
         HttpSession session = request.getSession();
@@ -151,7 +150,7 @@ public class MangaFacade {
     
     
     public String deleteManga(HttpServletRequest request) throws JsonProcessingException {
-        db = this.getConnection();
+        db = DBAccess.getConnection(pReader);
         ResultSet rs = null;
         ResponseModel<MangaModel> res = new ResponseModel<>();
         int id_manga = Integer.parseInt(request.getParameter("id"));
@@ -192,7 +191,7 @@ public class MangaFacade {
     }
     
     public int getGenreId(String genre) throws SQLException{
-        db = this.getConnection();
+        db = DBAccess.getConnection(pReader);
         ResultSet rs = db.execute(pReader.getValue("qg1"),genre);
         if(rs.next()){
             int id = rs.getInt(1);
@@ -207,7 +206,7 @@ public class MangaFacade {
     }
 
     private List<String> getGenresDes(int id_manga) throws SQLException {
-        db = this.getConnection();
+        db = DBAccess.getConnection(pReader);
         ResultSet rs = db.execute(pReader.getValue("qma5"), id_manga);
         List<String> listGenresDes = new ArrayList<>();
         while(rs.next()){
@@ -219,7 +218,7 @@ public class MangaFacade {
     }
 
     private List<ChapterModel> getChaptersManga(int id_manga,SessionModel sm) throws SQLException {
-        db = this.getConnection();
+        db = DBAccess.getConnection(pReader);
         ArrayList<ChapterModel> chapters = new ArrayList();
         ChapterModel chapter = null;
         ResultSet rs = db.execute(pReader.getValue("qca4"), id_manga);
@@ -269,7 +268,7 @@ public class MangaFacade {
 
     
     public String mangaSearch(HttpServletRequest request) throws JsonProcessingException{
-        db = this.getConnection();
+        db = DBAccess.getConnection(pReader);
         ArrayList<MangaModel> groupSMangas = new ArrayList<>();
         ResultSet rs = null;
         int i = 0;
@@ -320,10 +319,6 @@ public class MangaFacade {
             FileUtils.deleteDirectory(new File(directory));
             System.out.println("Lo borré todo durisimo");
         }
-        
-         private DBAccess getConnection(){
-        return new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
-    }
 
     private boolean getVisualitation(int chapter_id, int tracker,DBAccess db) throws SQLException {
         ResultSet rs = null;

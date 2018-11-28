@@ -73,6 +73,10 @@ public class DBAccess {
             ts = new Timestamp(System.currentTimeMillis());
             return ts;
         }
+        
+        public static DBAccess getConnection(PropertiesReader pReader){
+             return new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
+        }
 	
 	//Cerrar conexiones
 	public void close() {

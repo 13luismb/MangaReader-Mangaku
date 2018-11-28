@@ -50,7 +50,7 @@ public class TrackerFacade {
         TrackerModel tracker = new TrackerModel();
         try{
             if(sm!=null){
-                db = this.getConnection();
+                db = DBAccess.getConnection(pReader);
                 rs = db.execute(pReader.getValue("qt3"), sm.getId(),getMangaId(id,db));
                 if (rs.next()){
                     rstwo = db.execute(pReader.getValue("qt4"), rs.getInt(1),id);
@@ -101,9 +101,5 @@ public class TrackerFacade {
         }
         return idManga;
     }
-    
-    private DBAccess getConnection(){
-        return new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
-    }
-    
+
 }

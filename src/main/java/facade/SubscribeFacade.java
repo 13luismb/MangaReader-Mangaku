@@ -25,11 +25,12 @@ import util.Validator;
  */
 public class SubscribeFacade {
     private DBAccess db;
+    private static DBAccess db2;
     private PropertiesReader pReader;
     private JacksonMapper jackson;
     private static SessionModel in;
     private Validator validator;
-    private MailSender ms;
+    private static MailSender ms;
     
     public SubscribeFacade(){
         db = null;
@@ -40,7 +41,7 @@ public class SubscribeFacade {
     }
     
     public String doSubscribe(HttpServletRequest request) throws JsonProcessingException{
-        db = this.getConnection();
+        db = DBAccess.getConnection(pReader);
         ResultSet rs = null;
         SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
         int id = Integer.valueOf(request.getParameter("id"));
@@ -67,7 +68,7 @@ public class SubscribeFacade {
     }
     
     public String deleteSubscribe(HttpServletRequest request) throws JsonProcessingException{
-        db = this.getConnection();
+        db = DBAccess.getConnection(pReader);
         ResultSet rs = null;
         SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
         int id = Integer.valueOf(request.getParameter("id"));
@@ -102,7 +103,7 @@ public class SubscribeFacade {
         SubscribeModel sub = new SubscribeModel();
         try{
             if(sm != null){
-            db = this.getConnection();
+            db = DBAccess.getConnection(pReader);
             rs = db.execute(pReader.getValue("qsu1"), sm.getId(),id);
             if (rs.next()){
                 sub.setIsSubscribed(true);
@@ -125,12 +126,12 @@ public class SubscribeFacade {
         return jackson.pojoToJson(resp);
     }
     
-    protected void sendMail(HttpServletRequest request, PropertiesReader pReader, ChapterModel cm){
-        db = this.getConnection();
+    protected static void sendMail(HttpServletRequest request, PropertiesReader pReader, ChapterModel cm){
+        db2 = DBAccess.getConnection(pReader);
         ArrayList<String> groupAddress = new ArrayList<>();
         ResultSet rs = null;
         try{
-            rs = db.execute(pReader.getValue("qsu4"), cm.getMangaId());
+            rs = db2.execute(pReader.getValue("qsu4"), cm.getMangaId());
             while(rs.next()){
                 groupAddress.add(rs.getString(1));
             }
@@ -140,8 +141,4 @@ public class SubscribeFacade {
         ms = new MailSender(request,pReader,groupAddress,cm);
     }
     
-    
-    private DBAccess getConnection(){
-        return new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
-    }
 }

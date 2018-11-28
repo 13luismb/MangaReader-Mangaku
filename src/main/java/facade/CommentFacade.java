@@ -42,8 +42,7 @@ public class CommentFacade {
     }
     
     public String insertComment(HttpServletRequest request) throws SQLException, JsonProcessingException{
-        
-        db = this.getConnection();
+        db = DBAccess.getConnection(pReader);
         ResponseModel<CommentModel> res = new ResponseModel<>();
         HttpSession session = null;
         
@@ -72,7 +71,7 @@ public class CommentFacade {
     
     //Llamado usualmente desde otro facade
     public List<CommentModel> getListComment(int id_manga,int id_user) throws JsonProcessingException, SQLException{
-        db = this.getConnection();
+        db = DBAccess.getConnection(pReader);
         ArrayList<CommentModel> comments = new ArrayList();
         CommentModel comment = null;
         ResultSet rs = db.execute(pReader.getValue("qcm2"), id_manga);
@@ -95,7 +94,7 @@ public class CommentFacade {
     
     
     public List<CommentModel> getListCommentChapter(int id_chapter,int id_user) throws JsonProcessingException, SQLException{
-        db = this.getConnection();
+        db = DBAccess.getConnection(pReader);
         ArrayList<CommentModel> comments = new ArrayList();
         CommentModel comment = null;
         ResultSet rs = db.execute(pReader.getValue("qcm7"), id_chapter);
@@ -116,7 +115,7 @@ public class CommentFacade {
     }
     
     public String deleteComment(HttpServletRequest request) throws JsonProcessingException {
-        db = this.getConnection();
+        db = DBAccess.getConnection(pReader);
         ResultSet rs = null;
         ResponseModel<CommentModel> res = new ResponseModel<>();
         int id_comment = Integer.parseInt(request.getParameter("id"));
@@ -142,7 +141,7 @@ public class CommentFacade {
     }
     
     public String getNameCreator(int id_user) throws SQLException{
-        db = this.getConnection();
+        db = DBAccess.getConnection(pReader);
         ResultSet rs = db.execute(pReader.getValue("qu4"), id_user);
         String nameCreator = "User";
         while(rs.next()){
@@ -163,9 +162,6 @@ public class CommentFacade {
         return jackson.pojoToJson(json);
     }
     
-    public DBAccess getConnection(){
-        return new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
-    }
 
     public String getComments(HttpServletRequest request) throws JsonProcessingException {
         ResponseModel<List<CommentModel>> res = new ResponseModel<>();
@@ -190,7 +186,7 @@ public class CommentFacade {
     }
 
     public String deleteCommentChapter(HttpServletRequest request) throws JsonProcessingException {
-        db = this.getConnection();
+        db = DBAccess.getConnection(pReader);
         ResultSet rs = null;
         ResponseModel<CommentModel> res = new ResponseModel<>();
         int id_comment = Integer.parseInt(request.getParameter("id"));
