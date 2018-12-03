@@ -275,6 +275,7 @@
         }
         let json = JSON.stringify(body);
         formData.append('json', json);
+        console.log(formData);
         fetch(url, {
                 body: formData,
                 method: 'POST'

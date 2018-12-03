@@ -69,21 +69,35 @@ fetch('.././manga?'+params, config)
 function fillChapter(chapters){
     chapters.forEach(element => {
         if(element.tracker){
-            $("list_chapter").innerHTML += '<li class="collection-item"><div>'+element.chapterName+'<a href="chapter.html?id='+element.chapterId+'&page=1" class="secondary-content"><i class="material-icons black-text">play_arrow</i></a><a id="tracker-'+element.chapterId+'" class="secondary-content"><i class="material-icons black-text">visibility</i></a></div></li>';
-            $("tracker-"+element.chapterId).addEventListener("click",disTrack);
+            $("list_chapter").innerHTML += '<li class="collection-item"><div>'+element.chapterName+'<a href="chapter.html?id='+element.chapterId+'&page=1" class="secondary-content"><i class="material-icons black-text">play_arrow</i></a><a href="#!" onclick="disTrack('+element.chapterId+')" class="secondary-content"><i id="icon-'+element.chapterId+'" class="material-icons black-text">visibility</i></a></div></li>';
         }else{
-            $("list_chapter").innerHTML += '<li class="collection-item"><div>'+element.chapterName+'<a href="chapter.html?id='+element.chapterId+'&page=1" class="secondary-content"><i class="material-icons black-text">play_arrow</i></a><a class="secondary-content"><i id="tracker-'+element.chapterId+'" class="material-icons black-text">visibility_off</i></a></div></li>';
-            $("tracker-"+element.chapterId).addEventListener("click",track);
+            $("list_chapter").innerHTML += '<li class="collection-item"><div>'+element.chapterName+'<a href="chapter.html?id='+element.chapterId+'&page=1" class="secondary-content"><i class="material-icons black-text">play_arrow</i></a><a href="#!" onclick="track('+element.chapterId+')" class="secondary-content"><i id="icon-'+element.chapterId+'" class="material-icons black-text">visibility_off</i></a></div></li>';
         }
     });
 }
 
-function disTrack(){
-    console.log(event.target.id);
+function disTrack(id){
+    let x = location.search.split(/\=/)[1];
+    let url = ".././tracker?mid=" + x +"&cid=" + id;
+    fetch(url, { method: 'DELETE' })
+        .then(resp => resp.json())
+        .then(data => {
+            console.log(data);
+            $("icon-"+id).innerText = "visibility_off";
+            $("icon-"+id).onclick = track();
+    });
 }
 
-function track(){
-    console.log(event.target.id);
+function track(id){
+    let x = location.search.split(/\=/)[1];
+    let url = ".././tracker?id=" + id;
+    fetch(url, { method: 'POST' })
+        .then(resp => resp.json())
+        .then(data => {
+            console.log(data);
+            $("icon-"+id).innerText = "visibility";
+            $("icon-"+id).onclick = disTrack();
+    });
 }
 
 function getStatus(status){

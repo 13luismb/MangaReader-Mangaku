@@ -7,6 +7,7 @@ package facade;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.servlet.http.HttpServletRequest;
 import model.ChapterModel;
 import model.ResponseModel;
@@ -47,7 +48,6 @@ public class TrackerFacade {
         SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
         int id = Integer.valueOf(request.getParameter("id"));
         ResponseModel<TrackerModel> resp = new ResponseModel<>();
-        TrackerModel tracker = new TrackerModel();
         try{
             if(sm!=null){
                 db = this.getConnection();
@@ -86,6 +86,35 @@ public class TrackerFacade {
         
         return jackson.pojoToJson(resp);
     }
+ 
+    public String doDeleteTracker(HttpServletRequest request) throws JsonProcessingException{
+        ResultSet rs = null;
+        SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
+        int idChapter = Integer.valueOf(request.getParameter("cid"));
+        int idManga = Integer.valueOf(request.getParameter("mid"));
+        ResponseModel<TrackerModel> resp = new ResponseModel<>();
+        try{
+            db = this.getConnection();
+            if(sm!=null){
+                rs = db.execute(pReader.getValue("qt3"),sm.getId(),idManga);
+                if(rs.next()){
+                    db.update(pReader.getValue("qt5"), rs.getInt(1),idChapter);
+                    resp.setStatus(200);
+                    resp.setMessage(pReader.getValue("rst3"));
+                }else{
+                    resp.setStatus(200);
+                    resp.setMessage(pReader.getValue("rst5"));
+                }
+                db.close();
+            }
+            rs.close();
+        }catch(Exception e){
+            e.printStackTrace();
+            resp.setStatus(500);
+        }
+        
+        return jackson.pojoToJson(resp);
+    }
     
     private int getMangaId(int id, DBAccess db){
         ResultSet rs = null;
@@ -104,6 +133,28 @@ public class TrackerFacade {
     
     private DBAccess getConnection(){
         return new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
+    }
+    
+    private int getTracker(int id_manga, SessionModel sm,DBAccess db) throws SQLException {
+        try{
+            ResultSet rs = null;
+            if(sm!=null){
+                rs = db.execute(pReader.getValue("qt3"),sm.getId(),id_manga);
+                if(rs.next()){
+                    int tracker = rs.getInt(1);
+                    rs.close();
+                    return tracker;
+                }else{
+                    rs.close();
+                    return 0;
+                }
+            }else{
+                return 0;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            return 0;
+        }
     }
     
 }

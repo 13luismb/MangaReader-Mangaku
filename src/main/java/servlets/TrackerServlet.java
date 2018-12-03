@@ -47,7 +47,9 @@ public class TrackerServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException{
         PrintWriter out = response.getWriter();
+        TrackerFacade trackerF = new TrackerFacade();
         try{
+            out.print(trackerF.doDeleteTracker(request));
         }catch(Exception e){
             e.printStackTrace();
         }

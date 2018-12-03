@@ -363,6 +363,5 @@ public class MangaFacade {
             e.printStackTrace();
             return 0;
         }
-        
     }
 }
