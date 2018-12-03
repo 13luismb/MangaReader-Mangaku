@@ -23,7 +23,7 @@ import util.Validator;
  * @author Usuario
  */
 public class LikeFacade {
-     private DBAccess db;
+    private DBAccess db;
     private PropertiesReader pReader;
     private JacksonMapper jackson;
     private Validator validator;

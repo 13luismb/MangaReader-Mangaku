@@ -8,10 +8,8 @@ package facade;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.sql.ResultSet;
 import javax.servlet.http.HttpServletRequest;
-import model.ChapterModel;
 import model.ResponseModel;
 import model.SessionModel;
-import model.SubscribeModel;
 import model.TrackerModel;
 import util.DBAccess;
 import util.JacksonMapper;
@@ -28,7 +26,6 @@ public class TrackerFacade {
     private DBAccess db;
     private PropertiesReader pReader;
     private JacksonMapper jackson;
-    private static SessionModel in;
     private Validator validator;
     private MailSender ms;
     

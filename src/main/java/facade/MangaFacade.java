@@ -16,7 +16,6 @@ import util.DBAccess;
 import util.JacksonMapper;
 import util.PropertiesReader;
 import util.Validator;
-//import facade.CommentFacade;
 import java.io.File;
 import java.io.IOException;
 import org.apache.commons.io.FileUtils;
@@ -28,7 +27,6 @@ public class MangaFacade {
     private DBAccess db;
     private PropertiesReader pReader;
     private JacksonMapper jackson;
-    private static SessionModel in;
     private Validator validator;
     
     public MangaFacade(){

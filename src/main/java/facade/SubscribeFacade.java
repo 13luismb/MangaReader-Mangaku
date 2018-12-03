@@ -25,19 +25,15 @@ import util.Validator;
  */
 public class SubscribeFacade {
     private DBAccess db;
-    private static DBAccess db2;
     private PropertiesReader pReader;
     private JacksonMapper jackson;
-    private static SessionModel in;
     private Validator validator;
-    private static MailSender ms;
     
     public SubscribeFacade(){
         db = null;
         pReader = PropertiesReader.getInstance();
         jackson = new JacksonMapper();
         validator = new Validator();
-        ms = null;
     }
     
     public String doSubscribe(HttpServletRequest request) throws JsonProcessingException{
@@ -127,7 +123,7 @@ public class SubscribeFacade {
     }
     
     protected static void sendMail(HttpServletRequest request, PropertiesReader pReader, ChapterModel cm){
-        db2 = DBAccess.getConnection(pReader);
+        DBAccess db2 = DBAccess.getConnection(pReader);
         ArrayList<String> groupAddress = new ArrayList<>();
         ResultSet rs = null;
         try{
@@ -138,7 +134,7 @@ public class SubscribeFacade {
         }catch(Exception e){
             e.printStackTrace();
         }
-        ms = new MailSender(request,pReader,groupAddress,cm);
+        MailSender ms = new MailSender(request,pReader,groupAddress,cm);
     }
     
 }

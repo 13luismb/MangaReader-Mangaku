@@ -5,6 +5,7 @@
  */
 package util;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Properties;
 import javax.mail.Message;
@@ -39,12 +40,8 @@ public class MailSender extends Thread{
       properties.setProperty("mail.smtp.auth", "true");
       Session session = Session.getDefaultInstance(properties);
       String host = "localhost:"+request.getServerPort();
-      String bodyText = "<h1>New Manga chapter!</h1>"
-              + "<p>The following series: <h2><b>"+cm.getMangaName()+"</b></h2>, has been updated, "
-              + "and a brand new chapter is on! It's chapter No. "+cm.getChapterNumber()+". "
-              + "<a href=\"http://"+host+"/Mangaku/views/chapter.html?id="+cm.getChapterId()+"&page=1\">Read now!</a></p>";
-      
-
+      String bodyText = MessageFormat.format(pReader.getValue("mailbody"), cm.getMangaName(),cm.getChapterNumber(), host,cm.getChapterId());
+        System.out.println(bodyText);
      //compose the message
       try{             
          MimeMessage message = new MimeMessage(session);
