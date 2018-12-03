@@ -9,10 +9,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.servlet.http.HttpServletRequest;
-import model.ChapterModel;
 import model.ResponseModel;
 import model.SessionModel;
-import model.SubscribeModel;
 import model.TrackerModel;
 import util.DBAccess;
 import util.JacksonMapper;
@@ -29,16 +27,11 @@ public class TrackerFacade {
     private DBAccess db;
     private PropertiesReader pReader;
     private JacksonMapper jackson;
-    private static SessionModel in;
-    private Validator validator;
-    private MailSender ms;
     
     public TrackerFacade(){
         db = null;
         pReader = PropertiesReader.getInstance();
         jackson = new JacksonMapper();
-        validator = new Validator();
-        ms = null;
     }
     
     public String doTracker(HttpServletRequest request) throws JsonProcessingException{
@@ -50,7 +43,7 @@ public class TrackerFacade {
         ResponseModel<TrackerModel> resp = new ResponseModel<>();
         try{
             if(sm!=null){
-                db = this.getConnection();
+                db = DBAccess.getConnection(pReader);
                 rs = db.execute(pReader.getValue("qt3"), sm.getId(),getMangaId(id,db));
                 if (rs.next()){
                     rstwo = db.execute(pReader.getValue("qt4"), rs.getInt(1),id);
@@ -94,7 +87,7 @@ public class TrackerFacade {
         int idManga = Integer.valueOf(request.getParameter("mid"));
         ResponseModel<TrackerModel> resp = new ResponseModel<>();
         try{
-            db = this.getConnection();
+            db = DBAccess.getConnection(pReader);
             if(sm!=null){
                 rs = db.execute(pReader.getValue("qt3"),sm.getId(),idManga);
                 if(rs.next()){
@@ -129,10 +122,6 @@ public class TrackerFacade {
             e.printStackTrace();
         }
         return idManga;
-    }
-    
-    private DBAccess getConnection(){
-        return new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
     }
     
     private int getTracker(int id_manga, SessionModel sm,DBAccess db) throws SQLException {

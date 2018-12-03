@@ -29,7 +29,7 @@ public class UserFacade {
     }
 
     public String insertUser(HttpServletRequest request) throws SQLException, JsonProcessingException{
-        db = this.getConnection();
+        db = DBAccess.getConnection(pReader);
         ResultSet rs = null;
         ResponseModel<SessionModel> res = new ResponseModel();
         String salt = Encrypter.getSalt(10);
@@ -57,7 +57,7 @@ public class UserFacade {
         }    
     
     private SessionModel getUserData(HttpServletRequest request) throws SQLException{
-        db = this.getConnection();
+        db = DBAccess.getConnection(pReader);
         ResultSet rs = null;
         SessionModel dataUser = null; 
         
@@ -187,8 +187,5 @@ private String getUserSalt(ResultSet rs) throws IOException{
     private void setSessionValues(HttpSession session, SessionModel in){
         session.setAttribute("session", in);
     }
-    
-    private DBAccess getConnection(){
-        return new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
-    }
+
 }

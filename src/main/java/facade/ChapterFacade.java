@@ -13,7 +13,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -23,7 +22,6 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import model.ChapterModel;
 import model.ResponseModel;
@@ -52,7 +50,7 @@ public class ChapterFacade {
     }
     
     public ChapterModel chapterRequestValid(HttpServletRequest request, String st) throws IOException, SQLException{ //Listo
-        db = this.getConnection();
+        db = DBAccess.getConnection(pReader);
         ResultSet rs = null;
         ChapterModel cm = null;
       if (!request.getSession().isNew()){
@@ -75,7 +73,7 @@ public class ChapterFacade {
     }
     
     public String chapterCreate(HttpServletRequest request) throws IOException, ServletException, SQLException{ //Refactorizar
-        db = this.getConnection();
+        db = DBAccess.getConnection(pReader);
         ResponseModel<ChapterModel> res = new ResponseModel();
         String m = request.getParameter("json");
         System.out.println(m);
@@ -90,8 +88,7 @@ public class ChapterFacade {
                     res.setData(cm);
                     res.setStatus(201);
                     res.setMessage(pReader.getValue("rc1")); //
-                    SubscribeFacade subs = new SubscribeFacade();
-                    subs.sendMail(request, pReader, cm);
+                    SubscribeFacade.sendMail(request, pReader, cm);
                 }else{
                     res.setStatus(403);
                     res.setMessage(pReader.getValue("rc2")); //
@@ -109,7 +106,7 @@ public class ChapterFacade {
     }
 
     public void chapterGet(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException{
-        db = this.getConnection();
+        db = DBAccess.getConnection(pReader);
         ResponseModel<ChapterModel> res = new ResponseModel();
         ChapterModel cm = new ChapterModel();
         int id_chapter = Integer.parseInt(request.getParameter("id"));
@@ -124,7 +121,7 @@ public class ChapterFacade {
      }
 
     public String getChapterInfo(HttpServletRequest request) throws SQLException, JsonProcessingException{
-        db = this.getConnection();
+        db = DBAccess.getConnection(pReader);
         ResponseModel<ChapterModel> res = new ResponseModel();
         ChapterModel cm = new ChapterModel();
         int id_chapter = Integer.parseInt(request.getParameter("id"));
@@ -143,7 +140,7 @@ public class ChapterFacade {
     }
     
     public String chapterUpdate(HttpServletRequest request) throws IOException, ServletException{
-        db = this.getConnection();
+        db = DBAccess.getConnection(pReader);
         ResponseModel<ChapterModel> res = new ResponseModel();
         ChapterModel cm = jackson.jsonToPojo(request, ChapterModel.class) ;
         SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
@@ -167,7 +164,7 @@ public class ChapterFacade {
 }
 
     public String chapterDelete(HttpServletRequest request) throws IOException, ServletException{
-        db = this.getConnection();
+        db = DBAccess.getConnection(pReader);
         ResponseModel<ChapterModel> res = new ResponseModel();
         ChapterModel cm = jackson.jsonToPojo(request, ChapterModel.class);
         SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
@@ -390,7 +387,4 @@ public class ChapterFacade {
         }
     }
     
-    private DBAccess getConnection(){
-        return new DBAccess(pReader.getValue("dbDriver"),pReader.getValue("dbUrl"),pReader.getValue("dbUser"),pReader.getValue("dbPassword"));
-    }
 }
