@@ -126,15 +126,20 @@ public class MangaFacade {
         try{
             
             MangaModel manga = jackson.jsonToPojo(request,MangaModel.class);
-            rs = db.execute(pReader.getValue("qmu3"),manga.getId(),sm.getId());
+            rs = db.execute(pReader.getValue("qmu3"),manga.getId());
             if(rs.next()){
-                db.update(pReader.getValue("qmu1"),manga.getName(),manga.getSynopsis(),manga.getStatus(),manga.getId());
-                res.setData(manga);
-                res.setStatus(200);
-                res.setMessage(pReader.getValue("rm6"));
+                if(sm.getId() == rs.getInt(2) || sm.getTypeuser() == 1){
+                    db.update(pReader.getValue("qmu1"),manga.getName(),manga.getSynopsis(),manga.getStatus(),manga.getId());
+                    res.setData(manga);
+                    res.setStatus(200);
+                    res.setMessage(pReader.getValue("rm6"));
+                }else{
+                    res.setStatus(403);
+                    res.setMessage(pReader.getValue("rm4"));
+                }
             }else{
-                res.setStatus(500);
-                res.setMessage(pReader.getValue("rm4"));
+                res.setStatus(404);
+                res.setMessage(pReader.getValue("rm3"));
             }
             rs.close();
             db.close();
@@ -146,7 +151,7 @@ public class MangaFacade {
     }
     
     
-    public String deleteManga(HttpServletRequest request) throws JsonProcessingException {
+    public String deleteManga(HttpServletRequest request) throws JsonProcessingException, SQLException {
         db = DBAccess.getConnection(pReader);
         ResultSet rs = null;
         ResponseModel<MangaModel> res = new ResponseModel<>();
@@ -156,21 +161,29 @@ public class MangaFacade {
         MangaModel ma = new MangaModel();
         
         try{
-            rs = db.execute(pReader.getValue("qmu3"),id_manga,sm.getId());
+            rs = db.execute(pReader.getValue("qmu3"),id_manga);
             if(rs.next()){
-                ma.setName(rs.getString(3));
-                this.deleteMangaData(request, ma);
-                db.update(pReader.getValue("qmu2"),id_manga);
-                res.setStatus(200);
-                res.setMessage(pReader.getValue("rm7"));
+                if(sm.getId() == rs.getInt(2) || sm.getTypeuser() == 1){
+                    ma.setName(rs.getString(3));
+                    this.deleteMangaData(request, ma);
+                    db.update(pReader.getValue("qmu2"),id_manga);
+                    res.setStatus(200);
+                    res.setMessage(pReader.getValue("rm7"));
+                }else{
+                    res.setStatus(403);
+                    res.setMessage(pReader.getValue("rm4"));
+                }
             }else{
-                res.setStatus(500);
-                res.setMessage(pReader.getValue("rm4"));
+                res.setStatus(404);
+                res.setMessage(pReader.getValue("rm3"));
             }
-            rs.close();
-            db.close();
         }catch(Exception e){
             e.printStackTrace();
+            res.setStatus(500);
+            res.setMessage("e1");
+        }finally{
+            rs.close();
+            db.close();
         }
         
         return jackson.pojoToJson(res);
