@@ -5,7 +5,7 @@
  */
 package servlets;
 
-import facade.MangaFacade;
+import facade.UserFacade;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -18,24 +18,30 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Usuario
  */
-@WebServlet(name = "SearchServlet", urlPatterns = {"/search"})
-public class SearchServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
-
+@WebServlet(name = "AdminServlet", urlPatterns = {"/admins"})
+public class AdminServlet extends HttpServlet {
     @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+    }
+     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         PrintWriter out = response.getWriter();
-        MangaFacade manga = new MangaFacade();
-
+        UserFacade user = new UserFacade();
+        
         try{
-                out.print(manga.mangaSearch(request));       
+            out.print(user.userSearch(request));     
         }catch(Exception e){
             e.printStackTrace();
-        }
+        } 
     }
-
-    @Override
+    
+     @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+    }
+     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
     }

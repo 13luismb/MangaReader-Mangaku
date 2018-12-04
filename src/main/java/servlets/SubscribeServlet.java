@@ -40,7 +40,12 @@ public class SubscribeServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         SubscribeFacade subs = new SubscribeFacade();
         try{
-            out.print(subs.doSubscribe(request));
+            if (request.getParameter("email") == null){
+                out.print(subs.doSubscribe(request));  
+            }else{
+                out.print(subs.doVisitorSubscribe(request));
+            }
+
         }catch(Exception e){
             e.printStackTrace();
         }

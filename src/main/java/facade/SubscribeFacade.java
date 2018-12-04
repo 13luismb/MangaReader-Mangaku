@@ -122,19 +122,41 @@ public class SubscribeFacade {
         return jackson.pojoToJson(resp);
     }
     
+    public String doVisitorSubscribe(HttpServletRequest request) throws JsonProcessingException{
+        db = DBAccess.getConnection(pReader);
+        ResponseModel<?> resp = new ResponseModel<>();
+        String visitor = request.getParameter("email");
+        int id = Integer.valueOf(request.getParameter("id"));
+        try{
+            db.update(pReader.getValue("qsuv2"), id, visitor);
+            resp.setStatus(202);
+            resp.setMessage(pReader.getValue("rsuv1"));
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return jackson.pojoToJson(resp);
+    }
+    
     protected static void sendMail(HttpServletRequest request, PropertiesReader pReader, ChapterModel cm){
         DBAccess db2 = DBAccess.getConnection(pReader);
         ArrayList<String> groupAddress = new ArrayList<>();
-        ResultSet rs = null;
+        ResultSet rs, rs2;
         try{
             rs = db2.execute(pReader.getValue("qsu4"), cm.getMangaId());
             while(rs.next()){
                 groupAddress.add(rs.getString(1));
             }
+            rs2 = db2.execute(pReader.getValue("qsuv1"), cm.getMangaId());
+            while(rs2.next()){
+                groupAddress.add(rs2.getString(1));
+            }
+            rs.close();
+            rs2.close();
         }catch(Exception e){
             e.printStackTrace();
         }
+        db2.close();
         MailSender ms = new MailSender(request,pReader,groupAddress,cm);
     }
-    
+
 }
