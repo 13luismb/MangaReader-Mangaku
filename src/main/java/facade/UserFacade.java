@@ -6,10 +6,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import model.MangaModel;
 import model.ResponseModel;
 import util.*;
 
@@ -188,4 +190,40 @@ private String getUserSalt(ResultSet rs) throws IOException{
         session.setAttribute("session", in);
     }
 
+    public String userSearch (HttpServletRequest request) throws JsonProcessingException{
+    db = DBAccess.getConnection(pReader);
+        ArrayList<SessionModel> groupSUsers = new ArrayList<>();
+        ResultSet rs = null;
+        int i = 0;
+        try{
+            rs = doUserSearch(request, db);
+            while(rs.next()){
+                 groupSUsers.add(new SessionModel());
+                 groupSUsers.get(i).setId(rs.getInt(1));
+                 groupSUsers.get(i).setTypeuser(rs.getInt(2));
+                 groupSUsers.get(i).setUsername(rs.getString(3));
+                 groupSUsers.get(i).setName(rs.getString(4));
+                 groupSUsers.get(i).setEmail(rs.getString(5));
+                 i++;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }     
+        return jackson.pojoToJson(groupSUsers);
+    }
+        private String getSearchValue(String value){
+        StringBuilder pSearch = new StringBuilder();
+        pSearch.append("%").append(value).append("%");
+            return pSearch.toString();
+        }
+    private ResultSet doUserSearch (HttpServletRequest request, DBAccess db){
+        ResultSet rs = null;
+        String value = this.getSearchValue(request.getParameter("username"));
+        try{
+            rs = db.execute(pReader.getValue("qadminsearch"), value);
+        }catch(Exception e){
+                    e.printStackTrace();
+        }
+        return rs;
+    }
 }

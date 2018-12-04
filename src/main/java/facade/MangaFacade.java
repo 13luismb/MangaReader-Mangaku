@@ -78,7 +78,6 @@ public class MangaFacade {
         int id_manga = Integer.parseInt(request.getParameter("id"));
         
         
-        
         try{
             rs = db.execute(pReader.getValue("qma4"), id_manga);
             if(rs.next()){
@@ -91,7 +90,7 @@ public class MangaFacade {
                 
                 if(!session.isNew() && sm!=null){
                     dataManga.setComment(cFacade.getListComment(id_manga,sm.getId()));
-                    if(sm.getId() == rs.getInt(2)){
+                    if(sm.getId() == rs.getInt(2) || sm.getTypeuser() == 1){
                         res.setStatus(201);
                         res.setMessage(pReader.getValue("rm5"));
                     }else{
