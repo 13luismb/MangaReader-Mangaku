@@ -5,6 +5,7 @@
  */
 package servlets;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import facade.UserFacade;
 import java.io.IOException;
@@ -34,7 +35,7 @@ public class RegisterServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, JsonProcessingException {
             UserFacade userFacade = new UserFacade();
             PrintWriter out = response.getWriter();  
             
@@ -42,7 +43,9 @@ public class RegisterServlet extends HttpServlet {
                 out.print(userFacade.insertUser(request)); 
             } catch (SQLException ex) {
                 Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            } catch (CloneNotSupportedException ex) {
+            Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import model.MangaModel;
 import model.ResponseModel;
+import model.SubscribeModel;
 import util.*;
 
 public class UserFacade {
@@ -22,18 +23,19 @@ public class UserFacade {
     private JacksonMapper jackson;
     private Validator validator;
     private SessionModel sessionData;
-    
+    private ModelCache modelCache;
     public UserFacade(){
         db = null;
         pReader = PropertiesReader.getInstance();
         jackson = new JacksonMapper();
         validator = new Validator();
+        modelCache = ModelCache.getInstance();
     }
 
-    public String insertUser(HttpServletRequest request) throws SQLException, JsonProcessingException{
+    public String insertUser(HttpServletRequest request) throws SQLException, JsonProcessingException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
         ResultSet rs = null;
-        ResponseModel<SessionModel> res = new ResponseModel();
+        ResponseModel<SessionModel> res = (ResponseModel) modelCache.getModel("Response");
         String salt = Encrypter.getSalt(10);
         
         try{
@@ -64,7 +66,7 @@ public class UserFacade {
         SessionModel dataUser = null; 
         
         try{
-            dataUser = new SessionModel();
+            dataUser = (SessionModel) modelCache.getModel("Session");
             UserModel user = jackson.jsonToPojo(request,UserModel.class);
             String salt = this.getUserSalt(db.execute(pReader.getValue("qu1"), user.getUsername(), user.getUsername()));
             if (salt != null){
@@ -105,8 +107,8 @@ public HttpSession checkUser(HttpServletRequest request) throws JsonProcessingEx
     return session;
 }
 
-public String sessionCreate(HttpServletRequest request) throws JsonProcessingException{
-    ResponseModel<SessionModel> data = new ResponseModel<>();
+public String sessionCreate(HttpServletRequest request) throws JsonProcessingException, CloneNotSupportedException{
+    ResponseModel<SessionModel> data = (ResponseModel) modelCache.getModel("Response");
     HttpSession session = checkUser(request);
     SessionModel sm = (SessionModel) session.getAttribute("session");
     System.out.println(sm.getUsername());
@@ -127,9 +129,9 @@ public String sessionCreate(HttpServletRequest request) throws JsonProcessingExc
         return jackson.pojoToJson(data);
 }
 
-public String sessionDestroy(HttpServletRequest request) throws JsonProcessingException{       
+public String sessionDestroy(HttpServletRequest request) throws JsonProcessingException, CloneNotSupportedException{       
         HttpSession session = request.getSession();
-        ResponseModel<String> data = new ResponseModel<>();
+        ResponseModel<String> data = (ResponseModel) modelCache.getModel("Response");
         
 	if (session.isNew()) {
             data.setStatus(200);
@@ -198,7 +200,7 @@ private String getUserSalt(ResultSet rs) throws IOException{
         try{
             rs = doUserSearch(request, db);
             while(rs.next()){
-                 groupSUsers.add(new SessionModel());
+                 groupSUsers.add((SessionModel) modelCache.getModel("Session"));
                  groupSUsers.get(i).setId(rs.getInt(1));
                  groupSUsers.get(i).setTypeuser(rs.getInt(2));
                  groupSUsers.get(i).setUsername(rs.getString(3));

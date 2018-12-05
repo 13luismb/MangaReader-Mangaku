@@ -28,6 +28,7 @@ import model.ResponseModel;
 import model.SessionModel;
 import util.DBAccess;
 import util.JacksonMapper;
+import util.ModelCache;
 import util.PropertiesReader;
 import util.Validator;
 
@@ -41,12 +42,15 @@ public class ChapterFacade {
     private PropertiesReader pReader;
     private JacksonMapper jackson;
     private Validator validator;
+    private ModelCache modelCache;
+    
 
     public ChapterFacade(){
         db = null;
         pReader = PropertiesReader.getInstance();
         jackson = new JacksonMapper();
         validator = new Validator();
+        modelCache = ModelCache.getInstance();
     }
     
     public ChapterModel chapterRequestValid(HttpServletRequest request, String st) throws IOException, SQLException{ //Listo
@@ -72,9 +76,9 @@ public class ChapterFacade {
         return null;
     }
     
-    public String chapterCreate(HttpServletRequest request) throws IOException, ServletException, SQLException{ //Refactorizar
+    public String chapterCreate(HttpServletRequest request) throws IOException, ServletException, SQLException, CloneNotSupportedException{ //Refactorizar
         db = DBAccess.getConnection(pReader);
-        ResponseModel<ChapterModel> res = new ResponseModel();
+        ResponseModel<ChapterModel> res = (ResponseModel) modelCache.getModel("Response");
         String m = request.getParameter("json");
         System.out.println(m);
         ChapterModel cm = chapterRequestValid(request, m);
@@ -105,10 +109,10 @@ public class ChapterFacade {
     return jackson.pojoToJson(res);
     }
 
-    public void chapterGet(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException{
+    public void chapterGet(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
-        ResponseModel<ChapterModel> res = new ResponseModel();
-        ChapterModel cm = new ChapterModel();
+        ResponseModel<ChapterModel> res = (ResponseModel) modelCache.getModel("Response");
+        ChapterModel cm = (ChapterModel) modelCache.getModel("Chapter");
         int id_chapter = Integer.parseInt(request.getParameter("id"));
             if (requestGet(cm, db, pReader, id_chapter)){
                 db.close();
@@ -120,10 +124,10 @@ public class ChapterFacade {
             db.close();          
      }
 
-    public String getChapterInfo(HttpServletRequest request) throws SQLException, JsonProcessingException{
+    public String getChapterInfo(HttpServletRequest request) throws SQLException, JsonProcessingException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
-        ResponseModel<ChapterModel> res = new ResponseModel();
-        ChapterModel cm = new ChapterModel();
+        ResponseModel<ChapterModel> res = (ResponseModel) modelCache.getModel("Response");
+        ChapterModel cm = (ChapterModel) modelCache.getModel("Chapter");
         int id_chapter = Integer.parseInt(request.getParameter("id"));
             if (requestGet(cm, db, pReader, id_chapter)){
                 db.close();
@@ -139,33 +143,33 @@ public class ChapterFacade {
             
     }
     
-    public String chapterUpdate(HttpServletRequest request) throws IOException, ServletException{
+    public String chapterUpdate(HttpServletRequest request) throws IOException, ServletException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
-        ResponseModel<ChapterModel> res = new ResponseModel();
+        ResponseModel<ChapterModel> res = (ResponseModel) modelCache.getModel("Response");
         ChapterModel cm = jackson.jsonToPojo(request, ChapterModel.class) ;
         SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
         
         if(cm != null){
-                if(requestUpdate(sm, cm, db, pReader, (Boolean) request.getAttribute("isAdmin"))){
-                    db.close();
-                    res.setData(cm);
-                    res.setStatus(200);
-                    res.setMessage(pReader.getValue("rc7"));
-                }else{
-                    res.setStatus(403);
-                    res.setMessage(pReader.getValue("rc8"));
-                } 
+            if(requestUpdate(sm, cm, db, pReader, (Boolean) request.getAttribute("isAdmin"))){
+                db.close();
+                res.setData(cm);
+                res.setStatus(200);
+                res.setMessage(pReader.getValue("rc7"));
+            }else{
+                res.setStatus(403);
+                res.setMessage(pReader.getValue("rc8"));
+            } 
         }else{
-                    res.setStatus(500);
-                    res.setMessage(pReader.getValue("rc4"));
-                }
+            res.setStatus(500);
+            res.setMessage(pReader.getValue("rc4"));
+        }
         db.close();
         return jackson.pojoToJson(res);
 }
 
-    public String chapterDelete(HttpServletRequest request) throws IOException, ServletException{
+    public String chapterDelete(HttpServletRequest request) throws IOException, ServletException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
-        ResponseModel<ChapterModel> res = new ResponseModel();
+        ResponseModel<ChapterModel> res = (ResponseModel) modelCache.getModel("Response");
         ChapterModel cm = jackson.jsonToPojo(request, ChapterModel.class);
         SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
         
@@ -195,9 +199,9 @@ public class ChapterFacade {
            rs = db.execute(pReader.getValue("qca1"), cm.getChapterId());
             if(rs.next()){   
                 if(isAdmin){
-                db.update(pReader.getValue("qcx1"), cm.getChapterNumber(),cm.getChapterName(),cm.getChapterPages(),cm.getMangaId(),cm.getChapterId());
+                    db.update(pReader.getValue("qcx1"), cm.getChapterNumber(),cm.getChapterName(),cm.getChapterPages(),cm.getMangaId(),cm.getChapterId());
                 }else{
-                db.update(pReader.getValue("qcu1"), cm.getChapterNumber(),cm.getChapterName(),cm.getChapterLocation(),cm.getChapterPages(),cm.getChapterId(), sm.getId());
+                    db.update(pReader.getValue("qcu1"), cm.getChapterNumber(),cm.getChapterName(),cm.getChapterLocation(),cm.getChapterPages(),cm.getChapterId(), sm.getId());
                 }
                 return true;
             }  
@@ -230,9 +234,9 @@ public class ChapterFacade {
         ResultSet rs = null;
         try{
             if (isAdmin){
-            rs = db.execute(pReader.getValue("qcx3"), cm.getMangaId(),cm.getChapterNumber(),cm.getChapterName(),cm.getChapterLocation(),cm.getChapterPages());    
+                rs = db.execute(pReader.getValue("qcx3"), cm.getMangaId(),cm.getChapterNumber(),cm.getChapterName(),cm.getChapterLocation(),cm.getChapterPages());    
             }else{
-            rs = db.execute(pReader.getValue("qcu3"), sm.getId(), cm.getMangaId(),cm.getChapterNumber(),cm.getChapterName(),cm.getChapterLocation(),cm.getChapterPages());  
+                rs = db.execute(pReader.getValue("qcu3"), sm.getId(), cm.getMangaId(),cm.getChapterNumber(),cm.getChapterName(),cm.getChapterLocation(),cm.getChapterPages());  
             }
                 if(rs.next()){
                     cm.setChapterId(rs.getInt(1));

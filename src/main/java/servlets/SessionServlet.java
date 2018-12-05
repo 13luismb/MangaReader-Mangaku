@@ -11,6 +11,8 @@ import model.ResponseModel;
 import facade.UserFacade;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -37,6 +39,8 @@ public class SessionServlet extends HttpServlet {
             out.print(user.sessionDestroy(request));
         }catch(JsonProcessingException e){
             e.printStackTrace();
+        } catch (CloneNotSupportedException ex) {
+            Logger.getLogger(SessionServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -50,6 +54,8 @@ public class SessionServlet extends HttpServlet {
             out.print(user.sessionCreate(request));
         }catch(JsonProcessingException e){
             e.printStackTrace();
+        } catch (CloneNotSupportedException ex) {
+            Logger.getLogger(SessionServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
   
     }

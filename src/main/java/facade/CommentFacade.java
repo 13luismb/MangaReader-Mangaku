@@ -12,11 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import model.ChapterModel;
 import model.ResponseModel;
 import model.SessionModel;
 import model.CommentModel;
 import util.DBAccess;
 import util.JacksonMapper;
+import util.ModelCache;
 import util.PropertiesReader;
 import util.Validator;
 
@@ -30,17 +32,19 @@ public class CommentFacade {
     private PropertiesReader pReader;
     private JacksonMapper jackson;
     private Validator validator;
+    private ModelCache modelCache;
 
     public CommentFacade(){
         db = null;
         pReader = PropertiesReader.getInstance();
         jackson = new JacksonMapper();
         validator = new Validator();
+        modelCache = ModelCache.getInstance();
     }
     
-    public String insertComment(HttpServletRequest request) throws SQLException, JsonProcessingException{
+    public String insertComment(HttpServletRequest request) throws SQLException, JsonProcessingException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
-        ResponseModel<CommentModel> res = new ResponseModel<>();
+        ResponseModel<CommentModel> res = (ResponseModel) modelCache.getModel("Response");
         HttpSession session = null;
         
         try{
@@ -67,13 +71,13 @@ public class CommentFacade {
     }
     
     //Llamado usualmente desde otro facade
-    public List<CommentModel> getListComment(int id_manga,int id_user) throws JsonProcessingException, SQLException{
+    public List<CommentModel> getListComment(int id_manga,int id_user) throws JsonProcessingException, SQLException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
         ArrayList<CommentModel> comments = new ArrayList();
         CommentModel comment = null;
         ResultSet rs = db.execute(pReader.getValue("qcm2"), id_manga);
         while (rs.next()){
-            comment = new CommentModel();
+            comment = (CommentModel) modelCache.getModel("Comment");
             comment.setId(rs.getInt(1));
             if(!rs.getBoolean(6)){
                 comment.setContent(rs.getString(4));
@@ -90,13 +94,13 @@ public class CommentFacade {
     }
     
     
-    public List<CommentModel> getListCommentChapter(int id_chapter,int id_user) throws JsonProcessingException, SQLException{
+    public List<CommentModel> getListCommentChapter(int id_chapter,int id_user) throws JsonProcessingException, SQLException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
         ArrayList<CommentModel> comments = new ArrayList();
         CommentModel comment = null;
         ResultSet rs = db.execute(pReader.getValue("qcm7"), id_chapter);
         while (rs.next()){
-            comment = new CommentModel();
+            comment = (CommentModel)modelCache.getModel("Comment");
             comment.setId(rs.getInt(1));
             if(!rs.getBoolean(6)){
                 comment.setContent(rs.getString(4));
@@ -111,10 +115,10 @@ public class CommentFacade {
         return comments;
     }
     
-    public String deleteComment(HttpServletRequest request) throws JsonProcessingException {
+    public String deleteComment(HttpServletRequest request) throws JsonProcessingException, CloneNotSupportedException {
         db = DBAccess.getConnection(pReader);
         ResultSet rs = null;
-        ResponseModel<CommentModel> res = new ResponseModel<>();
+        ResponseModel<CommentModel> res = (ResponseModel) modelCache.getModel("Response");
         int id_comment = Integer.parseInt(request.getParameter("id"));
         HttpSession session = request.getSession();
         SessionModel sm = (SessionModel) session.getAttribute("session");
@@ -160,8 +164,8 @@ public class CommentFacade {
     }
     
 
-    public String getComments(HttpServletRequest request) throws JsonProcessingException {
-        ResponseModel<List<CommentModel>> res = new ResponseModel<>();
+    public String getComments(HttpServletRequest request) throws JsonProcessingException, CloneNotSupportedException {
+        ResponseModel<List<CommentModel>> res = (ResponseModel) modelCache.getModel("Response");
         HttpSession session = null;
         
         try{
@@ -182,10 +186,10 @@ public class CommentFacade {
         return jackson.pojoToJson(res);
     }
 
-    public String deleteCommentChapter(HttpServletRequest request) throws JsonProcessingException {
+    public String deleteCommentChapter(HttpServletRequest request) throws JsonProcessingException, CloneNotSupportedException {
         db = DBAccess.getConnection(pReader);
         ResultSet rs = null;
-        ResponseModel<CommentModel> res = new ResponseModel<>();
+        ResponseModel<CommentModel> res = (ResponseModel) modelCache.getModel("Response");
         int id_comment = Integer.parseInt(request.getParameter("id"));
         System.out.println(id_comment);
         HttpSession session = request.getSession();

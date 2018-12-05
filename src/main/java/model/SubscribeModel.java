@@ -9,7 +9,7 @@ package model;
  *
  * @author Usuario
  */
-public class SubscribeModel {
+public class SubscribeModel extends ModelClass{
     private boolean isSubscribed;
 
     public boolean isIsSubscribed() {

@@ -6,21 +6,22 @@
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link type="text/css" rel="stylesheet" href="../css/materialize.min.css"  media="screen,projection"/>
     </head>
-    <body>
+    <body class="grey">
         <script type="text/javascript" src="../js/materialize.min.js"></script>
-        
-        <ul id='dropdown1' class='dropdown-content'>
+
+
+            <!--DropDown-->
+            <ul id='dropdown1' class='dropdown-content'>
                 <li><a href="#modal1" class="modal-trigger" >Crear manga</a></li>
-                <li><a href="#!">Subir capitulo</a></li>
                 <li><a href="#!" onClick="logout()">Log-out</a></li>
-        </ul>
+            </ul>
 
 
             <!--Navbar-->
-            <nav class="black" style="position:absolute;z-index: 2;">
+            <nav class="black">
                 <div class="nav-wrapper container">
                     <a href="#" class="brand-logo center">Mangaku</a>
-                    
+
                     <form class="left hide-on-med-and-down" style="width:40%">
                         <div class="input-field">
                             <input id="search" placeholder="Busca tus mangas favoritos aqui" type="search" required>
@@ -35,14 +36,127 @@
                     </ul>
                     <!-- User-name and log-out-->
                     <ul id="name-logout" class="hide-on-med-and-down right" hidden>
-                        <li><a id="user-name" href="config.html"></a></li>
+                        <li><a id="user-name"></a></li>
                         <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Opciones<i class="material-icons right">arrow_drop_down</i></a></li>
                     </ul>
                 </div>
             </nav>
             <!--End Navbar-->
             <!--Div-->
-            <div class="grey" style="position: absolute;height:100vh;width: 100%;z-index: 1;filter:brightness(0.1);background-image: url('../images/wallpaper-2.jpg');">
+            <div class="container row">
+                <br>
+                <div class="col s10">
+                    <div id="myManga" class="row">
+                        <h4>
+                            Lista de tus Mangas:
+                        </h4>
+                        <div class="card grey darken-1 carousel-item col s3">
+                            <div class="card-content white-text">
+                                <span class="card-title center">Pokemon Special</span>
+                            </div>
+                            <div class="card-action center">
+                                <br>
+                                <a href="project.html?project_id=' + element.project_id + '" class="waves-effect waves-light btn lime">Acceder</a>
+                            </div>
+                        </div>
+                                                                                
+                        <br>
+                    </div>
+                    <div id="readManga" class="row">
+                        <h4>
+                            Lista de Mangas leidos:
+                        </h4>
+                        <div class="card grey darken-1 carousel-item col s3">
+                            <div class="card-content white-text">
+                                <span class="card-title center">Dragon Ball Super</span>
+                            </div>
+                            <div class="card-action center">
+                                <br>
+                                <a href="project.html?project_id=' + element.project_id + '" class="waves-effect waves-light btn lime">Acceder</a>
+                            </div>
+                        </div>
+                        <div class="card grey darken-1 carousel-item col s3">
+                                <div class="card-content white-text">
+                                    <span class="card-title center">Dragon Ball Super</span>
+                                </div>
+                                <div class="card-action center">
+                                    <br>
+                                    <a href="project.html?project_id=' + element.project_id + '" class="waves-effect waves-light btn lime">Acceder</a>
+                                </div>
+                            </div>
+                            <div class="card grey darken-1 carousel-item col s3">
+                                    <div class="card-content white-text">
+                                        <span class="card-title center">Dragon Ball Super</span>
+                                    </div>
+                                    <div class="card-action center">
+                                        <br>
+                                        <a href="project.html?project_id=' + element.project_id + '" class="waves-effect waves-light btn lime">Acceder</a>
+                                    </div>
+                                </div>
+                        <br>
+                    </div>
+                    <div id="newManga" class="row">
+                        <h4>
+                            Lista de Mangas nuevos:
+                        </h4>
+                        <div class="card grey darken-1 carousel-item col s3">
+                            <div class="card-content white-text">
+                                <span class="card-title center">Dragon Ball Super</span>
+                            </div>
+                            <div class="card-action center">
+                                <br>
+                                <a href="project.html?project_id=' + element.project_id + '" class="waves-effect waves-light btn lime">Acceder</a>
+                            </div>
+                        </div>
+                        <div class="card grey darken-1 carousel-item col s3">
+                                <div class="card-content white-text">
+                                    <span class="card-title center">Dragon Ball Super</span>
+                                </div>
+                                <div class="card-action center">
+                                    <br>
+                                    <a href="project.html?project_id=' + element.project_id + '" class="waves-effect waves-light btn lime">Acceder</a>
+                                </div>
+                            </div>
+                            <div class="card grey darken-1 carousel-item col s3">
+                                    <div class="card-content white-text">
+                                        <span class="card-title center">Dragon Ball Super</span>
+                                    </div>
+                                    <div class="card-action center">
+                                        <br>
+                                        <a href="project.html?project_id=' + element.project_id + '" class="waves-effect waves-light btn lime">Acceder</a>
+                                    </div>
+                                </div>
+                                <div class="card grey darken-1 carousel-item col s3">
+                                        <div class="card-content white-text">
+                                            <span class="card-title center">Dragon Ball Super</span>
+                                        </div>
+                                        <div class="card-action center">
+                                            <br>
+                                            <a href="project.html?project_id=' + element.project_id + '" class="waves-effect waves-light btn lime">Acceder</a>
+                                        </div>
+                                    </div>
+                                    <div class="card grey darken-1 carousel-item col s3">
+                                            <div class="card-content white-text">
+                                                <span class="card-title center">Dragon Ball Super</span>
+                                            </div>
+                                            <div class="card-action center">
+                                                <br>
+                                                <a href="project.html?project_id=' + element.project_id + '" class="waves-effect waves-light btn lime">Acceder</a>
+                                            </div>
+                                        </div>
+                        <br>
+                    </div>
+                </div>
+                <div class="col s2">
+                    <div style="position: fixed;text-align: center">
+                        <h6>
+                           Busqueda por generos 
+                        </h6>
+                        <!--AQUI VAN LOS GENEROS-->
+                        <!--PUBLICIDAD PARA JODER-->
+                    </div>
+                </div>
+                
             </div>
 
             <div id="modal1" class="modal">
@@ -82,6 +196,7 @@
         <script src="../js/searchManga.js"></script>
         <script src="../js/creatorManga.js"></script>
         <script src="../js/renderNavBar.js"></script>    
+        
         <script>
 
                 document.addEventListener('DOMContentLoaded', function() {

@@ -9,7 +9,7 @@ package model;
  *
  * @author VulcanoMachine 2.0
  */
-public class CommentModel {
+public class CommentModel extends ModelClass{
     private String content;
     private int id;
     private String nameCreator;

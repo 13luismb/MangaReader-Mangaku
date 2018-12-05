@@ -10,7 +10,7 @@ package model;
  * @author Usuario
  * @param <T>
  */
-public class ResponseModel<T> {
+public class ResponseModel<T> extends ModelClass{
     private String message;
     private int status;
     private T data;

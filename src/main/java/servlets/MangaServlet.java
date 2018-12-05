@@ -5,6 +5,7 @@
  */
 package servlets;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import facade.MangaFacade;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -26,16 +27,20 @@ public class MangaServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, JsonProcessingException {
         PrintWriter out = response.getWriter();
         MangaFacade mangaFacade = new MangaFacade();
-        out.print(mangaFacade.getManga(request));
+        try {
+            out.print(mangaFacade.getManga(request));
+        } catch (CloneNotSupportedException ex) {
+            Logger.getLogger(MangaServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, JsonProcessingException {
             
         PrintWriter out = response.getWriter();  
         MangaFacade mangaFacade = new MangaFacade();    
@@ -43,12 +48,14 @@ public class MangaServlet extends HttpServlet {
             out.print(mangaFacade.insertManga(request)); 
         } catch (SQLException ex) {
             Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (CloneNotSupportedException ex) {
+            Logger.getLogger(MangaServlet.class.getName()).log(Level.SEVERE, null, ex);
         } 
     }
     
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, JsonProcessingException {
         PrintWriter out = response.getWriter();  
         MangaFacade mangaFacade = new MangaFacade();    
         
@@ -56,16 +63,24 @@ public class MangaServlet extends HttpServlet {
             out.print(mangaFacade.editManga(request)); 
         } catch (SQLException ex) {
             Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (CloneNotSupportedException ex) {
+            Logger.getLogger(MangaServlet.class.getName()).log(Level.SEVERE, null, ex);
         } 
     }
     
     
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, JsonProcessingException {
         PrintWriter out = response.getWriter();  
         MangaFacade mangaFacade = new MangaFacade();    
-        out.print(mangaFacade.deleteManga(request)); 
+        try { 
+            out.print(mangaFacade.deleteManga(request));
+        } catch (SQLException ex) {
+            Logger.getLogger(MangaServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (CloneNotSupportedException ex) {
+            Logger.getLogger(MangaServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }
 }

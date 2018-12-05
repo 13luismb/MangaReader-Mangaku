@@ -10,11 +10,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import model.CommentModel;
 import model.LikeModel;
 import model.ResponseModel;
 import model.SessionModel;
 import util.DBAccess;
 import util.JacksonMapper;
+import util.ModelCache;
 import util.PropertiesReader;
 import util.Validator;
 
@@ -27,21 +29,23 @@ public class LikeFacade {
     private PropertiesReader pReader;
     private JacksonMapper jackson;
     private Validator validator;
+    private ModelCache modelCache;
 
     public LikeFacade(){
         db = null;
         pReader = PropertiesReader.getInstance();
         jackson = new JacksonMapper();
         validator = new Validator();
+        modelCache = ModelCache.getInstance();
     }
     
-    public String doMangaLike(HttpServletRequest request) throws SQLException, JsonProcessingException{
+    public String doMangaLike(HttpServletRequest request) throws SQLException, JsonProcessingException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
-        ResponseModel<LikeModel> resp = new ResponseModel<>();
+        ResponseModel<LikeModel> resp = (ResponseModel) modelCache.getModel("Response");
         ResultSet rs, rs1;
         HttpSession session = request.getSession();
         SessionModel sm = (SessionModel) session.getAttribute("session");
-        LikeModel lm = new LikeModel();
+        LikeModel lm = (LikeModel) modelCache.getModel("Like");
         int id = Integer.valueOf(request.getParameter("mid"));
         try{
             rs = db.execute(pReader.getValue("ql1"), sm.getId(), id);
@@ -62,13 +66,13 @@ public class LikeFacade {
         return jackson.pojoToJson(resp);
     }
     
-    public String getMangaLike(HttpServletRequest request) throws JsonProcessingException{
+    public String getMangaLike(HttpServletRequest request) throws JsonProcessingException, CloneNotSupportedException{
         
-        ResponseModel<LikeModel> resp = new ResponseModel<>();
+        ResponseModel<LikeModel> resp = (ResponseModel) modelCache.getModel("Response");
         ResultSet rs;
         HttpSession session = request.getSession();
         SessionModel sm = (SessionModel) session.getAttribute("session");
-        LikeModel lm = new LikeModel();
+        LikeModel lm = (LikeModel) modelCache.getModel("Like");
         int id = Integer.valueOf(request.getParameter("mid"));
         
         try{
@@ -96,13 +100,13 @@ public class LikeFacade {
         return jackson.pojoToJson(resp);
     }
     
-    public String deleteMangaLike(HttpServletRequest request) throws JsonProcessingException{
+    public String deleteMangaLike(HttpServletRequest request) throws JsonProcessingException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
-        ResponseModel<LikeModel> resp = new ResponseModel<>();
+        ResponseModel<LikeModel> resp = (ResponseModel) modelCache.getModel("Response");
         ResultSet rs;
         HttpSession session = request.getSession();
         SessionModel sm = (SessionModel) session.getAttribute("session");
-        LikeModel lm = new LikeModel();
+        LikeModel lm = (LikeModel) modelCache.getModel("Like");
         int id = Integer.valueOf(request.getParameter("mid"));
         
         try{
@@ -121,13 +125,13 @@ public class LikeFacade {
         return jackson.pojoToJson(resp);
     }
     
-    public String doChapterLike(HttpServletRequest request) throws JsonProcessingException{
+    public String doChapterLike(HttpServletRequest request) throws JsonProcessingException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
-        ResponseModel<LikeModel> resp = new ResponseModel<>();
+        ResponseModel<LikeModel> resp = (ResponseModel) modelCache.getModel("Response");
         ResultSet rs, rs1;
         HttpSession session = request.getSession();
         SessionModel sm = (SessionModel) session.getAttribute("session");
-        LikeModel lm = new LikeModel();
+        LikeModel lm = (LikeModel) modelCache.getModel("Like");
         int id = Integer.valueOf(request.getParameter("cid"));
         
         try{
@@ -149,13 +153,13 @@ public class LikeFacade {
         return jackson.pojoToJson(resp);
     }
     
-    public String getChapterLike(HttpServletRequest request) throws JsonProcessingException{
+    public String getChapterLike(HttpServletRequest request) throws JsonProcessingException, CloneNotSupportedException{
         
-        ResponseModel<LikeModel> resp = new ResponseModel<>();
+        ResponseModel<LikeModel> resp = (ResponseModel) modelCache.getModel("Response");
         ResultSet rs;
         HttpSession session = request.getSession();
         SessionModel sm = (SessionModel) session.getAttribute("session");
-        LikeModel lm = new LikeModel();
+        LikeModel lm = (LikeModel) modelCache.getModel("Like");
         int id = Integer.valueOf(request.getParameter("cid"));
         
         try{
@@ -184,13 +188,13 @@ public class LikeFacade {
         return jackson.pojoToJson(resp);
     }    
     
-    public String deleteChapterLike(HttpServletRequest request) throws JsonProcessingException{
+    public String deleteChapterLike(HttpServletRequest request) throws JsonProcessingException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
-        ResponseModel<LikeModel> resp = new ResponseModel<>();
+        ResponseModel<LikeModel> resp = (ResponseModel) modelCache.getModel("Response");
         ResultSet rs;
         HttpSession session = request.getSession();
         SessionModel sm = (SessionModel) session.getAttribute("session");
-        LikeModel lm = new LikeModel();
+        LikeModel lm = (LikeModel) modelCache.getModel("Like");
         int id = Integer.valueOf(request.getParameter("cid"));
         
         try{

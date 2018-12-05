@@ -8,7 +8,7 @@ import java.util.List;
  *
  * @author VulcanoMachine 2.0
  */
-public class MangaModel {
+public class MangaModel extends ModelClass{
     
     private String name,synopsis;
     private List<String> genres;

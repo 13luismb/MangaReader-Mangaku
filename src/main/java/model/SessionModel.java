@@ -9,7 +9,7 @@ package model;
  *
  * @author Usuario
  */
-public class SessionModel {
+public class SessionModel extends ModelClass{
     private String username, name, email;
     private int id, typeuser;
 

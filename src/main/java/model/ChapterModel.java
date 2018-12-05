@@ -9,7 +9,7 @@ package model;
  *
  * @author Usuario
  */
-public class ChapterModel {
+public class ChapterModel extends ModelClass{
     private String mangaName,chapterLocation,chapterName;
     private int  mangaId, chapterNumber, chapterPages, chapterId;
     private boolean tracker;

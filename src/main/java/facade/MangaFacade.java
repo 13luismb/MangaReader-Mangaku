@@ -18,7 +18,9 @@ import util.PropertiesReader;
 import util.Validator;
 import java.io.File;
 import java.io.IOException;
+import model.LikeModel;
 import org.apache.commons.io.FileUtils;
+import util.ModelCache;
 /**
  *
  * @author Usuario
@@ -28,18 +30,20 @@ public class MangaFacade {
     private PropertiesReader pReader;
     private JacksonMapper jackson;
     private Validator validator;
+    private ModelCache modelCache;
     
     public MangaFacade(){
         db = null;
         pReader = PropertiesReader.getInstance();
         jackson = new JacksonMapper();
         validator = new Validator();
+        modelCache = ModelCache.getInstance();
     }
     
-    public String insertManga(HttpServletRequest request) throws SQLException, JsonProcessingException{
+    public String insertManga(HttpServletRequest request) throws SQLException, JsonProcessingException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
         ResultSet rs = null;
-        ResponseModel<MangaModel> res = new ResponseModel<>();
+        ResponseModel<MangaModel> res = (ResponseModel) modelCache.getModel("Response");
         HttpSession session = null;
         
         try{
@@ -67,12 +71,12 @@ public class MangaFacade {
         return jackson.pojoToJson(res);
     }
     
-    public String getManga(HttpServletRequest request) throws JsonProcessingException{
+    public String getManga(HttpServletRequest request) throws JsonProcessingException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
         ResultSet rs = null;
         CommentFacade cFacade = new CommentFacade();
-        ResponseModel<MangaModel> res = new ResponseModel<>();
-        MangaModel dataManga = new MangaModel();
+        ResponseModel<MangaModel> res = (ResponseModel) modelCache.getModel("Response");
+        MangaModel dataManga = (MangaModel) modelCache.getModel("Manga");
         HttpSession session = request.getSession();
         SessionModel sm = (SessionModel) session.getAttribute("session");
         int id_manga = Integer.parseInt(request.getParameter("id"));
@@ -117,10 +121,10 @@ public class MangaFacade {
     
     }
     
-    public String editManga(HttpServletRequest request) throws SQLException, JsonProcessingException{
+    public String editManga(HttpServletRequest request) throws SQLException, JsonProcessingException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
         ResultSet rs = null;
-        ResponseModel<MangaModel> res = new ResponseModel<>();
+        ResponseModel<MangaModel> res = (ResponseModel) modelCache.getModel("Response");
         HttpSession session = request.getSession();
         SessionModel sm = (SessionModel) session.getAttribute("session");
         try{
@@ -151,14 +155,14 @@ public class MangaFacade {
     }
     
     
-    public String deleteManga(HttpServletRequest request) throws JsonProcessingException, SQLException {
+    public String deleteManga(HttpServletRequest request) throws JsonProcessingException, SQLException, CloneNotSupportedException {
         db = DBAccess.getConnection(pReader);
         ResultSet rs = null;
-        ResponseModel<MangaModel> res = new ResponseModel<>();
+        ResponseModel<MangaModel> res = (ResponseModel) modelCache.getModel("Response");
         int id_manga = Integer.parseInt(request.getParameter("id"));
         HttpSession session = request.getSession();
         SessionModel sm = (SessionModel) session.getAttribute("session");
-        MangaModel ma = new MangaModel();
+        MangaModel ma = (MangaModel) modelCache.getModel("Manga");
         
         try{
             rs = db.execute(pReader.getValue("qmu3"),id_manga);
@@ -227,14 +231,14 @@ public class MangaFacade {
         return listGenresDes;
     }
 
-    private List<ChapterModel> getChaptersManga(int id_manga,SessionModel sm) throws SQLException {
+    private List<ChapterModel> getChaptersManga(int id_manga,SessionModel sm) throws SQLException, CloneNotSupportedException {
         db = DBAccess.getConnection(pReader);
         ArrayList<ChapterModel> chapters = new ArrayList();
         ChapterModel chapter = null;
         ResultSet rs = db.execute(pReader.getValue("qca4"), id_manga);
         int tracker = getTracker(id_manga,sm,db);
         while (rs.next()){
-            chapter = new ChapterModel();
+            chapter = (ChapterModel) modelCache.getModel("Chapter");
             chapter.setChapterId(rs.getInt(1));
             chapter.setChapterNumber(rs.getInt(3));
             chapter.setChapterName(rs.getString(4));
@@ -285,7 +289,7 @@ public class MangaFacade {
         try{
             rs = doSearch(request, db);
             while(rs.next()){
-                 groupSMangas.add(new MangaModel());
+                 groupSMangas.add((MangaModel) modelCache.getModel("Manga"));
                  groupSMangas.get(i).setId(rs.getInt(1));
                  groupSMangas.get(i).setName(rs.getString(2));
                  groupSMangas.get(i).setSynopsis(rs.getString(3));

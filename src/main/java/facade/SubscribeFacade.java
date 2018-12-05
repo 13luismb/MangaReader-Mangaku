@@ -10,12 +10,14 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 import model.ChapterModel;
+import model.LikeModel;
 import model.ResponseModel;
 import model.SessionModel;
 import model.SubscribeModel;
 import util.DBAccess;
 import util.JacksonMapper;
 import util.MailSender;
+import util.ModelCache;
 import util.PropertiesReader;
 import util.Validator;
 
@@ -28,21 +30,23 @@ public class SubscribeFacade {
     private PropertiesReader pReader;
     private JacksonMapper jackson;
     private Validator validator;
+    private ModelCache modelCache;
     
     public SubscribeFacade(){
         db = null;
         pReader = PropertiesReader.getInstance();
         jackson = new JacksonMapper();
         validator = new Validator();
+        modelCache = ModelCache.getInstance();
     }
     
-    public String doSubscribe(HttpServletRequest request) throws JsonProcessingException{
+    public String doSubscribe(HttpServletRequest request) throws JsonProcessingException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
         ResultSet rs = null;
         SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
         int id = Integer.valueOf(request.getParameter("id"));
-        ResponseModel<SubscribeModel> resp = new ResponseModel<>();
-        SubscribeModel sub = new SubscribeModel();
+        ResponseModel<SubscribeModel> resp = (ResponseModel) modelCache.getModel("Response");
+        SubscribeModel sub = (SubscribeModel) modelCache.getModel("Subscribe");
         try{
             rs = db.execute(pReader.getValue("qsu1"), sm.getId(),id);
             if (!rs.next()){
@@ -63,13 +67,13 @@ public class SubscribeFacade {
         return jackson.pojoToJson(resp);
     }
     
-    public String deleteSubscribe(HttpServletRequest request) throws JsonProcessingException{
+    public String deleteSubscribe(HttpServletRequest request) throws JsonProcessingException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
         ResultSet rs = null;
         SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
         int id = Integer.valueOf(request.getParameter("id"));
-        ResponseModel<SubscribeModel> resp = new ResponseModel<>();
-        SubscribeModel sub = new SubscribeModel();
+        ResponseModel<SubscribeModel> resp = (ResponseModel) modelCache.getModel("Response");
+        SubscribeModel sub = (SubscribeModel) modelCache.getModel("Subscribe");
         try{
             rs = db.execute(pReader.getValue("qsu1"), sm.getId(),id);
             if (rs.next()){
@@ -90,13 +94,13 @@ public class SubscribeFacade {
         return jackson.pojoToJson(resp);
     }
     
-    public String getSubscriptionStatus(HttpServletRequest request) throws JsonProcessingException{
+    public String getSubscriptionStatus(HttpServletRequest request) throws JsonProcessingException, CloneNotSupportedException{
 
         ResultSet rs = null;
         SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
         int id = Integer.valueOf(request.getParameter("id"));
-        ResponseModel<SubscribeModel> resp = new ResponseModel<>();
-        SubscribeModel sub = new SubscribeModel();
+        ResponseModel<SubscribeModel> resp = (ResponseModel) modelCache.getModel("Response");
+        SubscribeModel sub = (SubscribeModel) modelCache.getModel("Subscribe");
         try{
             if(sm != null){
             db = DBAccess.getConnection(pReader);
@@ -122,9 +126,9 @@ public class SubscribeFacade {
         return jackson.pojoToJson(resp);
     }
     
-    public String doVisitorSubscribe(HttpServletRequest request) throws JsonProcessingException{
+    public String doVisitorSubscribe(HttpServletRequest request) throws JsonProcessingException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
-        ResponseModel<?> resp = new ResponseModel<>();
+        ResponseModel<?> resp = (ResponseModel) modelCache.getModel("Response");
         String visitor = request.getParameter("email");
         int id = Integer.valueOf(request.getParameter("id"));
         try{

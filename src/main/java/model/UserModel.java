@@ -9,7 +9,7 @@ package model;
  *
  * @author kko_0
  */
-public class UserModel {
+public class UserModel extends ModelClass{
     private String name, email, username, password;
 
     public String getName() {

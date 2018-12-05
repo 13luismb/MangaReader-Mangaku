@@ -5,6 +5,7 @@
  */
 package servlets;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import facade.ChapterFacade;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -38,7 +39,7 @@ public class ChapterServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
     
-        protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, JsonProcessingException {
 		// TODO Auto-generated method stub
                 ChapterFacade chapter = new ChapterFacade();
             try {
@@ -47,6 +48,8 @@ public class ChapterServlet extends HttpServlet {
                 PrintWriter out = response.getWriter();
                 out.print(chapter.getChapterInfo(request));
             } catch (SQLException ex) {
+                Logger.getLogger(ChapterServlet.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (CloneNotSupportedException ex) {
                 Logger.getLogger(ChapterServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
 
@@ -60,6 +63,8 @@ public class ChapterServlet extends HttpServlet {
                 System.out.println(chapter.chapterGet(request));*/
                 chapter.chapterGet(request, response);
             } catch (SQLException ex) {
+                Logger.getLogger(ChapterServlet.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (CloneNotSupportedException ex) {
                 Logger.getLogger(ChapterServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
 
@@ -75,7 +80,9 @@ public class ChapterServlet extends HttpServlet {
                     out.print(chapter.chapterCreate(request));
                 } catch (SQLException ex) {
                     Logger.getLogger(ChapterServlet.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                } catch (CloneNotSupportedException ex) {
+                Logger.getLogger(ChapterServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
 	}
                 
@@ -86,6 +93,8 @@ public class ChapterServlet extends HttpServlet {
             out.print(chapter.chapterDelete(request));
             }catch(IOException | ServletException e){
                 e.printStackTrace();
+            } catch (CloneNotSupportedException ex) {
+                Logger.getLogger(ChapterServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         
@@ -96,6 +105,8 @@ public class ChapterServlet extends HttpServlet {
             out.print(chapter.chapterUpdate(request));
             }catch(IOException | ServletException e){
                 e.printStackTrace();
+            } catch (CloneNotSupportedException ex) {
+                Logger.getLogger(ChapterServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 }

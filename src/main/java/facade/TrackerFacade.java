@@ -15,6 +15,7 @@ import model.TrackerModel;
 import util.DBAccess;
 import util.JacksonMapper;
 import util.MailSender;
+import util.ModelCache;
 import util.PropertiesReader;
 import util.Validator;
 
@@ -27,20 +28,22 @@ public class TrackerFacade {
     private DBAccess db;
     private PropertiesReader pReader;
     private JacksonMapper jackson;
+    private ModelCache modelCache;
     
     public TrackerFacade(){
         db = null;
         pReader = PropertiesReader.getInstance();
         jackson = new JacksonMapper();
+        modelCache = ModelCache.getInstance();
     }
     
-    public String doTracker(HttpServletRequest request) throws JsonProcessingException{
+    public String doTracker(HttpServletRequest request) throws JsonProcessingException, CloneNotSupportedException{
         
         ResultSet rs = null;
         ResultSet rstwo = null;
         SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
         int id = Integer.valueOf(request.getParameter("id"));
-        ResponseModel<TrackerModel> resp = new ResponseModel<>();
+        ResponseModel<TrackerModel> resp = (ResponseModel) modelCache.getModel("Response");
         try{
             if(sm!=null){
                 db = DBAccess.getConnection(pReader);
@@ -80,12 +83,12 @@ public class TrackerFacade {
         return jackson.pojoToJson(resp);
     }
  
-    public String doDeleteTracker(HttpServletRequest request) throws JsonProcessingException{
+    public String doDeleteTracker(HttpServletRequest request) throws JsonProcessingException, CloneNotSupportedException{
         ResultSet rs = null;
         SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
         int idChapter = Integer.valueOf(request.getParameter("cid"));
         int idManga = Integer.valueOf(request.getParameter("mid"));
-        ResponseModel<TrackerModel> resp = new ResponseModel<>();
+        ResponseModel<TrackerModel> resp = (ResponseModel) modelCache.getModel("Response");
         try{
             db = DBAccess.getConnection(pReader);
             if(sm!=null){

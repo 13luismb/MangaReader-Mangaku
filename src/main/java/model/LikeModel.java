@@ -9,7 +9,7 @@ package model;
  *
  * @author Usuario
  */
-public class LikeModel {
+public class LikeModel extends ModelClass{
     private boolean isLiked;
 
     public boolean isIsLiked() {
