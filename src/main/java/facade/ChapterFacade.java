@@ -78,7 +78,7 @@ public class ChapterFacade {
     
     public String chapterCreate(HttpServletRequest request) throws IOException, ServletException, SQLException, CloneNotSupportedException{ //Refactorizar
         db = DBAccess.getConnection(pReader);
-        ResponseModel<ChapterModel> res = (ResponseModel) modelCache.getModel("Response");
+        ResponseModel<ChapterModel> res = modelCache.getModel("Response");
         String m = request.getParameter("json");
         System.out.println(m);
         ChapterModel cm = chapterRequestValid(request, m);
@@ -111,8 +111,8 @@ public class ChapterFacade {
 
     public void chapterGet(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
-        ResponseModel<ChapterModel> res = (ResponseModel) modelCache.getModel("Response");
-        ChapterModel cm = (ChapterModel) modelCache.getModel("Chapter");
+        ResponseModel<ChapterModel> res = modelCache.getModel("Response");
+        ChapterModel cm = modelCache.getModel("Chapter");
         int id_chapter = Integer.parseInt(request.getParameter("id"));
             if (requestGet(cm, db, pReader, id_chapter)){
                 db.close();
@@ -126,8 +126,8 @@ public class ChapterFacade {
 
     public String getChapterInfo(HttpServletRequest request) throws SQLException, JsonProcessingException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
-        ResponseModel<ChapterModel> res = (ResponseModel) modelCache.getModel("Response");
-        ChapterModel cm = (ChapterModel) modelCache.getModel("Chapter");
+        ResponseModel<ChapterModel> res = modelCache.getModel("Response");
+        ChapterModel cm = modelCache.getModel("Chapter");
         int id_chapter = Integer.parseInt(request.getParameter("id"));
             if (requestGet(cm, db, pReader, id_chapter)){
                 db.close();
@@ -145,7 +145,7 @@ public class ChapterFacade {
     
     public String chapterUpdate(HttpServletRequest request) throws IOException, ServletException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
-        ResponseModel<ChapterModel> res = (ResponseModel) modelCache.getModel("Response");
+        ResponseModel<ChapterModel> res = modelCache.getModel("Response");
         ChapterModel cm = jackson.jsonToPojo(request, ChapterModel.class) ;
         SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
         
@@ -169,7 +169,7 @@ public class ChapterFacade {
 
     public String chapterDelete(HttpServletRequest request) throws IOException, ServletException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
-        ResponseModel<ChapterModel> res = (ResponseModel) modelCache.getModel("Response");
+        ResponseModel<ChapterModel> res = modelCache.getModel("Response");
         ChapterModel cm = jackson.jsonToPojo(request, ChapterModel.class);
         SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
         
@@ -342,7 +342,6 @@ public class ChapterFacade {
     }
     
     public <T> String writeJSON(T json) throws JsonProcessingException{
-    jackson = new JacksonMapper();    
         return jackson.pojoToJson(json);
     }
     

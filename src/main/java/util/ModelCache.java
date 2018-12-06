@@ -9,8 +9,8 @@ public class ModelCache {
     
     private HashMap<String, ModelClass> modelMap  = new HashMap<>();
     
-    public Object getModel(String type) throws CloneNotSupportedException{
-        return modelMap.get(type).clone();
+    public <T> T getModel(String type) throws CloneNotSupportedException{
+        return (T) modelMap.get(type).clone();
     }
     
     public static ModelCache getInstance(){

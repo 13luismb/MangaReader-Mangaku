@@ -43,7 +43,7 @@ public class TrackerFacade {
         ResultSet rstwo = null;
         SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
         int id = Integer.valueOf(request.getParameter("id"));
-        ResponseModel<TrackerModel> resp = (ResponseModel) modelCache.getModel("Response");
+        ResponseModel<TrackerModel> resp = modelCache.getModel("Response");
         try{
             if(sm!=null){
                 db = DBAccess.getConnection(pReader);
@@ -88,7 +88,7 @@ public class TrackerFacade {
         SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
         int idChapter = Integer.valueOf(request.getParameter("cid"));
         int idManga = Integer.valueOf(request.getParameter("mid"));
-        ResponseModel<TrackerModel> resp = (ResponseModel) modelCache.getModel("Response");
+        ResponseModel<TrackerModel> resp = modelCache.getModel("Response");
         try{
             db = DBAccess.getConnection(pReader);
             if(sm!=null){

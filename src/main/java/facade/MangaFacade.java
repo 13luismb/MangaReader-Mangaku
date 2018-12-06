@@ -43,7 +43,7 @@ public class MangaFacade {
     public String insertManga(HttpServletRequest request) throws SQLException, JsonProcessingException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
         ResultSet rs = null;
-        ResponseModel<MangaModel> res = (ResponseModel) modelCache.getModel("Response");
+        ResponseModel<MangaModel> res = modelCache.getModel("Response");
         HttpSession session = null;
         
         try{
@@ -75,8 +75,8 @@ public class MangaFacade {
         db = DBAccess.getConnection(pReader);
         ResultSet rs = null;
         CommentFacade cFacade = new CommentFacade();
-        ResponseModel<MangaModel> res = (ResponseModel) modelCache.getModel("Response");
-        MangaModel dataManga = (MangaModel) modelCache.getModel("Manga");
+        ResponseModel<MangaModel> res = modelCache.getModel("Response");
+        MangaModel dataManga = modelCache.getModel("Manga");
         HttpSession session = request.getSession();
         SessionModel sm = (SessionModel) session.getAttribute("session");
         int id_manga = Integer.parseInt(request.getParameter("id"));
@@ -124,7 +124,7 @@ public class MangaFacade {
     public String editManga(HttpServletRequest request) throws SQLException, JsonProcessingException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
         ResultSet rs = null;
-        ResponseModel<MangaModel> res = (ResponseModel) modelCache.getModel("Response");
+        ResponseModel<MangaModel> res = modelCache.getModel("Response");
         HttpSession session = request.getSession();
         SessionModel sm = (SessionModel) session.getAttribute("session");
         try{
@@ -158,11 +158,11 @@ public class MangaFacade {
     public String deleteManga(HttpServletRequest request) throws JsonProcessingException, SQLException, CloneNotSupportedException {
         db = DBAccess.getConnection(pReader);
         ResultSet rs = null;
-        ResponseModel<MangaModel> res = (ResponseModel) modelCache.getModel("Response");
+        ResponseModel<MangaModel> res = modelCache.getModel("Response");
         int id_manga = Integer.parseInt(request.getParameter("id"));
         HttpSession session = request.getSession();
         SessionModel sm = (SessionModel) session.getAttribute("session");
-        MangaModel ma = (MangaModel) modelCache.getModel("Manga");
+        MangaModel ma = modelCache.getModel("Manga");
         
         try{
             rs = db.execute(pReader.getValue("qmu3"),id_manga);
@@ -312,12 +312,12 @@ public class MangaFacade {
         private ResultSet doSearch(HttpServletRequest request, DBAccess db){
             String query, value = null;
             ResultSet rs = null;
-            if (request.getParameter("genre") == null){
+            if (request.getParameter("g") == null){
                 query = "qs1";
                 value = getSearchValue(request.getParameter("s"));
             }else{
                 query = "qs2";
-                value = request.getParameter("genre");
+                value = request.getParameter("g");
             }
                 try{
                    rs = db.execute(pReader.getValue(query), value);

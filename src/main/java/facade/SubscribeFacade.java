@@ -45,8 +45,8 @@ public class SubscribeFacade {
         ResultSet rs = null;
         SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
         int id = Integer.valueOf(request.getParameter("id"));
-        ResponseModel<SubscribeModel> resp = (ResponseModel) modelCache.getModel("Response");
-        SubscribeModel sub = (SubscribeModel) modelCache.getModel("Subscribe");
+        ResponseModel<SubscribeModel> resp = modelCache.getModel("Response");
+        SubscribeModel sub = modelCache.getModel("Subscribe");
         try{
             rs = db.execute(pReader.getValue("qsu1"), sm.getId(),id);
             if (!rs.next()){
@@ -72,8 +72,8 @@ public class SubscribeFacade {
         ResultSet rs = null;
         SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
         int id = Integer.valueOf(request.getParameter("id"));
-        ResponseModel<SubscribeModel> resp = (ResponseModel) modelCache.getModel("Response");
-        SubscribeModel sub = (SubscribeModel) modelCache.getModel("Subscribe");
+        ResponseModel<SubscribeModel> resp = modelCache.getModel("Response");
+        SubscribeModel sub = modelCache.getModel("Subscribe");
         try{
             rs = db.execute(pReader.getValue("qsu1"), sm.getId(),id);
             if (rs.next()){
@@ -99,8 +99,8 @@ public class SubscribeFacade {
         ResultSet rs = null;
         SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
         int id = Integer.valueOf(request.getParameter("id"));
-        ResponseModel<SubscribeModel> resp = (ResponseModel) modelCache.getModel("Response");
-        SubscribeModel sub = (SubscribeModel) modelCache.getModel("Subscribe");
+        ResponseModel<SubscribeModel> resp = modelCache.getModel("Response");
+        SubscribeModel sub = modelCache.getModel("Subscribe");
         try{
             if(sm != null){
             db = DBAccess.getConnection(pReader);
@@ -128,7 +128,7 @@ public class SubscribeFacade {
     
     public String doVisitorSubscribe(HttpServletRequest request) throws JsonProcessingException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
-        ResponseModel<?> resp = (ResponseModel) modelCache.getModel("Response");
+        ResponseModel<?> resp = modelCache.getModel("Response");
         String visitor = request.getParameter("email");
         int id = Integer.valueOf(request.getParameter("id"));
         try{

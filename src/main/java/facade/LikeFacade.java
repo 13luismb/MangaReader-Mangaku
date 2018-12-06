@@ -41,11 +41,11 @@ public class LikeFacade {
     
     public String doMangaLike(HttpServletRequest request) throws SQLException, JsonProcessingException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
-        ResponseModel<LikeModel> resp = (ResponseModel) modelCache.getModel("Response");
+        ResponseModel<LikeModel> resp = modelCache.getModel("Response");
         ResultSet rs, rs1;
         HttpSession session = request.getSession();
         SessionModel sm = (SessionModel) session.getAttribute("session");
-        LikeModel lm = (LikeModel) modelCache.getModel("Like");
+        LikeModel lm = modelCache.getModel("Like");
         int id = Integer.valueOf(request.getParameter("mid"));
         try{
             rs = db.execute(pReader.getValue("ql1"), sm.getId(), id);
@@ -68,11 +68,11 @@ public class LikeFacade {
     
     public String getMangaLike(HttpServletRequest request) throws JsonProcessingException, CloneNotSupportedException{
         
-        ResponseModel<LikeModel> resp = (ResponseModel) modelCache.getModel("Response");
+        ResponseModel<LikeModel> resp = modelCache.getModel("Response");
         ResultSet rs;
         HttpSession session = request.getSession();
         SessionModel sm = (SessionModel) session.getAttribute("session");
-        LikeModel lm = (LikeModel) modelCache.getModel("Like");
+        LikeModel lm = modelCache.getModel("Like");
         int id = Integer.valueOf(request.getParameter("mid"));
         
         try{
@@ -102,11 +102,11 @@ public class LikeFacade {
     
     public String deleteMangaLike(HttpServletRequest request) throws JsonProcessingException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
-        ResponseModel<LikeModel> resp = (ResponseModel) modelCache.getModel("Response");
+        ResponseModel<LikeModel> resp = modelCache.getModel("Response");
         ResultSet rs;
         HttpSession session = request.getSession();
         SessionModel sm = (SessionModel) session.getAttribute("session");
-        LikeModel lm = (LikeModel) modelCache.getModel("Like");
+        LikeModel lm = modelCache.getModel("Like");
         int id = Integer.valueOf(request.getParameter("mid"));
         
         try{
@@ -127,11 +127,11 @@ public class LikeFacade {
     
     public String doChapterLike(HttpServletRequest request) throws JsonProcessingException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
-        ResponseModel<LikeModel> resp = (ResponseModel) modelCache.getModel("Response");
+        ResponseModel<LikeModel> resp = modelCache.getModel("Response");
         ResultSet rs, rs1;
         HttpSession session = request.getSession();
         SessionModel sm = (SessionModel) session.getAttribute("session");
-        LikeModel lm = (LikeModel) modelCache.getModel("Like");
+        LikeModel lm = modelCache.getModel("Like");
         int id = Integer.valueOf(request.getParameter("cid"));
         
         try{
@@ -155,11 +155,11 @@ public class LikeFacade {
     
     public String getChapterLike(HttpServletRequest request) throws JsonProcessingException, CloneNotSupportedException{
         
-        ResponseModel<LikeModel> resp = (ResponseModel) modelCache.getModel("Response");
+        ResponseModel<LikeModel> resp = modelCache.getModel("Response");
         ResultSet rs;
         HttpSession session = request.getSession();
         SessionModel sm = (SessionModel) session.getAttribute("session");
-        LikeModel lm = (LikeModel) modelCache.getModel("Like");
+        LikeModel lm = modelCache.getModel("Like");
         int id = Integer.valueOf(request.getParameter("cid"));
         
         try{
@@ -190,11 +190,11 @@ public class LikeFacade {
     
     public String deleteChapterLike(HttpServletRequest request) throws JsonProcessingException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
-        ResponseModel<LikeModel> resp = (ResponseModel) modelCache.getModel("Response");
+        ResponseModel<LikeModel> resp = modelCache.getModel("Response");
         ResultSet rs;
         HttpSession session = request.getSession();
         SessionModel sm = (SessionModel) session.getAttribute("session");
-        LikeModel lm = (LikeModel) modelCache.getModel("Like");
+        LikeModel lm = modelCache.getModel("Like");
         int id = Integer.valueOf(request.getParameter("cid"));
         
         try{

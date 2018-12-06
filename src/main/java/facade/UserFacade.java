@@ -35,7 +35,7 @@ public class UserFacade {
     public String insertUser(HttpServletRequest request) throws SQLException, JsonProcessingException, CloneNotSupportedException{
         db = DBAccess.getConnection(pReader);
         ResultSet rs = null;
-        ResponseModel<SessionModel> res = (ResponseModel) modelCache.getModel("Response");
+        ResponseModel<SessionModel> res = modelCache.getModel("Response");
         String salt = Encrypter.getSalt(10);
         
         try{
@@ -66,7 +66,7 @@ public class UserFacade {
         SessionModel dataUser = null; 
         
         try{
-            dataUser = (SessionModel) modelCache.getModel("Session");
+            dataUser = modelCache.getModel("Session");
             UserModel user = jackson.jsonToPojo(request,UserModel.class);
             String salt = this.getUserSalt(db.execute(pReader.getValue("qu1"), user.getUsername(), user.getUsername()));
             if (salt != null){
@@ -108,7 +108,7 @@ public HttpSession checkUser(HttpServletRequest request) throws JsonProcessingEx
 }
 
 public String sessionCreate(HttpServletRequest request) throws JsonProcessingException, CloneNotSupportedException{
-    ResponseModel<SessionModel> data = (ResponseModel) modelCache.getModel("Response");
+    ResponseModel<SessionModel> data = modelCache.getModel("Response");
     HttpSession session = checkUser(request);
     SessionModel sm = (SessionModel) session.getAttribute("session");
     System.out.println(sm.getUsername());
@@ -131,7 +131,7 @@ public String sessionCreate(HttpServletRequest request) throws JsonProcessingExc
 
 public String sessionDestroy(HttpServletRequest request) throws JsonProcessingException, CloneNotSupportedException{       
         HttpSession session = request.getSession();
-        ResponseModel<String> data = (ResponseModel) modelCache.getModel("Response");
+        ResponseModel<String> data = modelCache.getModel("Response");
         
 	if (session.isNew()) {
             data.setStatus(200);
@@ -227,5 +227,17 @@ private String getUserSalt(ResultSet rs) throws IOException{
                     e.printStackTrace();
         }
         return rs;
+    }
+    
+    public String doAdminUpdate(HttpServletRequest request) throws CloneNotSupportedException{
+        db = DBAccess.getConnection(pReader);
+        ResponseModel<?> res = modelCache.getModel("Response");
+        return "";
+    }
+    
+    public String doAdminDelete(HttpServletRequest request) throws CloneNotSupportedException{
+        db = DBAccess.getConnection(pReader);
+        ResponseModel<?> res = modelCache.getModel("Response");
+        return "";
     }
 }
