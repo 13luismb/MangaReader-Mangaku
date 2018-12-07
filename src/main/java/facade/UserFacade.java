@@ -79,6 +79,7 @@ public class UserFacade {
                     dataUser.setUsername(rs.getString(4));
                     dataUser.setName(rs.getString(5));
                     dataUser.setEmail(rs.getString(7));
+                    dataUser.setBlocked_status(rs.getBoolean(9));
                 }
             }
         }catch(Exception e){
@@ -112,16 +113,20 @@ public String sessionCreate(HttpServletRequest request) throws JsonProcessingExc
     HttpSession session = checkUser(request);
     SessionModel sm = (SessionModel) session.getAttribute("session");
     System.out.println(sm.getUsername());
-        if(sm.getId() != 0){
+        if(sm.getId() != 0 && !sm.isBlocked_status()){
             if(session.isNew()){
-                    data.setStatus(200);
-                    data.setMessage(pReader.getValue("ru1"));
-                    data.setData(getSessionData());
+                data.setStatus(200);
+                data.setMessage(pReader.getValue("ru1"));
+                data.setData(getSessionData());
             }else{
                 data.setStatus(200);
                 data.setMessage(pReader.getValue("ru2"));
                 session.invalidate();
             }
+        }else if(sm.isBlocked_status()){
+            session.invalidate();
+            data.setStatus(403);
+            data.setMessage(pReader.getValue("ru6"));
         }else{
             data.setStatus(500);
             data.setMessage(pReader.getValue("ru3"));

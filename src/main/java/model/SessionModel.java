@@ -12,7 +12,16 @@ package model;
 public class SessionModel extends ModelClass{
     private String username, name, email;
     private int id, typeuser;
+    private boolean blocked_status;
 
+    public boolean isBlocked_status() {
+        return blocked_status;
+    }
+
+    public void setBlocked_status(boolean blocked_status) {
+        this.blocked_status = blocked_status;
+    }
+    
     public int getId() {
         return id;
     }
