@@ -343,40 +343,63 @@ public class MangaFacade {
         SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
         db = DBAccess.getConnection(pReader);
         try{
-            rs = db.execute(pReader.getValue("qdash1"));          
-            rs1 = db.execute(pReader.getValue("qdash2"), sm.getId());
-            rs2 = db.execute(pReader.getValue("qdash3"), sm.getId());
             
-            if(this.getDashboardData(newManga, rs) && !newManga.isEmpty()){
-                data.put("newManga",newManga);
-            }
-            
-            if(this.getDashboardData(myManga, rs1) && !myManga.isEmpty()){
-                data.put("myManga", myManga);
-            }
+            if(sm != null){
+                rs = db.execute(pReader.getValue("qdash1"));          
+                rs1 = db.execute(pReader.getValue("qdash2"), sm.getId());
+                rs2 = db.execute(pReader.getValue("qdash3"), sm.getId());
+
+                if(this.getDashboardData(newManga, rs) && !newManga.isEmpty()){
+                    data.put("newManga",newManga);
+                }
+
+                if(this.getDashboardData(myManga, rs1) && !myManga.isEmpty()){
+                    data.put("myManga", myManga);
+                }
+
+                if(this.getDashboardData(subbedManga, rs2) && !subbedManga.isEmpty()){
+                    data.put("subbedManga",subbedManga);
+                }
+
+                resp.setStatus(201);
+                resp.setData(data);
+
+                switch(data.size()){
+                    case 1:
+                resp.setMessage("got 1");
+                break;
+                    case 2:
+                resp.setMessage("got 2");
+                break;
+                    case 3:
+                resp.setMessage("got all of them");
+                break;
+                    default:
+                resp.setMessage("got none");
+                resp.setStatus(500);
+                break;
+                }  
                 
-            if(this.getDashboardData(subbedManga, rs2) && !subbedManga.isEmpty()){
-                data.put("subbedManga",subbedManga);
-            }
-            
+            }else{
+              rs = db.execute(pReader.getValue("qdash1")); 
+              if(this.getDashboardData(newManga, rs) && !newManga.isEmpty()){
+                    data.put("newManga",newManga);
+                }
+              
             resp.setStatus(201);
             resp.setData(data);
-            
-            switch(data.size()){
-                case 1:
-            resp.setMessage("got 1");
-            break;
-                case 2:
-            resp.setMessage("got 2");
-            break;
-                case 3:
-            resp.setMessage("got all of them");
-            break;
-                default:
-            resp.setMessage("got none");
-            resp.setStatus(500);
-            break;
+
+                switch(data.size()){
+                        case 1:
+                    resp.setMessage("got 1");
+                    break;
+                        default:
+                    resp.setMessage("got none");
+                    resp.setStatus(500);
+                    break;
+                }
             }
+            
         }catch(Exception e){
             e.printStackTrace();
         } 
