@@ -18,6 +18,7 @@ import util.PropertiesReader;
 import util.Validator;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import model.LikeModel;
 import org.apache.commons.io.FileUtils;
 import util.ModelCache;
@@ -334,6 +335,78 @@ public class MangaFacade {
             System.out.println("Lo borré todo durisimo");
         }
 
+    public String getDashboard(HttpServletRequest request) throws CloneNotSupportedException, JsonProcessingException{
+        ResponseModel<HashMap<String,ArrayList<MangaModel>>> resp = modelCache.getModel("Response");
+        HashMap<String, ArrayList<MangaModel>> data = new HashMap<>();
+        ArrayList<MangaModel> myManga = new ArrayList<>();
+        ArrayList<MangaModel> subbedManga = new ArrayList<>();
+        ArrayList<MangaModel> newManga = new ArrayList<>();
+        ResultSet rs, rs1, rs2;
+        SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
+        db = DBAccess.getConnection(pReader);
+        try{
+            rs = db.execute(pReader.getValue("qdash1"));          
+            rs1 = db.execute(pReader.getValue("qdash2"), sm.getId());
+            rs2 = db.execute(pReader.getValue("qdash3"), sm.getId());
+            
+            if(this.getDashboardData(newManga, rs) && !newManga.isEmpty()){
+                data.put("newManga",newManga);
+            }
+            
+            if(this.getDashboardData(myManga, rs1) && !myManga.isEmpty()){
+                data.put("myManga", myManga);
+            }
+                
+            if(this.getDashboardData(subbedManga, rs2) && !subbedManga.isEmpty()){
+                data.put("subbedManga",subbedManga);
+            }
+            
+            resp.setStatus(201);
+            resp.setData(data);
+            
+            switch(data.size()){
+                case 1:
+            resp.setMessage("got 1");
+            break;
+                case 2:
+            resp.setMessage("got 2");
+            break;
+                case 3:
+            resp.setMessage("got all of them");
+            break;
+                default:
+            resp.setMessage("got none");
+            resp.setStatus(500);
+            break;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        } 
+        db.close();
+        System.out.println(resp);
+        return jackson.pojoToJson(resp);
+    }
+    
+    private boolean getDashboardData(ArrayList<MangaModel> arr, ResultSet rs){
+            int i = 0;
+            try{
+            while(rs.next()){
+                arr.add((MangaModel) modelCache.getModel("Manga"));
+                arr.get(i).setId(rs.getInt(1));
+                arr.get(i).setName(rs.getString(3));
+                arr.get(i).setSynopsis(rs.getString(4));
+                arr.get(i).setStatus(rs.getBoolean(5));
+                i++;
+            }    
+            rs.close();
+            return true;
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        return false;
+    }
+        
+        
     private boolean getVisualitation(int chapter_id, int tracker,DBAccess db) throws SQLException {
         ResultSet rs = null;
         try{
