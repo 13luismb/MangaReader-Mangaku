@@ -51,7 +51,6 @@ public class MangaFacade {
             session = request.getSession();
             MangaModel manga = jackson.jsonToPojo(request,MangaModel.class);
             SessionModel sm = (SessionModel) session.getAttribute("session");
-            System.out.println(sm.getName());
             rs = db.execute(pReader.getValue("qma3"),sm.getId(),manga.getName(),manga.getSynopsis(),true,db.currentTimestamp());
             if(rs.next()){
                 db.multiUpdate(pReader.getValue("qma2"),getListGenresId(manga.getGenres()),rs.getInt(1));
@@ -300,7 +299,6 @@ public class MangaFacade {
         }catch(Exception e){
             e.printStackTrace();
         }     
-        System.out.println(jackson.pojoToJson(groupSMangas));
         return jackson.pojoToJson(groupSMangas);
     }
     
@@ -383,7 +381,6 @@ public class MangaFacade {
             e.printStackTrace();
         } 
         db.close();
-        System.out.println(resp);
         return jackson.pojoToJson(resp);
     }
     

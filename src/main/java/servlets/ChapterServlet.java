@@ -43,8 +43,6 @@ public class ChapterServlet extends HttpServlet {
 		// TODO Auto-generated method stub
                 ChapterFacade chapter = new ChapterFacade();
             try {
-                /* out.print(chapter.chapterGet(request));
-                System.out.println(chapter.chapterGet(request));*/
                 PrintWriter out = response.getWriter();
                 out.print(chapter.getChapterInfo(request));
             } catch (SQLException ex) {
@@ -59,8 +57,6 @@ public class ChapterServlet extends HttpServlet {
 		// TODO Auto-generated method stub
                    ChapterFacade chapter = new ChapterFacade();
             try {
-                /* out.print(chapter.chapterGet(request));
-                System.out.println(chapter.chapterGet(request));*/
                 chapter.chapterGet(request, response);
             } catch (SQLException ex) {
                 Logger.getLogger(ChapterServlet.class.getName()).log(Level.SEVERE, null, ex);

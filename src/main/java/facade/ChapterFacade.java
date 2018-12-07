@@ -57,13 +57,11 @@ public class ChapterFacade {
         db = DBAccess.getConnection(pReader);
         ResultSet rs = null;
         ChapterModel cm = null;
-      if (!request.getSession().isNew()){
-        System.out.println(st);     
+      if (!request.getSession().isNew()){   
         cm = jackson.jsonToPojo(st, ChapterModel.class);
             rs = db.execute(pReader.getValue("qca2"), cm.getMangaId(),cm.getChapterNumber());
             
             try {
-                System.out.println(rs.next());
                 if(!rs.next()){
                     return cm;   
                 }
@@ -80,7 +78,6 @@ public class ChapterFacade {
         db = DBAccess.getConnection(pReader);
         ResponseModel<ChapterModel> res = modelCache.getModel("Response");
         String m = request.getParameter("json");
-        System.out.println(m);
         ChapterModel cm = chapterRequestValid(request, m);
         SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
         
@@ -279,7 +276,6 @@ public class ChapterFacade {
                 int i = 0;
 		try {
 			String baseDir = request.getServletContext().getContextPath();
-                        System.out.println(request.getServletContext().getContextPath());
                         StringBuilder mangaDir = new StringBuilder();
                         mangaDir.append(baseDir).append("\\").append(cm.getMangaName().toLowerCase()).append("\\").append(cm.getChapterNumber());
                         this.createFolder(mangaDir.toString());

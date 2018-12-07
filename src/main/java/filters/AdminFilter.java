@@ -24,7 +24,7 @@ import model.SessionModel;
  *
  * @author Usuario
  */
-@WebFilter(filterName = "AdminFilter", urlPatterns = {""})
+@WebFilter(filterName = "AdminFilter", urlPatterns = {"/admins"})
 public class AdminFilter implements Filter {
   
     /**
@@ -49,27 +49,16 @@ public class AdminFilter implements Filter {
 		HttpServletResponse response = (HttpServletResponse) res;
 		HttpServletRequest request = (HttpServletRequest) req;
 		response.setHeader("Access-Control-Allow-Origin", "*");
-                response.setHeader("Access-Control-Allow-Methods", "GET,DELETE,POST,PUT,OPTIONS");
-		String method = request.getMethod();
+                response.setHeader("Access-Control-Allow-Methods", "GET,DELETE,PUT");
+                SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
                 
-                switch (method){
-                  
+                if(sm.getTypeuser() == 1){
+                    chain.doFilter(request, response);
+                }else{
+                    PrintWriter out = response.getWriter();
+                    out.print("mistake");
                 }
 	}
-
-        public boolean typeUserSet(HttpServletRequest request){
-            SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
-        switch (sm.getTypeuser()) {
-            case 1:
-                request.setAttribute("isAdmin", true);
-                return true;
-            case 2:
-                request.setAttribute("isAdmin", false);
-                return true;
-            default:
-                return false;
-        }
-        }
 	/**
 	 * @see Filter#init(FilterConfig)
 	 */

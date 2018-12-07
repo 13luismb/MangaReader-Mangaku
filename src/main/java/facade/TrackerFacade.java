@@ -63,7 +63,6 @@ public class TrackerFacade {
                 }else{
                     rstwo = db.execute(pReader.getValue("qt1"), sm.getId(),getMangaId(id,db));
                     if (rstwo.next()){
-                        System.out.println(rstwo.getInt(1));
                         db.update(pReader.getValue("qt2"),rstwo.getInt(1),id);
                     }
                     rstwo.close();

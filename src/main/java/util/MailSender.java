@@ -41,7 +41,6 @@ public class MailSender extends Thread{
       Session session = Session.getDefaultInstance(properties);
       String host = "localhost:"+request.getServerPort();
       String bodyText = MessageFormat.format(pReader.getValue("mailbody"), cm.getMangaName(),cm.getChapterNumber(), host,cm.getChapterId());
-        System.out.println(bodyText);
      //compose the message
       try{             
          MimeMessage message = new MimeMessage(session);

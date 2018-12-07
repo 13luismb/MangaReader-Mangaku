@@ -132,7 +132,6 @@ public class CommentFacade {
                 res.setStatus(404);
                 res.setMessage(pReader.getValue("rcm3"));
             }
-            System.out.println(writeJSON(res));
             rs.close();
             db.close();
         }catch(Exception e){
@@ -191,7 +190,6 @@ public class CommentFacade {
         ResultSet rs = null;
         ResponseModel<CommentModel> res = modelCache.getModel("Response");
         int id_comment = Integer.parseInt(request.getParameter("id"));
-        System.out.println(id_comment);
         HttpSession session = request.getSession();
         SessionModel sm = (SessionModel) session.getAttribute("session");
         
@@ -205,7 +203,6 @@ public class CommentFacade {
                 res.setStatus(404);
                 res.setMessage(pReader.getValue("rcm3"));
             }
-            System.out.println(writeJSON(res));
             rs.close();
             db.close();
         }catch(Exception e){

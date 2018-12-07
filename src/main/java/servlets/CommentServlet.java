@@ -71,7 +71,6 @@ public class CommentServlet extends HttpServlet {
             PrintWriter out = response.getWriter();
             CommentFacade commentFacade = new CommentFacade();
             System.out.println("----------------------------------------------------");
-            System.out.println(request.getParameter("isChapter"));
             if(!request.getParameter("isChapter").equals("isChapter")){
                 System.out.println("Delete Comment Manga");
                 try {
