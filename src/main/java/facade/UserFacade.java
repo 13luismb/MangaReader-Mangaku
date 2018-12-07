@@ -252,17 +252,17 @@ private String getUserSalt(ResultSet rs) throws IOException{
         db = DBAccess.getConnection(pReader);
         ResponseModel<SessionModel> res = modelCache.getModel("Response");
         ResultSet rs = null;
-        int username = Integer.parseInt(request.getParameter("username"));
+        String username = request.getParameter("username");
         try{
             SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
             if(sm!=null){
                 if(sm.getTypeuser() == 1){
-                    rs = db.execute(pReader.getValue("qu1"), username);
+                    rs = db.execute(pReader.getValue("qu5"), username);
                     if(rs.next()){
                         if(rs.getInt(2)==1){
                             db.update(pReader.getValue("qadmindrop"), 2, rs.getInt(1));
                         }else{
-                            db.update(pReader.getValue("qadmindrop"), 2, rs.getInt(1));
+                            db.update(pReader.getValue("qadmindrop"), 1, rs.getInt(1));
                         }
                         res.setData((SessionModel) modelCache.getModel("Session"));
                         res.setMessage("Jaimanolo");
@@ -292,12 +292,12 @@ private String getUserSalt(ResultSet rs) throws IOException{
         db = DBAccess.getConnection(pReader);
         ResponseModel<SessionModel> res = modelCache.getModel("Response");
         ResultSet rs = null;
-        int username = Integer.parseInt(request.getParameter("username"));
+        String username = request.getParameter("username");
         try{
             SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
             if(sm!=null){
                 if(sm.getTypeuser() == 1){
-                    rs = db.execute(pReader.getValue("qu1"), username);
+                    rs = db.execute(pReader.getValue("qu5"), username);
                     if(rs.next()){
                         db.update(pReader.getValue("qadminupdate"), !rs.getBoolean(9), rs.getInt(1));
                         res.setData((SessionModel) modelCache.getModel("Session"));

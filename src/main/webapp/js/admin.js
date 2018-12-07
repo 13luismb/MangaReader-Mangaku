@@ -7,6 +7,8 @@ window.onload = function(){
     $('send').addEventListener('click',searchUser);
 }
 
+var list = [];
+
 function searchUser(){
     username = $('username').value;
 
@@ -24,24 +26,25 @@ function searchUser(){
         console.log(data);
         if(data.status == 200){
             $("listUser").innerHTML = "";
+            list = [];
+            let i = 0;
             data.data.forEach(element => {
+                list.push(element.username);
                 $("listUser").innerHTML += 
                 '<li class="collection-item">'+
-                    '<div >'+element.username+
-                        '<a id="'+element.username+'" href="#!" class="secondary-content">'+
-                            '<i class="material-icons black-text">cancel'+
+                    '<div>'+element.username+
+                        '<a href="#!" onclick="blockedUpdate('+i+')" class="secondary-content">'+
+                            '<i id="'+element.username+'-block" class="material-icons black-text">cancel'+
                             '</i>'+
                         '</a>'+
-                        '<a class="secondary-content">'+
-                            '<i class="material-icons black-text">assignment_ind'+
+                        '<a href="#!" onclick="setTypeUser('+i+')" class="secondary-content">'+
+                            '<i id="'+element.username+'-admin" class="material-icons black-text">assignment_ind'+
                             '</i>'+
                         '</a>'+
                     '</div>'+
-                '</li>'
-
-                $(element.username).addEventListener('click', blockedUpdate);
+                '</li>';
+                i++;
             });
-            
         }else if(data.status == 403){
             alert("NO ADMIN NO PARTY!")
             location.href = "dashboard.html";
@@ -49,24 +52,50 @@ function searchUser(){
     });
 }
 
-function blockedUpdate(e){
-    console.log(e);
+function blockedUpdate(position){
+    console.log(list[position]);
+    params={
+        method: "DELETE", 
+        headers: {
+            "Content-type": "application/x-www-form-urlencoded"
+        }
+    };
+    
+    fetch(".././admins?username="+list[position], params)
+    .then(resp => resp.json())
+    .then(data => {
+        console.log(data);
+      if (data.status==200){
+      }else{
+          alert("Error al crear el manga, status:"+data.status);
+      }
+    });
+}
 
+
+
+function setTypeUser(position){
+    console.log(list[position]);
     params={
         method: "PUT", 
         headers: {
             "Content-type": "application/x-www-form-urlencoded"
         }
     };
-    
-    fetch(".././admin?username="+username, params)
+    fetch(".././admins?username="+list[position], params)
     .then(resp => resp.json())
     .then(data => {
         console.log(data);
       if (data.status==200){
-          location.href = "manga.html?id="+data.data.id;
       }else{
           alert("Error al crear el manga, status:"+data.status);
       }
     });
+}
+
+function getUsername(){
+    var url_string = window.location.href;
+    var url = new URL(url_string);
+    var id = url.searchParams.get("username");
+    return id;
 }

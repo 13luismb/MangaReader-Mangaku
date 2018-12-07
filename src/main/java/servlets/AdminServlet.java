@@ -25,6 +25,13 @@ public class AdminServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        PrintWriter out = response.getWriter();
+        UserFacade user = new UserFacade();
+        try {
+            out.print(user.doAdminUpdate(request));
+        } catch (CloneNotSupportedException ex) {
+            Logger.getLogger(AdminServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
      @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
