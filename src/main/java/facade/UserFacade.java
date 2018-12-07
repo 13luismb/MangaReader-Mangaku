@@ -192,52 +192,135 @@ private String getUserSalt(ResultSet rs) throws IOException{
         session.setAttribute("session", in);
     }
 
-    public String userSearch (HttpServletRequest request) throws JsonProcessingException{
-    db = DBAccess.getConnection(pReader);
+    public String userSearch (HttpServletRequest request) throws JsonProcessingException, CloneNotSupportedException{
+        db = DBAccess.getConnection(pReader);
+        ResponseModel<ArrayList<SessionModel>> res = modelCache.getModel("Response");
         ArrayList<SessionModel> groupSUsers = new ArrayList<>();
         ResultSet rs = null;
         int i = 0;
         try{
-            rs = doUserSearch(request, db);
-            while(rs.next()){
-                 groupSUsers.add((SessionModel) modelCache.getModel("Session"));
-                 groupSUsers.get(i).setId(rs.getInt(1));
-                 groupSUsers.get(i).setTypeuser(rs.getInt(2));
-                 groupSUsers.get(i).setUsername(rs.getString(3));
-                 groupSUsers.get(i).setName(rs.getString(4));
-                 groupSUsers.get(i).setEmail(rs.getString(5));
-                 i++;
+            SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
+            if(sm!=null){
+                if(sm.getTypeuser() == 1){
+                    rs = doUserSearch(request, db);
+                    while(rs.next()){
+                        groupSUsers.add((SessionModel) modelCache.getModel("Session"));
+                        groupSUsers.get(i).setId(rs.getInt(1));
+                        groupSUsers.get(i).setTypeuser(rs.getInt(2));
+                        groupSUsers.get(i).setUsername(rs.getString(3));
+                        groupSUsers.get(i).setName(rs.getString(4));
+                        groupSUsers.get(i).setEmail(rs.getString(5));
+                        i++;
+                    }
+                    res.setData(groupSUsers);
+                    res.setMessage("Jaimanolo");
+                    res.setStatus(200);
+                    rs.close();
+                }else{
+                    res.setMessage("Nada tiene que hacer aqui");
+                    res.setStatus(403);
+                }
+            }else{
+                res.setMessage("Nada tiene que hacer aqui visitante");
+                res.setStatus(403);
             }
+            
         }catch(Exception e){
             e.printStackTrace();
         }     
-        return jackson.pojoToJson(groupSUsers);
+        return jackson.pojoToJson(res);
     }
+    
         private String getSearchValue(String value){
         StringBuilder pSearch = new StringBuilder();
         pSearch.append("%").append(value).append("%");
             return pSearch.toString();
         }
+        
     private ResultSet doUserSearch (HttpServletRequest request, DBAccess db){
         ResultSet rs = null;
         String value = this.getSearchValue(request.getParameter("username"));
         try{
             rs = db.execute(pReader.getValue("qadminsearch"), value);
         }catch(Exception e){
-                    e.printStackTrace();
+            e.printStackTrace();
         }
         return rs;
     }
     
-    public String doAdminUpdate(HttpServletRequest request) throws CloneNotSupportedException{
+    public String doAdminUpdate(HttpServletRequest request) throws CloneNotSupportedException, JsonProcessingException{
         db = DBAccess.getConnection(pReader);
-        ResponseModel<?> res = modelCache.getModel("Response");
-        return "";
+        ResponseModel<SessionModel> res = modelCache.getModel("Response");
+        ResultSet rs = null;
+        int username = Integer.parseInt(request.getParameter("username"));
+        try{
+            SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
+            if(sm!=null){
+                if(sm.getTypeuser() == 1){
+                    rs = db.execute(pReader.getValue("qu1"), username);
+                    if(rs.next()){
+                        if(rs.getInt(2)==1){
+                            db.update(pReader.getValue("qadmindrop"), 2, rs.getInt(1));
+                        }else{
+                            db.update(pReader.getValue("qadmindrop"), 2, rs.getInt(1));
+                        }
+                        res.setData((SessionModel) modelCache.getModel("Session"));
+                        res.setMessage("Jaimanolo");
+                        res.setStatus(200);
+                    }else{
+                        res.setData(null);
+                        res.setMessage("No conseguimos este manolo");
+                        res.setStatus(404);
+                    }
+                    rs.close();
+                }else{
+                    res.setMessage("Nada tiene que hacer aqui");
+                    res.setStatus(403);
+                }
+            }else{
+                res.setMessage("Nada tiene que hacer aqui visitante");
+                res.setStatus(403);
+            }
+            
+        }catch(Exception e){
+            e.printStackTrace();
+        }     
+        return jackson.pojoToJson(res);
     }
     
-    public String doAdminDelete(HttpServletRequest request) throws CloneNotSupportedException{
+    public String doAdminDelete(HttpServletRequest request) throws CloneNotSupportedException, JsonProcessingException{
         db = DBAccess.getConnection(pReader);
-        ResponseModel<?> res = modelCache.getModel("Response");
-        return "";
+        ResponseModel<SessionModel> res = modelCache.getModel("Response");
+        ResultSet rs = null;
+        int username = Integer.parseInt(request.getParameter("username"));
+        try{
+            SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
+            if(sm!=null){
+                if(sm.getTypeuser() == 1){
+                    rs = db.execute(pReader.getValue("qu1"), username);
+                    if(rs.next()){
+                        db.update(pReader.getValue("qadminupdate"), !rs.getBoolean(9), rs.getInt(1));
+                        res.setData((SessionModel) modelCache.getModel("Session"));
+                        res.setMessage("Jaimanolo");
+                        res.setStatus(200);
+                    }else{
+                        res.setData(null);
+                        res.setMessage("No conseguimos este manolo");
+                        res.setStatus(404);
+                    }
+                    rs.close();
+                }else{
+                    res.setMessage("Nada tiene que hacer aqui");
+                    res.setStatus(403);
+                }
+            }else{
+                res.setMessage("Nada tiene que hacer aqui visitante");
+                res.setStatus(403);
+            }
+            
+        }catch(Exception e){
+            e.printStackTrace();
+        }     
+        return jackson.pojoToJson(res);
     }
 }

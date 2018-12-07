@@ -8,6 +8,8 @@ package servlets;
 import facade.UserFacade;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -40,6 +42,14 @@ public class AdminServlet extends HttpServlet {
      @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        PrintWriter out = response.getWriter();
+        UserFacade user = new UserFacade();
+        
+        try {
+            out.print(user.doAdminDelete(request));
+        } catch (CloneNotSupportedException ex) {
+            Logger.getLogger(AdminServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
      @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
