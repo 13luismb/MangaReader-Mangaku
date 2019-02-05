@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Mangaku</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link type="text/css" rel="stylesheet" href="../css/materialize.min.css"  media="screen,projection"/>
+    </head>
+    <body class="grey">
+        <script type="text/javascript" src="../js/materialize.min.js"></script>
+
+
+            <!--DropDown-->
+            <ul id='dropdown1' class='dropdown-content'>
+                <li><a href="#modal1" class="modal-trigger" >Crear manga</a></li>
+                <li><a href="#!" onClick="logout()">Log-out</a></li>
+            </ul>
+
+            <!--Navbar-->
+            <nav class="black">
+                <div class="nav-wrapper container">
+                    <a href="#" class="brand-logo center">Mangaku</a>
+
+                    <form class="left hide-on-med-and-down" style="width:40%">
+                        <div class="input-field">
+                            <input id="search" placeholder="Busca tus mangas favoritos aqui" type="search" required>
+                            <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+                            <i class="material-icons">close</i>
+                        </div>
+                    </form>
+                    <!-- Login and register-->        
+                    <ul id="login-register" class="hide-on-med-and-down right">
+                        <li><a id="login" href="login.html">Login</a></li>
+                        <li><a id="register" class="btn-large grey darken-2 pulse" href="register.html">Register</a></li>
+                    </ul>
+                    <!-- User-name and log-out-->
+                    <ul id="name-logout" class="hide-on-med-and-down right" hidden>
+                        <li><a id="user-name"></a></li>
+                        <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Opciones<i class="material-icons right">arrow_drop_down</i></a></li>
+                    </ul>
+                </div>
+            </nav>
+            <!--End Navbar-->
+            <!--Div-->
+
+            <div class="container row">
+                <br>
+                <div class="col s10">
+                    <div id="myManga" class="row">
+                        <h4>
+                            Lista de tus Mangas:
+                        </h4>
+                    </div>
+                    <div id="subbedManga" class="row">
+                        <h4>
+                            Lista de Mangas leidos:
+                        </h4>
+                    </div>
+                    <div id="newManga" class="row">
+                        <h4>
+                            Lista de Mangas nuevos:
+                        </h4>
+                    </div>
+                </div>
+                <div class="col s2">
+                    <div style="position: fixed;text-align: center">
+                        <h6>
+                           Busqueda por generos 
+                        </h6>
+                        <!--AQUI VAN LOS GENEROS-->
+                        <!--PUBLICIDAD PARA JODER-->
+                    </div>
+                </div>
+                
+            </div>
+
+            <div id="modal1" class="modal">
+                    <div class="modal-content">
+                        <h4 class="center">Crea tu manga!</h4>
+                        <div class="row">
+                                <form>
+                                        <div class="input-field col s6">
+                                                <i class="material-icons prefix">account_circle</i>
+                                                <input placeholder="Name Manga" id="name_manga" type="text" class="validate black-text">
+                                        </div>
+                                        <div class="input-field col s6">
+                                            <select id="genres_manga" multiple>
+                                                    <option value="" disabled>Choose your option</option>
+                                                    <option value="Shonen">Shonen</option>
+                                                    <option value="Shojo">Shojo</option>
+                                                    <option value="Seinen">Seinen</option>
+                                                    <option value="Shonen">Josei</option>
+                                                    <option value="Shojo">Komodo</option>
+                                                    <option value="Seinen">Mecha</option>
+                                                    <option value="Shonen">Spokon</option>
+                                            </select>
+                                            <label>Choose manga genre</label>
+                                        </div>
+                                        <div class="input-field col s12">
+                                                <i class="material-icons prefix">insert_emoticon</i>
+                                                <textarea placeholder="Synopsis" id="synopsis_manga" class="materialize-textarea"></textarea>
+                                        </div>                       
+                                </form>
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a id="modalbtn" href="#!" class="modal-close waves-effect waves-green btn-flat black white-text">Crear</a>
+                    </div>
+            </div>
+        
+        <script src="../js/searchManga.js"></script>
+        <script src="../js/creatorManga.js"></script>
+        <script src="../js/renderNavBar.js"></script>    
+        <script src="../js/dashboard.js"></script>
+
+        <script>
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    var elems = document.querySelectorAll('.dropdown-trigger');
+                    var instances = M.Dropdown.init(elems);
+                });
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    var elems = document.querySelectorAll('.modal');
+                    var instances = M.Modal.init(elems);
+                });
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    var elems = document.querySelectorAll('select');
+                    var instances = M.FormSelect.init(elems);
+                });
+
+        </script>
+
+    </body>
+</html>

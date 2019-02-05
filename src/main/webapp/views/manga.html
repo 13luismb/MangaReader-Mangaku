@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Mangaku</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="../css/materialize.min.css" media="screen,projection" />
+</head>
+
+<body>
+    <script type="text/javascript" src="../js/materialize.min.js"></script>
+    <script>
+        window.onload = function() {
+            let x = location.search.split(/\=/)[1];
+            let url = ".././likes?mid=" + x;
+            fetch(url, {
+                    method: 'GET'
+                })
+                .then(resp => resp.json())
+                .then(data => {
+                    //console.log("hola");
+                    if (data.isLiked) {
+                        $('likeBtn').className += " liked";
+                    }
+                });
+        }
+    </script>
+
+    <ul id='dropdown1' class='dropdown-content'>
+        <li><a href="#modal_insert" class="modal-trigger">Crear manga</a></li>
+        <li><a href="#!" onClick="logout()">Log-out</a></li>
+    </ul>
+
+
+    <!--Navbar-->
+    <nav class="black">
+        <div class="nav-wrapper container">
+            <a href="#" class="brand-logo center">Mangaku</a>
+            <form class="left hide-on-med-and-down" style="width:40%">
+                <div class="input-field">
+                    <input id="search" placeholder="Busca tus mangas favoritos aqui" type="search" required>
+                    <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+                    <i class="material-icons">close</i>
+                </div>
+            </form>
+            <!-- Login and register-->
+            <ul id="login-register" class="hide-on-med-and-down right">
+                <li><a id="login" href="login.html">Login</a></li>
+                <li><a id="register" class="btn-large grey darken-2 pulse" href="register.html">Register</a></li>
+            </ul>
+            <!-- User-name and log-out-->
+            <ul id="name-logout" class="hide-on-med-and-down right" hidden>
+                <li>
+                    <a id="user-name" href="config.html"></a>
+                </li>
+                <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Opciones<i class="material-icons right">arrow_drop_down</i></a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div id="btn_edit" class="fixed-action-btn" hidden>
+        <a class="btn-floating btn-large black">
+            <i class="large material-icons">mode_edit</i>
+        </a>
+        <ul>
+            <li><a href="#modal_edit" class="btn-floating black tooltipped modal-trigger" data-position="left" data-tooltip="Editar Manga"><i class="material-icons">build</i></a></li>
+            <li><a href="#modal_add" class="btn-floating black tooltipped modal-trigger" data-position="left" data-tooltip="Subir capitulo"><i class="material-icons">file_upload</i></a></li>
+            <li><a id="deletebtn" class="btn-floating black tooltipped" data-position="left" data-tooltip="Eliminar Manga"><i class="material-icons">cancel</i></a></li>
+        </ul>
+    </div>
+
+    <div id="modal_insert" class="modal">
+        <div class="modal-content">
+            <h4 class="center">Crea tu manga!</h4>
+            <div class="row">
+                <form>
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">account_circle</i>
+                        <input placeholder="Name Manga" id="name_manga" type="text" class="validate black-text">
+                    </div>
+                    <div class="input-field col s6">
+                        <select id="genres_manga" multiple>
+                                                    <option value="" disabled>Choose your option</option>
+                                                    <option value="Shonen">Shonen</option>
+                                                    <option value="Shojo">Shojo</option>
+                                                    <option value="Seinen">Seinen</option>
+                                                    <option value="Shonen">Josei</option>
+                                                    <option value="Shojo">Komodo</option>
+                                                    <option value="Seinen">Mecha</option>
+                                                    <option value="Shonen">Spokon</option>
+                                            </select>
+                        <label>Choose manga genre</label>
+                    </div>
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">insert_emoticon</i>
+                        <textarea placeholder="Synopsis" id="synopsis_manga" class="materialize-textarea"></textarea>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a id="modalbtn" href="#!" class="modal-close waves-effect waves-green btn-flat black white-text">Crear</a>
+        </div>
+    </div>
+
+
+    <div id="modal_edit" class="modal">
+        <div class="modal-content">
+            <h4 class="center">Edita tu manga!</h4>
+            <div class="row">
+                <form>
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">account_circle</i>
+                        <input placeholder="Name Manga" id="name_edit" type="text" class="validate black-text">
+                    </div>
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">account_circle</i>
+                        <input placeholder="Name Manga" id="status_edit" type="text" class="validate black-text">
+                    </div>
+                    <!--
+                                            <div  class="input-field col s6">
+                                            <select id="genres_edit" multiple>
+                                                    <option value="" disabled>Choose your option</option>
+                                                    <option value="Shonen">Shonen</option>
+                                                    <option value="Shojo">Shojo</option>
+                                                    <option value="Seinen">Seinen</option>
+                                                    <option value="Shonen">Josei</option>
+                                                    <option value="Shojo">Komodo</option>
+                                                    <option value="Seinen">Mecha</option>
+                                                    <option value="Shonen">Spokon</option>
+                                            </select>
+                                            <label>Choose manga genre</label>
+                                        </div>
+                                        -->
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">insert_emoticon</i>
+                        <textarea placeholder="Synopsis" id="synopsis_edit" class="materialize-textarea"></textarea>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a id="editbtn" href="#!" class="modal-close waves-effect waves-green btn-flat black white-text">Crear</a>
+        </div>
+    </div>
+
+    <div id="modal_add" class="modal">
+            <div class="modal-content">
+                <h4 class="center">Nuevo Capitulo</h4>
+                <div class="row">
+                        <div class="input-field col s6">
+                            <i class="material-icons prefix">account_circle</i>
+                            <input placeholder="Name Chapter" id="chname" type="text" class="validate black-text">
+                        </div>
+                        <div class="input-field col s6">
+                                <i class="material-icons prefix">account_circle</i>
+                                <input placeholder="Number Chapter" id="chnumb" type="text" class="validate black-text">
+                        </div>
+                        <br><br><br><br>
+                        <form action="#">
+                                <div class="file-field input-field">
+                                  <div class="btn black">
+                                    <span>File</span>
+                                    <input id="files" type="file" multiple>
+                                  </div>
+                                  <div class="file-path-wrapper">
+                                    <input class="file-path validate" type="text" placeholder="Upload one or more files">
+                                  </div>
+                                </div>
+                        </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a id="addbtn" href="#!" class="modal-close waves-effect waves-green btn-flat black white-text">Crear</a>
+            </div>
+        </div>
+
+
+    <!--End Navbar-->
+    <!--Div-->
+    <div class="black white-text">
+        <div class="" style="height:50vh">
+            <div class="container">
+                <br>
+                <h2 id="title" class="center"></h3>
+                <br>
+                <span id="synopsis" class="center"></span>
+                <br>
+                <br>
+                <div class="row">
+                    <div class="col s4">
+                        <h6>Genres:</h6>
+                        <h6 id="genres"></h6>
+                    </div>
+                    <div class="col s4">
+                        <h6>Status:</h6>
+                        <h6 id="status"></h6>
+                    </div>
+                    <div class="col s4">
+                        <h6>No te pierdas el manga!:</h6>
+                        <a href="#!" id="likeBtn" class="secondary-content right"><i id="likeIcon" class="material-icons white-text center">favorite_border</i></a>
+                        <a id="subBtn" class="waves-effect waves-light btn grey darken-3 white-text"><i class="material-icons left">cloud</i>Subscribete!</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="container">
+            <br>
+            <div class="col s8">
+
+                        <h6>Lista de capitulos:</h6>
+                <ul id="list_chapter" class="collection with-header">
+                    <!--Molde:
+                            <li class="collection-item"><div>Lorem<a href="#!" class="secondary-content"><i class="material-icons black-text">play_arrow</i></a></div></li>                            
+                        -->
+                </ul>
+
+            </div>
+
+            <div class="s4">
+                <h6>
+                    Comentarios:
+                </h6>
+
+                <ul id="list_comment" class="collection with-header">
+                    <!--Molde:
+                            <li class="collection-item"><div>Lorem<a href="#!" class="secondary-content"><i class="material-icons black-text">play_arrow</i></a></div></li>                            
+                        -->
+                </ul>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!--End Div-->
+
+    <script src="../js/creatorManga.js"></script>
+    <script src="../js/renderNavBar.js"></script>
+    <script src="../js/renderManga.js"></script>
+    <script src="../js/editManga.js"></script>
+    <script src="../js/comment.js"></script>
+    <script src="../js/subscribe.js"></script>
+    <script src="../js/searchManga.js"></script>
+
+    <script>
+
+    
+
+    function upload() {
+        var url = ".././chapter";
+        let body = {
+            chapterName: $('chname').value,
+            chapterNumber: $('chnumb').value,
+            mangaId: location.search.split(/\=/)[1]
+        }
+
+        var formData = new FormData();
+        var files = $("files").files;
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            formData.append('photos[]', file, i + 1);
+        }
+        let json = JSON.stringify(body);
+        formData.append('json', json);
+        console.log(formData);
+        fetch(url, {
+                body: formData,
+                method: 'POST'
+            })
+            .then(resp => resp.json())
+            .then(data => {
+                console.log(data);
+            });
+    }
+
+    $('addbtn').addEventListener('click',upload);
+    </script>
+
+    <!-- Esto se cambiara y se hara el codigo cuando lo habilite-->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.fixed-action-btn');
+            var instances = M.FloatingActionButton.init(elems);
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.dropdown-trigger');
+            var instances = M.Dropdown.init(elems);
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.modal');
+            var instances = M.Modal.init(elems);
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('select');
+            var instances = M.FormSelect.init(elems);
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.tooltipped');
+            var instances = M.Tooltip.init(elems);
+        });
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.chips');
+            var instances = M.Chips.init(elems);
+        });
+    </script>
+
+</body>
+
+</html>
