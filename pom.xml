@@ -7,7 +7,7 @@
     <version>0.1</version>
     <packaging>war</packaging>
 
-    <name>Mangaku</name>
+    <name>Mangaku v2</name>
 
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
@@ -21,6 +21,11 @@
             <version>42.2.5</version>
         </dependency>
         <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
             <version>7.0</version>
@@ -31,16 +36,6 @@
             <artifactId>jackson-databind</artifactId>
             <version>2.2.3</version>
         </dependency>
-        <dependency>
-			<groupId>com.sun.mail</groupId>
-			<artifactId>javax.mail</artifactId>
-			<version>1.5.5</version>
-		</dependency>
-		<dependency>
-   <groupId>commons-io</groupId>
-   <artifactId>commons-io</artifactId>
-   <version>2.6</version>
-</dependency>
     </dependencies>
 
     <build>
