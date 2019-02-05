@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Mangaku</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link type="text/css" rel="stylesheet" href="../css/materialize.min.css"  media="screen,projection"/>
+    </head>
+    <body class="grey">
+        <script type="text/javascript" src="../js/materialize.min.js"></script>
+
+
+            <!--DropDown-->
+            <ul id='dropdown1' class='dropdown-content'>
+                <li><a href="#modal1" class="modal-trigger" >Crear manga</a></li>
+                <li><a href="#!" onClick="logout()">Log-out</a></li>
+            </ul>
+
+            <!--Navbar-->
+            <nav class="black">
+                <div class="nav-wrapper container">
+                    <a href="#" class="brand-logo center">Mangaku</a>
+                    <ul class="left hide-on-med-and-down">
+                        <li><a href="dashboard.html"><i class="material-icons left">arrow_back</i>Dashboard</a></li>
+                    </ul>
+                </div>
+            </nav>
+            <!--End Navbar-->
+            <!--Div-->
+            <div style="padding: 50px 100px 50px;">
+                <div class="white" style="height:75vh; padding: 50px 75px 30px;overflow: auto;">
+                    <div class="center">
+                        <input placeholder="Coloca el username" id="username" type="text" class="validate" style="width:40%">
+                        <button id="send" class="btn waves-effect waves-light black" type="submit" name="action">Buscar
+                            <i class="material-icons right">send</i>
+                        </button>
+                    </div>
+                    
+                    <div>
+                        <ul class="collection with-header" id="listUser">
+                            <!--
+                            <li class="collection-item">
+                                <div>Vulcano
+                                    <a href="#!" class="secondary-content">
+                                        <i class="material-icons black-text">cancel
+                                        </i>
+                                    </a>
+                                    <a href="#!" class="secondary-content">
+                                        <i class="material-icons black-text">assignment_ind
+                                        </i>
+                                    </a>
+                                </div>
+                            </li>
+                            -->
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+
+            
+
+            <script src="../js/admin.js"></script>
+
+        <script>
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var elems = document.querySelectorAll('.modal');
+                var instances = M.Modal.init(elems);
+            });
+
+        </script>
+
+    </body>
+</html>
