@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Mangaku</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    </head>
+    <body>
+        <script type="text/javascript" src="js/materialize.min.js"></script>
+        
+
+        <div style="position:relative">
+            
+            <!--Navbar-->
+            <nav class="black" style="position:absolute;z-index: 2;">
+                <div class="nav-wrapper container">
+                        <form class="left" style="width:60%">
+                            <div class="input-field">
+                                <input id="search" placeholder="Busca tus mangas favoritos aqui" type="search" required>
+                                <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+                                <i class="material-icons">close</i>
+                            </div>
+                        </form>
+                        
+                        <ul id="nav-mobile" class="hide-on-med-and-down right">
+                            <li><a href="sass.html">Iniciar Sesion</a></li>
+                            <li><a class="btn-large grey darken-2 pulse" href="badges.html">Registro</a></li>
+                        </ul>
+                </div>
+            </nav>
+
+            
+
+            <!--Carousel del fondo-->
+            <div id="carousel" class="carousel carousel-slider center" style="position: absolute;height:100vh;width: 100%;z-index: 1;">
+                <div class="carousel-item black white-text" style="filter:brightness(0.4);background-image: url('images/wallpaper-1.jpg');" href="#one!" >
+                </div>
+                <div class="carousel-item black white-text" style="filter:brightness(0.4);background-image: url('images/wallpaper-2.jpg');" href="#two!">
+                </div>
+                <div class="carousel-item black white-text" style="filter:brightness(0.4);background-image: url('images/wallpaper-3.png');" href="#three!">
+                </div>
+                <div class="carousel-item black white-text" style="filter:brightness(0.4);background-image: url('images/wallpaper-4.jpg');" href="#four!">
+                </div>
+                <!--Panel central-->
+                <div class="carousel-fixed-item center" style="z-index:2;">
+                        <!--
+                            
+                        
+                        <div class="row container">
+                                <div class="col l6 s12 offset-l3">
+                                  <div class="card black">
+                                    <div class="card-content white-text">
+                                        <img src="images/aku-logo.jpg" class="" alt="" height="180px">
+                                        <span class="card-title">Mangaku</span>
+                                        <br>
+                                        <br>
+                                        <p></p>
+                                    </div>
+                                  </div>
+                                </div>
+                        </div>
+                        <br>
+                        <br>
+                        <br>
+                        -->      
+
+
+                </div>
+
+            </div>    
+        </div>
+        
+        
+        <script>
+            
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var elems = document.querySelectorAll('.carousel');
+                var instances = M.Carousel.init(elems,{
+                    fullWidth: true,
+                    indicators: true,
+                    duration:500
+                });
+                setInterval(function(){$('.carousel').carousel('next');},10000);
+            });
+
+            
+            
+        </script>
+    </body>
+</html>
