@@ -1,9 +1,0 @@
-util\PropertiesReader.class
-util\DBAccess.class
-model\UserModel.class
-servlets\LoginServlet.class
-servlets\LogoutServlet.class
-servlets\RegisterServlet.class
-facade\UserFacade.class
-util\Encrypter.class
-util\JacksonMapper.class
