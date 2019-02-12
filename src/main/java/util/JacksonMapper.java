@@ -5,21 +5,30 @@
  */
 package util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import model.UserModel;
 
 /**
  *
  * @author kko_0
  */
 public class JacksonMapper {
-  private ObjectMapper objMap = new ObjectMapper();
+    private ObjectMapper objMap = new ObjectMapper();
   
-  public <T> T jsonToPojo(HttpServletRequest request, Class clase) throws IOException{
-      return (T) objMap.readValue(request.getReader().lines().collect(Collectors.joining(System.lineSeparator())), clase);
-  }
+    public <T> T jsonToPojo(HttpServletRequest request, Class clase) throws IOException{
+        return (T) objMap.readValue(request.getReader().lines().collect(Collectors.joining(System.lineSeparator())), clase);
+    }
+        public <T> T jsonToPojo(String json, Class clase) throws IOException{
+        return (T) objMap.readValue(json, clase);
+    }
+        
+    public <T> String pojoToJson(T data) throws JsonProcessingException{
+        return objMap.writerWithDefaultPrettyPrinter().writeValueAsString(data);
+    }
+  
+  
 }

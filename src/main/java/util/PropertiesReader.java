@@ -11,10 +11,8 @@ public class PropertiesReader {
 
     private PropertiesReader() {
         try {
-            ClassLoader cl = Thread.currentThread().getContextClassLoader();
-            input = cl.getResourceAsStream("connection.properties");
+            input = getClass().getClassLoader().getResourceAsStream("connection.properties");
             prop.load(input);
-            System.out.print("PAPUUUUUUUUUUUUUUUUUUUUUUUUUUU"+getValue("dbDriver"));
         } catch (IOException ex) {
             ex.printStackTrace();
         } finally {
