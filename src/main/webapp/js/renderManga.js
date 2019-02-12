@@ -36,7 +36,6 @@ fetch('.././manga?'+params, config)
         $("synopsis").innerText = data.data.synopsis;
         $("genres").innerHTML = getGenresText(data.data.genres);
         $("status").innerHTML = getStatus(data.data.status);
-        $("likeIcon").innerText = getLike();
         fillChapter(data.data.chapters);
         fillComment(data.data.comment);
         if(data.status == 201){
@@ -52,18 +51,6 @@ fetch('.././manga?'+params, config)
         location.href = "dashboard.html";
     }
 });
-
-function getLike(){
-    if(!(localStorage.getItem("userInfo") === null || undefined)){
-        if ($('likeBtn').className.includes("liked")) {
-            return "favorite";
-        } else {
-            return "favorite_border";
-        }    
-    }else{
-        return "";
-    }
-}
 
 /*function setGenresActive(genres){ 
     console.log($("genres_edit").childNodes.length);
@@ -159,7 +146,6 @@ function doLike(data) {
             console.log(data.data.isLiked);
             if (data.data.isLiked) {
                 $('likeBtn').className += " liked";
-                $('likeIcon').innerText = "favorite";
             }
         })
 }
@@ -174,7 +160,6 @@ function doDislike(data) {
             if (!data.data.isLiked) {
                 let v = $('likeBtn').className.replace("liked","").trim(); //esto hay que cambiarlo, no se como hacer que se mantenga la clase sin el "liked"
                 $('likeBtn').className = v;
-                $('likeIcon').innerText = "favorite_border";
             }
         })
 }

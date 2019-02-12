@@ -21,7 +21,6 @@ function doSubscription() {
             console.log(data);
             if (data.data.isSubscribed) {
                 $('subBtn').className += " subbed";
-                $('subBtn').innerText = "Desuscribirse";
             }
         })
 }
@@ -36,7 +35,6 @@ function doUnsubscribe() {
             if (!data.data.isSubscribed) {
                 let v = $('subBtn').className.replace("subbed","").trim(); //esto hay que cambiarlo, no se como hacer que se mantenga la clase sin el "liked"
                 $('subBtn').className = v;
-                $('subBtn').innerText = "Subscribete!";
             }
         })
 }
@@ -50,7 +48,6 @@ function doUnsubscribe() {
                     console.log(data);
                     if (data.data.isSubscribed) {
                         $('subBtn').className += " subbed";
-                        $('subBtn').innerText = "Desuscribirse";
                     }
                 });
         }

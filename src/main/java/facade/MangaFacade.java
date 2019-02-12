@@ -340,8 +340,7 @@ public class MangaFacade {
         ArrayList<MangaModel> subbedManga = new ArrayList<>();
         ArrayList<MangaModel> newManga = new ArrayList<>();
         ResultSet rs, rs1, rs2;
-        HttpSession session = request.getSession();
-        SessionModel sm = (SessionModel) session.getAttribute("session");
+        SessionModel sm = (SessionModel) request.getSession().getAttribute("session");
         db = DBAccess.getConnection(pReader);
         try{
             
@@ -382,8 +381,7 @@ public class MangaFacade {
                 }  
                 
             }else{
-              rs = db.execute(pReader.getValue("qdash1"));
-              session.invalidate();
+              rs = db.execute(pReader.getValue("qdash1")); 
               if(this.getDashboardData(newManga, rs) && !newManga.isEmpty()){
                     data.put("newManga",newManga);
                 }
