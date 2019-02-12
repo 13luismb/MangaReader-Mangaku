@@ -2,22 +2,41 @@
 <html>
 
 <head>
-    <title>Perfil</title>
+    <title>Mangaku</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="../css/materialize.min.css"  media="screen,projection"/>
 </head>
-<h3 id="user">Name of Manga: </h3>
-<div id="div">
-<p id="likeBtn" class="hola">&hearts;</p>
-</div>
-<div id="handler">
-    <img id="image"></br>
-    <button id="previous">Anterior</button>
-    <button id="dashboard">Home</button>
-    <button id="next">Siguiente</button>
-    <ul id="list_comment" class="collection with-header">
-    </ul>
-</div>
+<body class="black">
+    <script type="text/javascript" src="../js/materialize.min.js"></script>
 
-<body>
+    <div>
+        <div id="handler" style="width:100%">
+            <br>
+            <br>
+            <div class="container">
+                <img class="responsive-img" id="image">
+            </div>
+            </br>
+            <div class="center">
+                <a class="waves-effect waves-light btn-large grey darken-3 white-text" id="previous"><i class="material-icons left">arrow_back</i>Anterior</a>
+                <a class="waves-effect waves-light btn-large grey darken-3 white-text" id="dashboard"><i class="material-icons center">home</i></a>
+                <a class="waves-effect waves-light btn-large grey darken-3 white-text" id="next"><i class="material-icons right">arrow_forward</i>Siguiente</a>
+            </div>
+            
+            <div id="div" class="center">
+                <a href="#!" id="likeBtn"><i id="likeIcon" class="material-icons white-text center">favorite_border</i></a>
+            </div>
+            <br>
+            <br>
+            <ul id="list_comment" class="black-text collection with-header">
+            </ul>
+        </div>    
+    </div>
+
+
+    
+    
     <script type="text/javascript" src="../js/chapter.js"></script>
     <script type="text/javascript" src="../js/comment.js"></script>
 </body>

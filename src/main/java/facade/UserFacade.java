@@ -270,20 +270,20 @@ private String getUserSalt(ResultSet rs) throws IOException{
                             db.update(pReader.getValue("qadmindrop"), 1, rs.getInt(1));
                         }
                         res.setData((SessionModel) modelCache.getModel("Session"));
-                        res.setMessage("Jaimanolo");
+                        res.setMessage(pReader.getValue("radmin1"));
                         res.setStatus(200);
                     }else{
                         res.setData(null);
-                        res.setMessage("No conseguimos este manolo");
+                        res.setMessage(pReader.getValue("radmin2"));
                         res.setStatus(404);
                     }
                     rs.close();
                 }else{
-                    res.setMessage("Nada tiene que hacer aqui");
+                    res.setMessage(pReader.getValue("radmin2"));
                     res.setStatus(403);
                 }
             }else{
-                res.setMessage("Nada tiene que hacer aqui visitante");
+                res.setMessage(pReader.getValue("radmin2"));
                 res.setStatus(403);
             }
             
@@ -306,20 +306,20 @@ private String getUserSalt(ResultSet rs) throws IOException{
                     if(rs.next()){
                         db.update(pReader.getValue("qadminupdate"), !rs.getBoolean(9), rs.getInt(1));
                         res.setData((SessionModel) modelCache.getModel("Session"));
-                        res.setMessage("Jaimanolo");
+                        res.setMessage(pReader.getValue("radmin1"));
                         res.setStatus(200);
                     }else{
                         res.setData(null);
-                        res.setMessage("No conseguimos este manolo");
+                        res.setMessage(pReader.getValue("radmin2"));
                         res.setStatus(404);
                     }
                     rs.close();
                 }else{
-                    res.setMessage("Nada tiene que hacer aqui");
+                    res.setMessage(pReader.getValue("radmin2"));
                     res.setStatus(403);
                 }
             }else{
-                res.setMessage("Nada tiene que hacer aqui visitante");
+                res.setMessage(pReader.getValue("radmin2"));
                 res.setStatus(403);
             }
             

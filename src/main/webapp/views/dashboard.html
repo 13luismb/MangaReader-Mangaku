@@ -6,7 +6,7 @@
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link type="text/css" rel="stylesheet" href="../css/materialize.min.css"  media="screen,projection"/>
     </head>
-    <body class="grey">
+    <body class="grey darken-2">
         <script type="text/javascript" src="../js/materialize.min.js"></script>
 
 
@@ -28,6 +28,7 @@
                             <i class="material-icons">close</i>
                         </div>
                     </form>
+                    
                     <!-- Login and register-->        
                     <ul id="login-register" class="hide-on-med-and-down right">
                         <li><a id="login" href="login.html">Login</a></li>
@@ -35,6 +36,7 @@
                     </ul>
                     <!-- User-name and log-out-->
                     <ul id="name-logout" class="hide-on-med-and-down right" hidden>
+                        <li><a href="admin.html" id="adminBtn">Admin</a></li>
                         <li><a id="user-name"></a></li>
                         <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Opciones<i class="material-icons right">arrow_drop_down</i></a></li>
                     </ul>
@@ -47,26 +49,50 @@
                 <br>
                 <div class="col s10">
                     <div id="myManga" class="row">
-                        <h4>
+                        <h4 class="white-text">
                             Lista de tus Mangas:
                         </h4>
                     </div>
                     <div id="subbedManga" class="row">
-                        <h4>
+                        <h4 class="white-text">
                             Lista de Mangas leidos:
                         </h4>
                     </div>
                     <div id="newManga" class="row">
-                        <h4>
+                        <h4 class="white-text">
                             Lista de Mangas nuevos:
                         </h4>
                     </div>
                 </div>
                 <div class="col s2">
                     <div style="position: fixed;text-align: center">
-                        <h6>
-                           Busqueda por generos 
+                        <br>
+                        <br>
+                        <h6 class="white-text">
+                            Busqueda por genero
                         </h6>
+                        <div class="card grey darken-1 center">
+                            <div class="card-content white-text">
+                                <div class="card-title center">
+                                    <a href="search.html?g=Shonen" class="waves-effect waves-light btn black white-text"  style="width: 20vh">Shonen</a>
+                                    <br>
+                                    <a href="search.html?g=Shojo" class="waves-effect waves-light btn black white-text" style="width: 20vh">Shojo</a>
+                                    <br>
+                                    <a href="search.html?g=Seinen" class="waves-effect waves-light btn black white-text" style="width: 20vh">Seinen</a>
+                                    <br>
+                                    <a href="search.html?g=Josei" class="waves-effect waves-light btn black white-text" style="width: 20vh">Josei</a>
+                                    <br>
+                                    <a href="search.html?g=Kodomo" class="waves-effect waves-light btn black white-text" style="width: 20vh">Kodomo</a>
+                                    <br>
+                                    <a href="search.html?g=Mecha" class="waves-effect waves-light btn black white-text" style="width: 20vh">Mecha</a>
+                                    <br>
+                                    <a href="search.html?g=Spokon" class="waves-effect waves-light btn black white-text" style="width: 20vh">Spokon</a>
+                                    <br>
+                                    <a href="search.html?g=Otros" class="waves-effect waves-light btn black white-text" style="width: 20vh">Otros</a>
+                                    <br>
+                                </div>
+                            </div>
+                        </div>
                         <!--AQUI VAN LOS GENEROS-->
                         <!--PUBLICIDAD PARA JODER-->
                     </div>
@@ -80,8 +106,8 @@
                         <div class="row">
                                 <form>
                                         <div class="input-field col s6">
-                                                <i class="material-icons prefix">account_circle</i>
-                                                <input placeholder="Name Manga" id="name_manga" type="text" class="validate black-text">
+                                            <i class="material-icons prefix">account_circle</i>
+                                            <input placeholder="Name Manga" id="name_manga" type="text" class="validate black-text">
                                         </div>
                                         <div class="input-field col s6">
                                             <select id="genres_manga" multiple>

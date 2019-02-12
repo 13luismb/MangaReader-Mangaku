@@ -198,9 +198,15 @@
                         <h6 id="status"></h6>
                     </div>
                     <div class="col s4">
-                        <h6>No te pierdas el manga!:</h6>
-                        <a href="#!" id="likeBtn" class="secondary-content right"><i id="likeIcon" class="material-icons white-text center">favorite_border</i></a>
-                        <a id="subBtn" class="waves-effect waves-light btn grey darken-3 white-text"><i class="material-icons left">cloud</i>Subscribete!</a>
+                        <h6>No te pierdas el manga!</h6>
+                        <div id="subscribeGuest" hidden>
+                            <input id="email_inline" type="email" placeholder="Your email" class="validate white-text">
+                            <a href="#!" id="visitorBtn" class="center grey btn">Subscribe</a>
+                        </div>
+                        <div id="subscribeUser">
+                                <a href="#!" id="likeBtn" class="secondary-content right"><i id="likeIcon" class="material-icons white-text center">favorite_border</i></a>
+                                <a id="subBtn" class="waves-effect waves-light btn grey darken-3 white-text"><i class="material-icons left">cloud</i>Subscribete!</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -273,7 +279,7 @@
             })
             .then(resp => resp.json())
             .then(data => {
-                console.log(data);
+                location.reload();
             });
     }
 

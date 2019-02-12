@@ -41,13 +41,23 @@ let params = {
     });
 
     function getCard(data){
-        return '<div class="card grey darken-1 col s3"></br>'+
+        return '<div class="card grey darken-1 col s3" style="margin:3px"></br>'+
                     '<div class="card-content white-text">'+
                         '<span class="card-title center">'+data.name+'</span>'+
                     '</div>'+
                     '<div class="card-action center">'+
                        '<br>'+
-                       '<a href="manga.html?id=' + data.id + '" class="waves-effect waves-light btn lime">Acceder</a>'+
+                       '<a href="manga.html?id=' + data.id + '" class="waves-effect waves-light btn black">Acceder</a>'+
                    '</div>'+
                 '</div>';
     }
+
+    function userCred(){
+        if(localStorage.getItem('userInfo') == null || undefined){
+            $('adminBtn').hidden = true; 
+        }else if(JSON.parse(localStorage.getItem('userInfo')).typeuser != 1){
+            $('adminBtn').hidden = true;
+        }
+    }
+
+    userCred();

@@ -14,8 +14,7 @@
                 <li><a href="#!">Subir capitulo</a></li>
                 <li><a href="#!" onClick="logout()">Log-out</a></li>
         </ul>
-
-
+        
     <!--Navbar-->
     <nav class="black">
         <div class="nav-wrapper container">
@@ -114,15 +113,8 @@
         <script>
 
             window.onload = function(){
-            var url_string = window.location.href;
-            var url = new URL(url_string);
-            var id = url.searchParams.get("s");
-            if(id === null || undefined){
-                location.href = "dashboard.html";
-            }else{
-                requestData(id);
+                requestData(location.href.split('?')[1]);
             }
-}
 
                 document.addEventListener('DOMContentLoaded', function() {
                     var elems = document.querySelectorAll('.collapsible');

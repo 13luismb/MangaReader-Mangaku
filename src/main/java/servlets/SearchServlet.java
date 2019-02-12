@@ -29,7 +29,7 @@ public class SearchServlet extends HttpServlet {
         MangaFacade manga = new MangaFacade();
 
         try{
-                out.print(manga.mangaSearch(request));       
+            out.print(manga.mangaSearch(request));       
         }catch(Exception e){
             e.printStackTrace();
         }

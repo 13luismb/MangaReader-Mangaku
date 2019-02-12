@@ -2,7 +2,7 @@ function $(id){
     return document.getElementById(id);
 }
 
-function requestData(id){
+function requestData(params){
     let config = {
         method: "GET",
         withCredentials: true,
@@ -12,13 +12,11 @@ function requestData(id){
         }
     };
     
-    fetch('.././search?s='+id, config)
+    fetch('.././search?'+params, config)
     .then(res => res.json())
     .then(data => {
-        //console.log(data);
         if(data.length>0){
             data.forEach(element => {
-                console.log(element);
                 $("result").innerHTML += '<li><div class="collapsible-header">'+element.name+'</div><div class="collapsible-body"><span>'+element.synopsis+'</span><br><br><br><div><a href="manga.html?id='+element.id+'" class="secondary-content waves-effect waves-light btn-floating btn-large black"><i class="material-icons white-text">play_arrow</i></a></div></div></li>'
             });
         }else{

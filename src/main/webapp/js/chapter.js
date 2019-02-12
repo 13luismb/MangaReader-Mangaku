@@ -45,9 +45,10 @@
                     if(data.status!=500){
                         if (data.data.isLiked) {
                             $('likeBtn').className += " liked";
+                            $('likeIcon').innerText = "favorite";
                         }
                     }else{
-                        $('likeBtn').hidden = true;
+                            $('likeBtn').innerHTML = "";
                     }
                 });
         }
@@ -154,6 +155,7 @@
                 .then(data => {
                     if (data.data.isLiked) {
                         $('likeBtn').className += " liked";
+                        $('likeIcon').innerText = "favorite";
                     }
                 })
         }
@@ -167,6 +169,7 @@
                     if (!data.data.isLiked) {
                         let v = $('likeBtn').className.replace("liked","").trim();
                         $('likeBtn').className = v;
+                        $('likeIcon').innerText = "favorite_border";
                     }
                 })
         }

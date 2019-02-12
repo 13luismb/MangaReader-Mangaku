@@ -2,6 +2,16 @@ function $(id){
     return document.getElementById(id);
 }
 
+window.onload = function(){
+    if(localStorage.getItem("userInfo") == null||undefined){
+        $('subscribeGuest').hidden = false;
+        $('subscribeUser').hidden = true;
+    }else{
+        $('subscribeGuest').hidden = true;
+        $('subscribeUser').hidden = false;
+    }
+}
+
 function subscribe() {
     if ($('subBtn').className.includes("subbed")) {
         doUnsubscribe();
@@ -9,6 +19,7 @@ function subscribe() {
         doSubscription();
     }
 }
+
 
 
 function doSubscription() {
@@ -51,9 +62,27 @@ function doUnsubscribe() {
                     if (data.data.isSubscribed) {
                         $('subBtn').className += " subbed";
                         $('subBtn').innerText = "Desuscribirse";
+                    }else{
+                        $('subBtn').innerText = "Suscribirse";
+                    }
+                });
+        }
+
+        function visitorSubscribe(){
+            let x = location.search.split(/\=/)[1];
+            let y = $('email_inline').value;
+            let url = ".././subscribe?id=" + x + "&email=" + y;
+            console.log(url);
+            fetch(url, { method: 'POST' })
+                .then(resp => resp.json())
+                .then(data => {
+                    if(data.status === 202){
+                        alert('You subscribed!');
+                        $('email_inline').value= "";
                     }
                 });
         }
 
 $('subBtn').addEventListener('click', function() {subscribe();});
+$('visitorBtn').addEventListener('click',visitorSubscribe);
 getSubscribeStatus();

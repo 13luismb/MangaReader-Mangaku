@@ -37,7 +37,7 @@ fetch('.././manga?'+params, config)
         $("genres").innerHTML = getGenresText(data.data.genres);
         $("status").innerHTML = getStatus(data.data.status);
         $("likeIcon").innerText = getLike();
-        fillChapter(data.data.chapters);
+        fillChapter(data.data.chapters,data.status);
         fillComment(data.data.comment);
         if(data.status == 201){
             $("btn_edit").hidden = false;
@@ -45,7 +45,6 @@ fetch('.././manga?'+params, config)
             $("synopsis_edit").innerText = data.data.synopsis;
             $("status_edit").value = getStatus(data.data.status); 
             //setGenresActive(data.data.genres);
-
         }
     } else if(data.status == 404){
         alert(data.message+" Error:"+data.status);
@@ -79,15 +78,51 @@ function getLike(){
     }
 }*/
 
-function fillChapter(chapters){
+function fillChapter(chapters,status){
     chapters.forEach(element => {
-        if(element.tracker){
-            $("list_chapter").innerHTML += '<li class="collection-item"><div>'+element.chapterName+'<a href="chapter.html?id='+element.chapterId+'&page=1" class="secondary-content"><i class="material-icons black-text">play_arrow</i></a><a href="#!" onclick="disTrack('+element.chapterId+')" class="secondary-content"><i id="icon-'+element.chapterId+'" class="material-icons black-text">visibility</i></a></div></li>';
+        if(status==200){
+            if(element.tracker){
+                $("list_chapter").innerHTML += '<li class="collection-item"><div>'+element.chapterName+'<a href="chapter.html?id='+element.chapterId+'&page=1" class="secondary-content"><i class="material-icons black-text">play_arrow</i></a><a href="#!" onclick="disTrack('+element.chapterId+')" class="secondary-content"><i id="icon-'+element.chapterId+'" class="material-icons black-text">visibility</i></a></div></li>';
+            }else{
+                $("list_chapter").innerHTML += '<li class="collection-item"><div>'+element.chapterName+'<a href="chapter.html?id='+element.chapterId+'&page=1" class="secondary-content"><i class="material-icons black-text">play_arrow</i></a><a href="#!" onclick="track('+element.chapterId+')" class="secondary-content"><i id="icon-'+element.chapterId+'" class="material-icons black-text">visibility_off</i></a></div></li>';
+            }
         }else{
-            $("list_chapter").innerHTML += '<li class="collection-item"><div>'+element.chapterName+'<a href="chapter.html?id='+element.chapterId+'&page=1" class="secondary-content"><i class="material-icons black-text">play_arrow</i></a><a href="#!" onclick="track('+element.chapterId+')" class="secondary-content"><i id="icon-'+element.chapterId+'" class="material-icons black-text">visibility_off</i></a></div></li>';
+            if(element.tracker){
+                $("list_chapter").innerHTML += '<li class="collection-item"><div>'+element.chapterName+'<a href="chapter.html?id='+element.chapterId+'&page=1" class="secondary-content"><i class="material-icons black-text">play_arrow</i></a><a href="#!" onclick="disTrack('+element.chapterId+')" class="secondary-content"><i id="icon-'+element.chapterId+'" class="material-icons black-text">visibility</i></a><a href="#!" onclick="deleteChapter('+element.chapterId+')" class="secondary-content"><i id="icon-'+element.chapterId+'" class="material-icons black-text">cancel</i></a></div></li>';
+            }else{
+                $("list_chapter").innerHTML += '<li class="collection-item"><div>'+element.chapterName+'<a href="chapter.html?id='+element.chapterId+'&page=1" class="secondary-content"><i class="material-icons black-text">play_arrow</i></a><a href="#!" onclick="track('+element.chapterId+')" class="secondary-content"><i id="icon-'+element.chapterId+'" class="material-icons black-text">visibility_off</i></a><a href="#!" onclick="deleteChapter('+element.chapterId+')" class="secondary-content"><i id="icon-'+element.chapterId+'" class="material-icons black-text">cancel</i></a></div></li>';
+            }
+        }
+                
+    });
+}
+
+function deleteChapter(id){
+    let body = {
+        chapterId:id
+    }
+    let config = {
+        method: "DELETE",
+        withCredentials: true,
+        credentials: 'same-origin',
+        headers: {
+            "Content-type": "application/json"
+        },
+        body: JSON.stringify(body)
+    };
+    
+    fetch('.././chapter', config)
+    .then(res => res.json())
+    .then(data => {
+        if(data.status == 200){
+            alert("Chapter deleteado gg");
+            location.reload(); 
+        }else{
+            alert(data.message+" Error:"+data.status);
         }
     });
 }
+
 
 function disTrack(id){
     let x = location.search.split(/\=/)[1];
@@ -98,6 +133,7 @@ function disTrack(id){
             console.log(data);
             $("icon-"+id).innerText = "visibility_off";
             $("icon-"+id).onclick = track();
+            location.reload();
     });
 }
 
@@ -110,6 +146,7 @@ function track(id){
             console.log(data);
             $("icon-"+id).innerText = "visibility";
             $("icon-"+id).onclick = disTrack();
+            location.reload();
     });
 }
 

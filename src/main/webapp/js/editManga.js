@@ -36,7 +36,7 @@ function getStatusText(status){
 }
 
 function deleteManga(){
-    alert("Delete");
+    
     let params = location.href.split('?')[1];
 
     let config = {
